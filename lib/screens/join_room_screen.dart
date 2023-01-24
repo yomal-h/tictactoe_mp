@@ -52,7 +52,7 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
             ),
             CustomTextfield(
                 controller: _gameIdController, hintText: 'Enter Game ID'),
-            SizedBox(height: size.height * 0.02),
+            SizedBox(height: size.height * 0.03),
             CustomButton(onTap: (() {}), text: 'Join')
           ],
         ),
