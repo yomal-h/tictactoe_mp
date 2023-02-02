@@ -21,6 +21,7 @@ io.on("connection", (socket) => {
         console.log(nickname);
         console.log(socket.id);
         try {
+
             //room is created
             let room = new Room();
             let player = {
@@ -39,13 +40,45 @@ io.on("connection", (socket) => {
             //player is taken to the next screen
 
             //tell the client that rom is created and go to next screen
-            io.to(roomId).emit("create room success", room);
-        }catch (e) {
+            io.to(roomId).emit("createRoomSuccess", room);
+        } catch (e) {
             console.log(e);
         }
 
-        
+
     });
+
+    socket.on('joinRoom', async ({ nickname, roomId }) => {
+        try {
+            if (!roomId.match(/^[0-9a-fA-F]{24}$/)) {
+                socket.emit("errorOccurred", "Please enter a valid room ID.");
+                return;
+            }
+            let room = await Room.findById(roomId);
+
+            if (room.isJoin) {
+                let player = {
+                    nickname,
+                    socketID: socket.id,
+                    playerType: "O",
+                };
+                socket.join(roomId);
+                room.players.push(player);
+                room.isJoin = false;
+                room = await room.save();
+                io.to(roomId).emit("joinRoomSuccess", room);
+                io.to(roomId).emit("updatePlayers", room.players);
+                io.to(roomId).emit("updateRoom", room);
+            } else {
+                socket.emit(
+                    "errorOccurred",
+                    "The game is in progress, try again later."
+                );
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    })
 });
 
 mongoose.set("strictQuery", false);//deprecated warning otherwise

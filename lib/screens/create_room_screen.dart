@@ -21,6 +21,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _socketMethods.createRoomSuccessListener(context);
   }
 
   @override
