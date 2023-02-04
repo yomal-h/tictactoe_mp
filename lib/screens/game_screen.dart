@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tictactoe_mp/provider/room_data_provider.dart';
 import 'package:tictactoe_mp/resources/socket_methods.dart';
 import 'package:tictactoe_mp/views/scoreboard.dart';
+import 'package:tictactoe_mp/views/tictactoe_board.dart';
 import 'package:tictactoe_mp/views/waiting_lobby.dart';
 
 class GameScreen extends StatefulWidget {
@@ -39,6 +40,9 @@ class _GameScreenState extends State<GameScreen> {
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
                   const Scoreboard(),
+                  const TicTacToeBoard(),
+                  Text(
+                      '${roomDataProvider.roomData['turn']['nickname']}\'s turn'),
                 ],
               )));
   }
