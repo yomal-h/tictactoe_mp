@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:tictactoe_mp/provider/room_data_provider.dart';
+import 'package:tictactoe_mp/resources/game_methods.dart';
 import 'package:tictactoe_mp/resources/socket_client.dart';
 import 'package:tictactoe_mp/screens/game_screen.dart';
 import 'package:tictactoe_mp/utils/utils.dart';
@@ -89,6 +90,8 @@ class SocketMethods {
         data['choice'],
       );
       roomDataProvider.updateRoomData(data['room']);
+      //check winner
+      GameMethods().checkWinner(context, _socketClient);
     });
   }
 }
