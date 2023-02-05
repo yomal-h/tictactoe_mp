@@ -87,7 +87,7 @@ class GameMethods {
         });
       } else {
         showGameDialog(context, '${roomDataProvider.player2.nickname} won!');
-        //display game dialog box saying player 1 is the winner
+        //display game dialog box saying player 2 is the winner
         socketClient.emit('winner', {
           'winnerSocketId': roomDataProvider.player2.socketID,
           'roomId': roomDataProvider.roomData['_id'],
@@ -96,13 +96,13 @@ class GameMethods {
     }
   }
 
-  // void clearBoard(BuildContext context) {
-  //   RoomDataProvider roomDataProvider =
-  //       Provider.of<RoomDataProvider>(context, listen: false);
+  void clearBoard(BuildContext context) {
+    RoomDataProvider roomDataProvider =
+        Provider.of<RoomDataProvider>(context, listen: false);
 
-  //   for (int i = 0; i < roomDataProvider.displayElements.length; i++) {
-  //     roomDataProvider.updateDisplayElements(i, '');
-  //   }
-  //   roomDataProvider.setFilledBoxesTo0();
-  // }
+    for (int i = 0; i < roomDataProvider.displayElements.length; i++) {
+      roomDataProvider.updateDisplayElements(i, '');
+    }
+    roomDataProvider.setFilledBoxesTo0();
+  }
 }

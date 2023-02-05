@@ -36,7 +36,11 @@ class RoomDataProvider extends ChangeNotifier {
 
   void updateDisplayElements(int index, String choice) {
     _displayElement[index] = choice;
-    _filledBoxes += 1; //checks how many boxxess filled
+    _filledBoxes += 1; //checks how many boxes filled
     notifyListeners();
+  }
+
+  void setFilledBoxesTo0() {
+    _filledBoxes = 0;
   }
 }
