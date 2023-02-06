@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:share_extend/share_extend.dart';
 import 'package:tictactoe_mp/provider/room_data_provider.dart';
 import 'package:tictactoe_mp/widgets/custom_textfield.dart';
 
@@ -43,7 +44,18 @@ class _WaitingLobbyState extends State<WaitingLobby> {
           controller: roomIdController,
           hintText: '',
           isReadOnly: true,
-        )
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        const Text(
+            'Please share this Game ID with the player you want to play'),
+        ElevatedButton(
+          onPressed: () {
+            ShareExtend.share(roomIdController.text, "text");
+          },
+          child: const Text('Share'),
+        ),
       ],
     );
   }
