@@ -43,8 +43,11 @@ void showEndGameDialog(BuildContext context, String text) {
             TextButton(
               onPressed: () {
                 GameMethods().clearBoard(context);
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const MainMenuScreen()));
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => MainMenuScreen()),
+                  (Route<dynamic> route) => false,
+                );
               },
               child: const Text(
                 'Main Menu',
