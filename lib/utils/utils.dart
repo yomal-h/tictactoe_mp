@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tictactoe_mp/resources/game_methods.dart';
 import 'package:tictactoe_mp/screens/main_menu_screen.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 void showSnackBar(BuildContext context, String content) {
   ScaffoldMessenger.of(context).showSnackBar(
@@ -43,11 +44,8 @@ void showEndGameDialog(BuildContext context, String text) {
             TextButton(
               onPressed: () {
                 GameMethods().clearBoard(context);
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => MainMenuScreen()),
-                  (Route<dynamic> route) => false,
-                );
+                
+                Navigator.of(context).popUntil((route) => route.isFirst);
               },
               child: const Text(
                 'Main Menu',
@@ -57,3 +55,5 @@ void showEndGameDialog(BuildContext context, String text) {
         );
       });
 }
+
+
