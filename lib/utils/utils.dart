@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tictactoe_mp/provider/room_data_provider.dart';
 import 'package:tictactoe_mp/resources/game_methods.dart';
 import 'package:tictactoe_mp/screens/main_menu_screen.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -34,6 +36,8 @@ void showGameDialog(BuildContext context, String text) {
 }
 
 void showEndGameDialog(BuildContext context, String text) {
+  final gameState = Provider.of<RoomDataProvider>(context, listen: false);
+
   showDialog(
       barrierDismissible: false,
       context: context,
@@ -43,9 +47,20 @@ void showEndGameDialog(BuildContext context, String text) {
           actions: [
             TextButton(
               onPressed: () {
-                GameMethods().clearBoard(context);
-                
-                Navigator.of(context).popUntil((route) => route.isFirst);
+                //GameMethods().clearBoard(context);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MainMenuScreen(),
+                  ),
+                );
+                // Navigator.pushNamed(
+                //   context,
+                //   MainMenuScreen.routeName,
+                // );
+                gameState.reset();
+
+                //Navigator.of(context).popUntil((route) => route.isFirst);
               },
               child: const Text(
                 'Main Menu',
@@ -55,5 +70,3 @@ void showEndGameDialog(BuildContext context, String text) {
         );
       });
 }
-
-

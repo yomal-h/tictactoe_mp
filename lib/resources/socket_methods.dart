@@ -109,6 +109,8 @@ class SocketMethods {
 
   void endGameListener(BuildContext context) {
     _socketClient.on('endGame', (playerData) {
+      //_socketClient.emit('reset', {'id': 'roomId'});
+
       showEndGameDialog(context, '${playerData['nickname']} won the game!');
       //Navigator.popUntil(context, (route) => false);
     });

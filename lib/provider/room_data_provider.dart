@@ -24,6 +24,17 @@ class RoomDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void reset() {
+    _roomData = {};
+    _displayElement = ['', '', '', '', '', '', '', '', ''];
+    _filledBoxes = 0;
+    _player1 = Player(nickname: '', socketID: '', points: 0, playerType: 'X');
+    _player2 = Player(nickname: '', socketID: '', points: 0, playerType: 'O');
+    updateRoomData(_roomData);
+    print("RESET METHOD");
+    notifyListeners();
+  }
+
   void updatePlayer1(Map<String, dynamic> player1Data) {
     _player1 = Player.fromMap(player1Data);
     notifyListeners();

@@ -34,18 +34,20 @@ class _GameScreenState extends State<GameScreen> {
     //print(Provider.of<RoomDataProvider>(context).player2.nickname);
 
     return Scaffold(
-        body: roomDataProvider.roomData['isJoin']
-            ? const WaitingLobby()
-            : SafeArea(
-                child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                // ignore: prefer_const_literals_to_create_immutables
-                children: [
-                  const Scoreboard(),
-                  const TicTacToeBoard(),
-                  Text(
-                      '${roomDataProvider.roomData['turn']['nickname']}\'s turn'),
-                ],
-              )));
+        body: roomDataProvider.roomData.containsKey('isJoin')
+            ? roomDataProvider.roomData['isJoin']
+                ? const WaitingLobby()
+                : SafeArea(
+                    child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: [
+                      const Scoreboard(),
+                      const TicTacToeBoard(),
+                      Text(
+                          '${roomDataProvider.roomData['turn']['nickname']}\'s turn'),
+                    ],
+                  ))
+            : Container());
   }
 }

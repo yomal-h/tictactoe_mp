@@ -16,7 +16,7 @@ app.use(express.json());
 const DB = "mongodb+srv://MrFreez18:123456789Ab@cluster0.gng6vna.mongodb.net/?retryWrites=true&w=majority";
 
 io.on("connection", (socket) => {
-    console.log("Conected!");
+    console.log("Conected socket!");
     socket.on("createRoom", async ({ nickname }) => {
         console.log(nickname);
         console.log(socket.id);
@@ -80,11 +80,11 @@ io.on("connection", (socket) => {
         }
     })
 
-    socket.on('tap', async ({index, roomId}) => {
-        try{
+    socket.on('tap', async ({ index, roomId }) => {
+        try {
             let room = await Room.findById(roomId);
             let choice = room.turn.playerType; //x or o
-            if(room.turnIndex == 0){
+            if (room.turnIndex == 0) {
                 room.turn = room.players[1];
                 room.turnIndex = 1;
             } else {
@@ -102,24 +102,49 @@ io.on("connection", (socket) => {
         }
     })
 
-    socket.on("winner", async ({ winnerSocketId, roomId }) => {
-        try {
-          let room = await Room.findById(roomId);
-          let player = room.players.find(
-            (playerr) => playerr.socketID == winnerSocketId
-          );
-          player.points += 1;
-          room = await room.save();
     
-          if (player.points >= room.maxRounds) {
-            io.to(roomId).emit("endGame", player);
-          } else {
-            io.to(roomId).emit("pointIncrease", player);
-          }
+
+    socket.on("winner", async ({ winnerSocketId, roomId}) => {
+        try {
+            if (socket.id != winnerSocketId) { return; }
+            let room = await Room.findById(roomId);
+            let player = room.players.find(
+                (playerr) => playerr.socketID == winnerSocketId
+            );
+            player.points += 1;
+            room = await room.save();
+
+            if (player.points >= room.maxRounds) {
+                
+                io.to(roomId).emit("endGame", player);
+                await Room.deleteOne({ id: roomId }, function(err) {
+                    if (err) {
+                      console.log(err);
+                    } else {
+                      console.log('Room deleted successfully');
+                    }
+                  });
+            } else {
+                io.to(roomId).emit("pointIncrease", player);
+            }
         } catch (e) {
-          console.log(e);
+            console.log(e);
+        }
+    });
+
+    socket.on("reset", async ({roomId}) =>  {
+        
+        // Clear the game state data from MongoDB
+      await Room.deleteOne({ id: roomId }, function(err) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log('Room deleted successfully');
         }
       });
+    });
+
+    
 });
 
 
