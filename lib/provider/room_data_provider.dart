@@ -24,15 +24,19 @@ class RoomDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void navigateToMainMenu(BuildContext context) {
+    Navigator.of(context).pushReplacementNamed('/main-menu');
+  }
+
   void reset() {
-    _roomData = {};
-    _displayElement = ['', '', '', '', '', '', '', '', ''];
-    _filledBoxes = 0;
-    _player1 = Player(nickname: '', socketID: '', points: 0, playerType: 'X');
-    _player2 = Player(nickname: '', socketID: '', points: 0, playerType: 'O');
-    updateRoomData(_roomData);
-    print("RESET METHOD");
-    notifyListeners();
+    Future.delayed(Duration.zero, () {
+      _displayElement = ['', '', '', '', '', '', '', '', ''];
+      _filledBoxes = 0;
+      _player1 = Player(nickname: '', socketID: '', points: 0, playerType: 'X');
+      _player2 = Player(nickname: '', socketID: '', points: 0, playerType: 'O');
+      print("RESET METHOD");
+      notifyListeners();
+    });
   }
 
   void updatePlayer1(Map<String, dynamic> player1Data) {

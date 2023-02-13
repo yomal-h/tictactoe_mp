@@ -12,11 +12,19 @@ class TicTacToeBoard extends StatefulWidget {
 
 class _TicTacToeBoardState extends State<TicTacToeBoard> {
   final SocketMethods _socketMethods = SocketMethods();
-
   @override
   void initState() {
     super.initState();
     _socketMethods.tappedListener(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _socketMethods.updateRoomListener(context);
+    _socketMethods.updatePlayersStateListener(context);
+    _socketMethods.pointIncreaseListener(context);
+    _socketMethods.endGameListener(context);
   }
 
   void tapped(int index, RoomDataProvider roomDataProvider) {

@@ -21,6 +21,7 @@ class _GameScreenState extends State<GameScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     _socketMethods.updateRoomListener(context);
     _socketMethods.updatePlayersStateListener(context);
     _socketMethods.pointIncreaseListener(context);

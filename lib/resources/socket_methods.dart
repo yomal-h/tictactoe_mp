@@ -83,15 +83,20 @@ class SocketMethods {
 
   void tappedListener(BuildContext context) {
     _socketClient.on('tapped', (data) {
-      RoomDataProvider roomDataProvider =
-          Provider.of<RoomDataProvider>(context, listen: false);
-      roomDataProvider.updateDisplayElements(
-        data['index'],
-        data['choice'],
-      );
-      roomDataProvider.updateRoomData(data['room']);
-      //check winner
-      GameMethods().checkWinner(context, _socketClient);
+      try {
+        RoomDataProvider roomDataProvider =
+            Provider.of<RoomDataProvider>(context, listen: false);
+
+        roomDataProvider.updateDisplayElements(
+          data['index'],
+          data['choice'],
+        );
+        roomDataProvider.updateRoomData(data['room']);
+        //check winner
+        GameMethods().checkWinner(context, _socketClient);
+      } catch (e) {
+        print("Error: $e");
+      }
     });
   }
 
@@ -109,8 +114,9 @@ class SocketMethods {
 
   void endGameListener(BuildContext context) {
     _socketClient.on('endGame', (playerData) {
+      final gameState = Provider.of<RoomDataProvider>(context, listen: false);
       //_socketClient.emit('reset', {'id': 'roomId'});
-
+      //gameState.reset();
       showEndGameDialog(context, '${playerData['nickname']} won the game!');
       //Navigator.popUntil(context, (route) => false);
     });

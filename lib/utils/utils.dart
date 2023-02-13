@@ -37,6 +37,9 @@ void showGameDialog(BuildContext context, String text) {
 
 void showEndGameDialog(BuildContext context, String text) {
   final gameState = Provider.of<RoomDataProvider>(context, listen: false);
+  void navigateToMainMenu(BuildContext context) {
+    Navigator.of(context).pushReplacementNamed('/main_menu');
+  }
 
   showDialog(
       barrierDismissible: false,
@@ -48,12 +51,13 @@ void showEndGameDialog(BuildContext context, String text) {
             TextButton(
               onPressed: () {
                 //GameMethods().clearBoard(context);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MainMenuScreen(),
-                  ),
-                );
+                // Navigator.pushReplacement(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => const MainMenuScreen(),
+                //   ),
+                // );
+                navigateToMainMenu(context);
                 // Navigator.pushNamed(
                 //   context,
                 //   MainMenuScreen.routeName,
