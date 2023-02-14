@@ -50,7 +50,7 @@ void showEndGameDialog(BuildContext context, String text) {
           actions: [
             TextButton(
               onPressed: () {
-                //GameMethods().clearBoard(context);
+                GameMethods().clearBoard(context);
                 // Navigator.pushReplacement(
                 //   context,
                 //   MaterialPageRoute(

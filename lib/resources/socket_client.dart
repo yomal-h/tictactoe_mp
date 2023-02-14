@@ -17,4 +17,18 @@ class SocketClient {
     _instance ??= SocketClient._internal();
     return _instance!;
   }
+
+  void connect() {
+    if (socket != null && !socket!.connected) {
+      socket!.connect();
+      print("Socket connected");
+    }
+  }
+
+  void disconnect() {
+    if (socket != null && socket!.connected) {
+      socket!.disconnect();
+      print("Socket disconnected");
+    }
+  }
 }

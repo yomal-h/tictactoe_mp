@@ -147,7 +147,26 @@ io.on("connection", (socket) => {
     
 });
 
-
+async function resetGame(roomId) {
+    try {
+      let room = await Room.findById(roomId);
+      
+      // reset players' points to zero
+      room.players.forEach(player => {
+        player.points = 0;
+      });
+      
+      // set game status back to "not started"
+      room.gameStarted = false;
+      
+      // save changes to the database
+      await room.save();
+      
+      console.log(`Game in room ${roomId} has been reset.`);
+    } catch (e) {
+      console.log(`Error resetting game in room ${roomId}: ${e.message}`);
+    }
+  }
 
 mongoose.set("strictQuery", false);//deprecated warning otherwise
 mongoose.connect(DB).then(() => {

@@ -22,6 +22,7 @@ class _WaitingLobbyState extends State<WaitingLobby> {
       text:
           Provider.of<RoomDataProvider>(context, listen: false).roomData['_id'],
     );
+    Provider.of<RoomDataProvider>(context, listen: false).setFilledBoxesTo0();
   }
 
   @override

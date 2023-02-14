@@ -11,6 +11,7 @@ class SocketMethods {
   final _socketClient = SocketClient.instance.socket!;
 
   Socket get socketClient => _socketClient;
+  Socket? socket;
 
   // EMITS
   void createRoom(String nickname) {
@@ -19,6 +20,7 @@ class SocketMethods {
         'nickname': nickname,
       });
     }
+    SocketClient.instance.connect();
   }
 
   void joinRoom(String nickname, String roomId) {
@@ -28,16 +30,25 @@ class SocketMethods {
         'roomId': roomId,
       });
     }
+
+    SocketClient.instance.connect();
   }
 
 //index is the element that user clicks on the board
-  void tapGrid(int index, String roomId, List<String> displayElements) {
+  void tapGrid(
+      int index, String roomId, List<String> displayElements, int filledBoxes) {
     if (displayElements[index] == '') {
       _socketClient.emit('tap', {
         'index': index,
         'roomId': roomId,
       });
+      filledBoxes++;
+      // Print the number of filled boxes after each tap
+
     }
+    print('Filled boxes: $filledBoxes');
+    print(index);
+    print(roomId);
   }
 
   // LISTENERS
@@ -78,25 +89,7 @@ class SocketMethods {
     _socketClient.on('updateRoom', (data) {
       Provider.of<RoomDataProvider>(context, listen: false)
           .updateRoomData(data);
-    });
-  }
-
-  void tappedListener(BuildContext context) {
-    _socketClient.on('tapped', (data) {
-      try {
-        RoomDataProvider roomDataProvider =
-            Provider.of<RoomDataProvider>(context, listen: false);
-
-        roomDataProvider.updateDisplayElements(
-          data['index'],
-          data['choice'],
-        );
-        roomDataProvider.updateRoomData(data['room']);
-        //check winner
-        GameMethods().checkWinner(context, _socketClient);
-      } catch (e) {
-        print("Error: $e");
-      }
+      print(data);
     });
   }
 
@@ -118,6 +111,7 @@ class SocketMethods {
       //_socketClient.emit('reset', {'id': 'roomId'});
       //gameState.reset();
       showEndGameDialog(context, '${playerData['nickname']} won the game!');
+
       //Navigator.popUntil(context, (route) => false);
     });
   }

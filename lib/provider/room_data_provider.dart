@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:tictactoe_mp/models/player.dart';
+import 'package:tictactoe_mp/resources/socket_client.dart';
 
 class RoomDataProvider extends ChangeNotifier {
   Map<String, dynamic> _roomData = {};
@@ -30,13 +31,24 @@ class RoomDataProvider extends ChangeNotifier {
 
   void reset() {
     Future.delayed(Duration.zero, () {
+      _roomData = {};
       _displayElement = ['', '', '', '', '', '', '', '', ''];
       _filledBoxes = 0;
       _player1 = Player(nickname: '', socketID: '', points: 0, playerType: 'X');
       _player2 = Player(nickname: '', socketID: '', points: 0, playerType: 'O');
       print("RESET METHOD");
+      print("Filled boxes before reset: $_filledBoxes");
+      _filledBoxes = 0;
+      print("Filled boxes after reset: $_filledBoxes");
       notifyListeners();
+      SocketClient.instance.disconnect(); // Disconnect socket
     });
+  }
+
+  void resetDisplayElements() {
+    _displayElement = List.filled(9, '');
+    _filledBoxes = 0;
+    notifyListeners();
   }
 
   void updatePlayer1(Map<String, dynamic> player1Data) {
@@ -57,5 +69,6 @@ class RoomDataProvider extends ChangeNotifier {
 
   void setFilledBoxesTo0() {
     _filledBoxes = 0;
+    print("Set filledboxes to ZERO");
   }
 }
