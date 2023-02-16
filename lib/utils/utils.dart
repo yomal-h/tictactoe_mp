@@ -38,7 +38,7 @@ void showGameDialog(BuildContext context, String text) {
 void showEndGameDialog(BuildContext context, String text) {
   final gameState = Provider.of<RoomDataProvider>(context, listen: false);
   void navigateToMainMenu(BuildContext context) {
-    Navigator.of(context).pushReplacementNamed('/main_menu');
+    Navigator.of(context).pushNamed('/main_menu');
   }
 
   showDialog(
@@ -57,12 +57,14 @@ void showEndGameDialog(BuildContext context, String text) {
                 //     builder: (context) => const MainMenuScreen(),
                 //   ),
                 // );
+                Navigator.pop(context);
                 navigateToMainMenu(context);
+
                 // Navigator.pushNamed(
                 //   context,
                 //   MainMenuScreen.routeName,
                 // );
-                gameState.reset();
+                //gameState.reset();
 
                 //Navigator.of(context).popUntil((route) => route.isFirst);
               },

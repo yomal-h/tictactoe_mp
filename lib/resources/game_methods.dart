@@ -10,7 +10,7 @@ class GameMethods {
         Provider.of<RoomDataProvider>(context, listen: false);
 
     String winner = ''; //'X' or 'O'
-
+    int filledBoxes = 0;
     // Checking rows
     if (roomDataProvider.displayElements[0] ==
             roomDataProvider.displayElements[1] &&
@@ -71,7 +71,18 @@ class GameMethods {
             roomDataProvider.displayElements[6] &&
         roomDataProvider.displayElements[2] != '') {
       winner = roomDataProvider.displayElements[2];
-    } else if (roomDataProvider.filledBoxes == 9) {
+    }
+    // else {
+    //   filledBoxes = roomDataProvider.displayElements
+    //       .where((element) => element != '')
+    //       .length;
+    //   if (filledBoxes == 9) {
+    //     winner = '';
+    //     //display game dialog box saying draw
+    //     showGameDialog(context, 'Draw');
+    //   }
+    // }
+    if (roomDataProvider.filledBoxes == 9) {
       winner = '';
       //display game dialog box saying draw
       showGameDialog(context, 'Draw');

@@ -48,6 +48,8 @@ class _TicTacToeBoardState extends State<TicTacToeBoard> {
 
   @override
   void dispose() {
+    _socketClient.off('tapped');
+
     // TODO: implement dispose
     super.dispose();
   }

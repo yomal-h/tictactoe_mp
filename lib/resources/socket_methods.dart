@@ -44,9 +44,9 @@ class SocketMethods {
       });
       filledBoxes++;
       // Print the number of filled boxes after each tap
-
+      print('Filled boxes: $filledBoxes');
     }
-    print('Filled boxes: $filledBoxes');
+
     print(index);
     print(roomId);
   }
@@ -109,9 +109,11 @@ class SocketMethods {
     _socketClient.on('endGame', (playerData) {
       final gameState = Provider.of<RoomDataProvider>(context, listen: false);
       //_socketClient.emit('reset', {'id': 'roomId'});
-      //gameState.reset();
-      showEndGameDialog(context, '${playerData['nickname']} won the game!');
+      gameState.reset();
+      //showEndGameDialog(context, '${playerData['nickname']} won the game!');
+      Navigator.pop(context);
 
+      Navigator.of(context).pushNamed('/main_menu');
       //Navigator.popUntil(context, (route) => false);
     });
   }

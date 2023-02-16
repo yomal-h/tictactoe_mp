@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe_mp/provider/room_data_provider.dart';
+import 'package:tictactoe_mp/resources/game_methods.dart';
 
 class Scoreboard extends StatelessWidget {
   const Scoreboard({Key? key}) : super(key: key);
@@ -56,6 +57,13 @@ class Scoreboard extends StatelessWidget {
             ],
           ),
         ),
+        TextButton(
+            onPressed: (() {
+              Navigator.pop(context);
+            }),
+            child: const Text(
+              'Main Menu',
+            )),
       ],
     );
   }

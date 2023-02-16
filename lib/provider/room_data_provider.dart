@@ -31,14 +31,14 @@ class RoomDataProvider extends ChangeNotifier {
 
   void reset() {
     Future.delayed(Duration.zero, () {
-      _roomData = {};
+      //_roomData = {};
       _displayElement = ['', '', '', '', '', '', '', '', ''];
-      _filledBoxes = 0;
+      setFilledBoxesTo0();
       _player1 = Player(nickname: '', socketID: '', points: 0, playerType: 'X');
       _player2 = Player(nickname: '', socketID: '', points: 0, playerType: 'O');
       print("RESET METHOD");
       print("Filled boxes before reset: $_filledBoxes");
-      _filledBoxes = 0;
+
       print("Filled boxes after reset: $_filledBoxes");
       notifyListeners();
       SocketClient.instance.disconnect(); // Disconnect socket
