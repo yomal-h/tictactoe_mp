@@ -5,6 +5,7 @@ import 'package:tictactoe_mp/provider/room_data_provider.dart';
 import 'package:tictactoe_mp/resources/game_methods.dart';
 import 'package:tictactoe_mp/resources/socket_client.dart';
 import 'package:tictactoe_mp/screens/game_screen.dart';
+import 'package:tictactoe_mp/screens/main_menu_screen.dart';
 import 'package:tictactoe_mp/utils/utils.dart';
 
 class SocketMethods {
@@ -56,6 +57,7 @@ class SocketMethods {
     _socketClient.on('createRoomSuccess', (room) {
       Provider.of<RoomDataProvider>(context, listen: false)
           .updateRoomData(room);
+
       Navigator.pushNamed(context, GameScreen.routeName);
     });
   }
@@ -110,10 +112,17 @@ class SocketMethods {
       final gameState = Provider.of<RoomDataProvider>(context, listen: false);
       //_socketClient.emit('reset', {'id': 'roomId'});
       gameState.reset();
-      //showEndGameDialog(context, '${playerData['nickname']} won the game!');
       Navigator.pop(context);
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => const MainMenuScreen(),
+      //   ),
+      // );
+      Navigator.pushNamed(context, MainMenuScreen.routeName);
 
-      Navigator.of(context).pushNamed('/main_menu');
+      //showEndGameDialog(context, '${playerData['nickname']} won the game!');
+      //Navigator.popUntil(context, ModalRoute.withName('/main_menu'));
       //Navigator.popUntil(context, (route) => false);
     });
   }

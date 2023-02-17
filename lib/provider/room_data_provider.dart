@@ -25,10 +25,6 @@ class RoomDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void navigateToMainMenu(BuildContext context) {
-    Navigator.of(context).pushReplacementNamed('/main-menu');
-  }
-
   void reset() {
     Future.delayed(Duration.zero, () {
       //_roomData = {};
@@ -43,12 +39,6 @@ class RoomDataProvider extends ChangeNotifier {
       notifyListeners();
       SocketClient.instance.disconnect(); // Disconnect socket
     });
-  }
-
-  void resetDisplayElements() {
-    _displayElement = List.filled(9, '');
-    _filledBoxes = 0;
-    notifyListeners();
   }
 
   void updatePlayer1(Map<String, dynamic> player1Data) {

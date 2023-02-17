@@ -21,6 +21,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard> {
   Socket get socketClient => _socketClient;
 
   void tappedListener(BuildContext context) {
+    _socketClient.off('tapped'); //double tap in new game error fixed
     _socketClient.on('tapped', (data) {
       BuildContext? newContext = _key.currentContext;
       if (newContext == null) {
