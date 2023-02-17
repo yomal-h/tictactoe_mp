@@ -58,13 +58,13 @@ void showEndGameDialog(BuildContext context, String text) {
                 //   ),
                 // );
                 Navigator.pop(context);
-                navigateToMainMenu(context);
-
+                //navigateToMainMenu(context);
+                Navigator.pushNamed(context, MainMenuScreen.routeName);
                 // Navigator.pushNamed(
                 //   context,
                 //   MainMenuScreen.routeName,
                 // );
-                //gameState.reset();
+                gameState.reset();
 
                 //Navigator.of(context).popUntil((route) => route.isFirst);
               },

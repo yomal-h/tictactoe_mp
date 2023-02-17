@@ -33,9 +33,8 @@ class RoomDataProvider extends ChangeNotifier {
       _player1 = Player(nickname: '', socketID: '', points: 0, playerType: 'X');
       _player2 = Player(nickname: '', socketID: '', points: 0, playerType: 'O');
       print("RESET METHOD");
-      print("Filled boxes before reset: $_filledBoxes");
+      // print("Filled boxes before reset: $_filledBoxes");
 
-      print("Filled boxes after reset: $_filledBoxes");
       notifyListeners();
       SocketClient.instance.disconnect(); // Disconnect socket
     });

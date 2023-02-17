@@ -45,7 +45,7 @@ class SocketMethods {
       });
       filledBoxes++;
       // Print the number of filled boxes after each tap
-      print('Filled boxes: $filledBoxes');
+      print('Filled boxes after each tap: $filledBoxes');
     }
 
     print(index);
@@ -111,7 +111,7 @@ class SocketMethods {
     _socketClient.on('endGame', (playerData) {
       final gameState = Provider.of<RoomDataProvider>(context, listen: false);
       //_socketClient.emit('reset', {'id': 'roomId'});
-      gameState.reset();
+      //gameState.reset();
       Navigator.pop(context);
       // Navigator.pushReplacement(
       //   context,
@@ -119,9 +119,9 @@ class SocketMethods {
       //     builder: (context) => const MainMenuScreen(),
       //   ),
       // );
-      Navigator.pushNamed(context, MainMenuScreen.routeName);
+      // Navigator.pushNamed(context, MainMenuScreen.routeName);//working
 
-      //showEndGameDialog(context, '${playerData['nickname']} won the game!');
+      showEndGameDialog(context, '${playerData['nickname']} won the game!');
       //Navigator.popUntil(context, ModalRoute.withName('/main_menu'));
       //Navigator.popUntil(context, (route) => false);
     });
