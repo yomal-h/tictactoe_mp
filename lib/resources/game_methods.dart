@@ -82,11 +82,6 @@ class GameMethods {
     //     showGameDialog(context, 'Draw');
     //   }
     // }
-    if (roomDataProvider.filledBoxes == 9) {
-      winner = '';
-      //display game dialog box saying draw
-      showGameDialog(context, 'Draw');
-    }
 
     if (winner != '') {
       if (roomDataProvider.player1.playerType == winner) {
@@ -104,6 +99,11 @@ class GameMethods {
           'roomId': roomDataProvider.roomData['_id'],
         });
       }
+    }
+    if (roomDataProvider.filledBoxes == 9) {
+      winner = '';
+      //display game dialog box saying draw
+      showGameDialog(context, 'Draw');
     }
   }
 
