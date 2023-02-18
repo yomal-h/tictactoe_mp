@@ -17,8 +17,45 @@ class RoomDataProvider extends ChangeNotifier {
   Map<String, dynamic> get roomData => _roomData;
   List<String> get displayElements => _displayElement;
   int get filledBoxes => _filledBoxes;
+  List<int> get winningLine => getWinningLine();
   Player get player1 => _player1;
   Player get player2 => _player2;
+
+  // Returns the indices of the boxes that form the winning line based on the current displayElements.
+  List<int> getWinningLine() {
+    // Check for horizontal lines
+    for (var i = 0; i < 9; i += 3) {
+      if (_displayElement[i].isNotEmpty &&
+          _displayElement[i] == _displayElement[i + 1] &&
+          _displayElement[i + 1] == _displayElement[i + 2]) {
+        return [i, i + 1, i + 2];
+      }
+    }
+
+    // Check for vertical lines
+    for (var i = 0; i < 3; i++) {
+      if (_displayElement[i].isNotEmpty &&
+          _displayElement[i] == _displayElement[i + 3] &&
+          _displayElement[i + 3] == _displayElement[i + 6]) {
+        return [i, i + 3, i + 6];
+      }
+    }
+
+    // Check for diagonal lines
+    if (_displayElement[0].isNotEmpty &&
+        _displayElement[0] == _displayElement[4] &&
+        _displayElement[4] == _displayElement[8]) {
+      return [0, 4, 8];
+    }
+    if (_displayElement[2].isNotEmpty &&
+        _displayElement[2] == _displayElement[4] &&
+        _displayElement[4] == _displayElement[6]) {
+      return [2, 4, 6];
+    }
+
+    // No winning line found
+    return [];
+  }
 
   void updateRoomData(Map<String, dynamic> data) {
     _roomData = data;

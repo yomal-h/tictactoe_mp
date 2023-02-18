@@ -109,7 +109,7 @@ class SocketMethods {
 
   void endGameListener(BuildContext context) {
     _socketClient.on('endGame', (playerData) {
-      final gameState = Provider.of<RoomDataProvider>(context, listen: false);
+      //final gameState = Provider.of<RoomDataProvider>(context, listen: false);
       //_socketClient.emit('reset', {'id': 'roomId'});
       //gameState.reset();
       Navigator.pop(context);
