@@ -41,40 +41,29 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
       roomDataProvider.updateRoomData(data['room']);
       //check winner
       GameMethods().checkWinner(newContext, _socketClient);
-    });
-  }
-
-  void updateDisplayElements(Map<String, dynamic> newRoomData) {
-    // setState(() {
-    //   final winner = newRoomData['winner'];
-    //   if (winner != null) {
-    //     _winningLine = winner['line'];
-    //   } else {
-    //     _winningLine = [];
-    //   }
-    // });
-    setState(() {
-      final winner = newRoomData['winner'];
-      if (winner != null) {
-        _winningLine = winner['line'];
-        _animationController.forward(from: 0);
-      } else {
-        _winningLine = [];
-      }
+      _animationController
+          .reset(); //in order to animation to work from the begining otherwise animation will play after it was drawn
+      _animationController.forward(); // Start the animation
     });
   }
 
   @override
   void initState() {
     super.initState();
-    _animationTween = Tween<double>(begin: 0, end: 1);
     _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 20),
-    );
+        duration: const Duration(milliseconds: 750), vsync: this);
+
+    _animationTween = Tween<double>(begin: 0, end: 1);
     _animationController.addListener(() {
       setState(() {});
     });
+    // _animationController.addStatusListener((status) {
+    //   if (status == AnimationStatus.completed) {
+    //     _animationController.reset();
+    //   } else if (status == AnimationStatus.dismissed) {
+    //     _animationController.forward();
+    //   }
+    // });
     //_socketMethods.tappedListener(context);
     tappedListener(context);
   }
@@ -86,15 +75,6 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
     // TODO: implement dispose
     super.dispose();
   }
-
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   _socketMethods.updateRoomListener(context);
-  //   _socketMethods.updatePlayersStateListener(context);
-  //   _socketMethods.pointIncreaseListener(context);
-  //   _socketMethods.endGameListener(context);
-  // }
 
   void tapped(int index, RoomDataProvider roomDataProvider) {
     _socketMethods.tapGrid(index, roomDataProvider.roomData['_id'],
@@ -165,22 +145,25 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
                 );
               },
             ),
-            AnimatedBuilder(
-              animation: _animationController,
-              builder: (BuildContext context, Widget? child) {
-                return CustomPaint(
-                  size: Size.infinite,
-                  painter: winningLine.isEmpty
-                      ? null
-                      : LinePainter(
-                          boxes: winningLine,
-                          color: Colors.red,
-                          strokeWidth: 10.0,
-                          progress: _animationController.value,
-                        ),
-                );
-              },
-            ),
+            if (winningLine.isNotEmpty)
+              AnimatedBuilder(
+                animation: _animationController,
+                builder: (BuildContext context, Widget? child) {
+                  return CustomPaint(
+                    size: Size.infinite,
+                    painter: LinePainter(
+                      boxes: winningLine,
+                      color: Colors.red,
+                      strokeWidth: 10.0,
+                      progress: _animationTween
+                          .animate(CurvedAnimation(
+                              parent: _animationController,
+                              curve: Curves.easeInOutCirc))
+                          .value,
+                    ),
+                  );
+                },
+              ),
           ],
         ),
       ),
@@ -206,28 +189,32 @@ class LinePainter extends CustomPainter {
     final paint = Paint()
       ..color = color
       ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round;
+      ..strokeCap = StrokeCap.square;
 
     final boxSize = size.width / 3;
     final start = Offset(
-      (boxes.first % 3) * boxSize + boxSize / 2,
-      (boxes.first ~/ 3) * boxSize + boxSize / 2,
+      (boxes.first % 3 + 0.5) * boxSize,
+      (boxes.first ~/ 3 + 0.5) * boxSize,
     );
     final end = Offset(
-      (boxes.last % 3) * boxSize + boxSize / 2,
-      (boxes.last ~/ 3) * boxSize + boxSize / 2,
+      (boxes.last % 3 + 0.5) * boxSize,
+      (boxes.last ~/ 3 + 0.5) * boxSize,
     );
 
-    final length = math.sqrt(
-          math.pow(end.dx - start.dx, 2) + math.pow(end.dy - start.dy, 2),
-        ) *
-        progress;
+    final lineLength = (end - start).distance;
+    final currentLength = lineLength * progress;
 
-    canvas.drawLine(start, end, paint..strokeWidth = strokeWidth);
+    final currentEnd = start + ((end - start) * (currentLength / lineLength));
+
+    canvas.drawLine(
+      start,
+      currentEnd,
+      paint,
+    );
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
+  bool shouldRepaint(LinePainter oldDelegate) {
+    return progress != oldDelegate.progress;
   }
 }

@@ -72,16 +72,7 @@ class GameMethods {
         roomDataProvider.displayElements[2] != '') {
       winner = roomDataProvider.displayElements[2];
     }
-    // else {
-    //   filledBoxes = roomDataProvider.displayElements
-    //       .where((element) => element != '')
-    //       .length;
-    //   if (filledBoxes == 9) {
-    //     winner = '';
-    //     //display game dialog box saying draw
-    //     showGameDialog(context, 'Draw');
-    //   }
-    // }
+ 
 
     if (winner != '') {
       if (roomDataProvider.player1.playerType == winner) {
