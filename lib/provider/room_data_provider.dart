@@ -8,6 +8,7 @@ class RoomDataProvider extends ChangeNotifier {
   Map<String, dynamic> _roomData = {};
   List<String> _displayElement = ['', '', '', '', '', '', '', '', ''];
   int _filledBoxes = 0;
+
   Player _player1 =
       Player(nickname: '', socketID: '', points: 0, playerType: 'X');
 
@@ -69,6 +70,7 @@ class RoomDataProvider extends ChangeNotifier {
       setFilledBoxesTo0();
       _player1 = Player(nickname: '', socketID: '', points: 0, playerType: 'X');
       _player2 = Player(nickname: '', socketID: '', points: 0, playerType: 'O');
+      winningLine.clear();
       print("RESET METHOD");
       // print("Filled boxes before reset: $_filledBoxes");
 

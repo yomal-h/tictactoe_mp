@@ -41,9 +41,12 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
       roomDataProvider.updateRoomData(data['room']);
       //check winner
       GameMethods().checkWinner(newContext, _socketClient);
+
       _animationController
           .reset(); //in order to animation to work from the begining otherwise animation will play after it was drawn
       _animationController.forward(); // Start the animation
+
+      print('_animationController.status: ${_animationController.status}');
     });
   }
 
@@ -51,19 +54,20 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-        duration: const Duration(milliseconds: 750), vsync: this);
-
+        duration: const Duration(milliseconds: 2000), vsync: this);
+    _animationController.forward();
     _animationTween = Tween<double>(begin: 0, end: 1);
-    _animationController.addListener(() {
-      setState(() {});
-    });
-    // _animationController.addStatusListener((status) {
-    //   if (status == AnimationStatus.completed) {
-    //     _animationController.reset();
-    //   } else if (status == AnimationStatus.dismissed) {
-    //     _animationController.forward();
-    //   }
+    // _animationController.addListener(() {
+    //   setState(() {});
     // });
+    _animationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        //_animationController.reset();
+        _animationController.stop();
+      } else if (status == AnimationStatus.dismissed) {
+        _animationController.forward();
+      }
+    });
     //_socketMethods.tappedListener(context);
     tappedListener(context);
   }
@@ -72,6 +76,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
   void dispose() {
     _socketClient.off('tapped');
     _animationController.dispose();
+
     // TODO: implement dispose
     super.dispose();
   }
@@ -115,7 +120,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
                       border: Border.all(
                         color: winningLine.contains(index)
                             ? Colors.red
-                            : Colors.grey,
+                            : Colors.white24,
                       ),
                     ),
                     child: Center(
@@ -145,25 +150,26 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
                 );
               },
             ),
-            if (winningLine.isNotEmpty)
-              AnimatedBuilder(
-                animation: _animationController,
-                builder: (BuildContext context, Widget? child) {
-                  return CustomPaint(
-                    size: Size.infinite,
-                    painter: LinePainter(
-                      boxes: winningLine,
-                      color: Colors.red,
-                      strokeWidth: 10.0,
-                      progress: _animationTween
-                          .animate(CurvedAnimation(
-                              parent: _animationController,
-                              curve: Curves.easeInOutCirc))
-                          .value,
-                    ),
-                  );
-                },
-              ),
+            AnimatedBuilder(
+              animation: _animationController,
+              builder: (BuildContext context, Widget? child) {
+                return CustomPaint(
+                  size: Size.infinite,
+                  painter: winningLine.isEmpty
+                      ? null
+                      : LinePainter(
+                          boxes: winningLine,
+                          color: Colors.red,
+                          strokeWidth: 10.0,
+                          progress: _animationTween
+                              .animate(CurvedAnimation(
+                                  parent: _animationController,
+                                  curve: Curves.easeInOutCirc))
+                              .value,
+                        ),
+                );
+              },
+            ),
           ],
         ),
       ),

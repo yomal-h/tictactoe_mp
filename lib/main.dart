@@ -6,6 +6,8 @@ import 'package:tictactoe_mp/screens/game_screen.dart';
 import 'package:tictactoe_mp/screens/join_room_screen.dart';
 import 'package:tictactoe_mp/screens/main_menu_screen.dart';
 import 'package:tictactoe_mp/utils/colors.dart';
+import 'package:tictactoe_mp/views/single_tictactoe_unbeatable.dart';
+import 'package:tictactoe_mp/views/single_tictactoe_easy.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,11 +26,13 @@ class MyApp extends StatelessWidget {
         theme: ThemeData.dark().copyWith(scaffoldBackgroundColor: bgColor),
         routes: {
           MainMenuScreen.routeName: (context) => const MainMenuScreen(),
+          TicTacToeGameEasy.routeName: (context) => const TicTacToeGameEasy(),
+          TicTacToeGame.routeName: (context) => const TicTacToeGame(),
           JoinRoomScreen.routeName: (context) => const JoinRoomScreen(),
           CreateRoomScreen.routeName: (context) => const CreateRoomScreen(),
           GameScreen.routeName: (context) => const GameScreen(),
         },
-        initialRoute: MainMenuScreen.routeName,
+        initialRoute: TicTacToeGameEasy.routeName,
       ),
     );
   }

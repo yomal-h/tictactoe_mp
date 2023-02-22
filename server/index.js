@@ -50,7 +50,7 @@ io.on("connection", (socket) => {
 
     socket.on('joinRoom', async ({ nickname, roomId }) => {
         try {
-            if (!roomId.match(/^[0-9a-fA-F]{24}$/)) {
+            if (!roomId.match(/^[a-zA-Z0-9]{10}$/)) {
                 socket.emit("errorOccurred", "Please enter a valid room ID.");
                 return;
             }
