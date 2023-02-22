@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 class TicTacToeGameMedium extends StatefulWidget {
-  static String routeName = '/tictactoe_hard';
+  static String routeName = '/tictactoe_medium';
 
   const TicTacToeGameMedium({Key? key}) : super(key: key);
 
@@ -157,7 +157,7 @@ class __TicTacToeGameMediumState extends State<TicTacToeGameMedium> {
     return availableMoves;
   }
 
-  //Hard mode
+  //Medium mode
   //choose the corners or sides randomly, or with some probability,
   void _makeComputerMove() {
     int blockingMove = _findBlockingMove();
@@ -170,21 +170,21 @@ class __TicTacToeGameMediumState extends State<TicTacToeGameMedium> {
       int randomIndex = Random().nextInt(availableMoves.length);
       int randomMove = availableMoves[randomIndex];
       if (availableMoves.length > 3 && randomIndex == 0) {
-        // With 20% probability, choose a random corner instead of the center
+        // With 60% probability, choose a random corner instead of the center
         List<int> corners = [0, 2, 6, 8];
         List<int> availableCorners =
             corners.where((corner) => _board[corner] == '').toList();
-        if (availableCorners.isNotEmpty && Random().nextInt(5) == 0) {
+        if (availableCorners.isNotEmpty && Random().nextInt(10) < 6) {
           int randomCorner =
               availableCorners[Random().nextInt(availableCorners.length)];
           randomMove = randomCorner;
         }
       } else if (availableMoves.length > 1 && randomIndex == 0) {
-        // With 20% probability, choose a random side instead of the center
+        // With 60% probability, choose a random side instead of the center
         List<int> sides = [1, 3, 5, 7];
         List<int> availableSides =
             sides.where((side) => _board[side] == '').toList();
-        if (availableSides.isNotEmpty && Random().nextInt(5) == 0) {
+        if (availableSides.isNotEmpty && Random().nextInt(10) < 6) {
           int randomSide =
               availableSides[Random().nextInt(availableSides.length)];
           randomMove = randomSide;

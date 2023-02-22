@@ -6,6 +6,8 @@ import 'package:tictactoe_mp/screens/game_screen.dart';
 import 'package:tictactoe_mp/screens/join_room_screen.dart';
 import 'package:tictactoe_mp/screens/main_menu_screen.dart';
 import 'package:tictactoe_mp/utils/colors.dart';
+import 'package:tictactoe_mp/views/single_tictactoe_hard.dart';
+import 'package:tictactoe_mp/views/single_tictactoe_medium.dart';
 import 'package:tictactoe_mp/views/single_tictactoe_unbeatable.dart';
 import 'package:tictactoe_mp/views/single_tictactoe_easy.dart';
 
@@ -27,7 +29,11 @@ class MyApp extends StatelessWidget {
         routes: {
           MainMenuScreen.routeName: (context) => const MainMenuScreen(),
           TicTacToeGameEasy.routeName: (context) => const TicTacToeGameEasy(),
-          TicTacToeGame.routeName: (context) => const TicTacToeGame(),
+          TicTacToeGameMedium.routeName: (context) =>
+              const TicTacToeGameMedium(),
+          TicTacToeGameHard.routeName: (context) => const TicTacToeGameHard(),
+          TicTacToeGameUnbeatable.routeName: (context) =>
+              const TicTacToeGameUnbeatable(),
           JoinRoomScreen.routeName: (context) => const JoinRoomScreen(),
           CreateRoomScreen.routeName: (context) => const CreateRoomScreen(),
           GameScreen.routeName: (context) => const GameScreen(),

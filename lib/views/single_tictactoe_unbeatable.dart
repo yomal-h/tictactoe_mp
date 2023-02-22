@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-class TicTacToeGame extends StatefulWidget {
-  static String routeName = '/tic';
+class TicTacToeGameUnbeatable extends StatefulWidget {
+  static String routeName = '/tictactoe_unbeatable';
 
-  const TicTacToeGame({Key? key}) : super(key: key);
+  const TicTacToeGameUnbeatable({Key? key}) : super(key: key);
 
   @override
-  _TicTacToeGameState createState() => _TicTacToeGameState();
+  _TicTacToeGameUnbeatableState createState() =>
+      _TicTacToeGameUnbeatableState();
 }
 
-class _TicTacToeGameState extends State<TicTacToeGame> {
+class _TicTacToeGameUnbeatableState extends State<TicTacToeGameUnbeatable> {
   final List<String> _board = List.filled(9, '');
   String _currentPlayer = 'X';
   int _playerScore = 0;
