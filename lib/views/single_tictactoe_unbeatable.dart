@@ -123,7 +123,7 @@ class _TicTacToeGameUnbeatableState extends State<TicTacToeGameUnbeatable> {
     );
   }
 
-//unbeatable mode
+  //unbeatable mode
   void _makeComputerMove() {
     int bestMove = -1;
     int bestScore = -1000;
@@ -209,16 +209,57 @@ class _TicTacToeGameUnbeatableState extends State<TicTacToeGameUnbeatable> {
   }
 
   void _startNewRound() {
-    setState(() {
-      _board.fillRange(0, 9, '');
-      _gameOver = false;
-      _round++;
-      if (_round > 2) {
-        _showWinner();
+    String winner = _checkForWinner(_board, 'X')
+        ? 'Player'
+        : _checkForWinner(_board, 'O')
+            ? 'Computer'
+            : 'Tie';
+
+    if (_round > 2) {
+      // Game is over
+      _showWinner();
+    } else {
+      // Round is over
+      String dialogTitle = 'Round $_round Result';
+      String dialogContent = '';
+
+      if (winner == 'Tie') {
+        dialogContent = 'The round was a tie!';
       } else {
-        _currentPlayer = 'X';
+        dialogContent = '$winner won the round!';
       }
-    });
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(dialogTitle),
+            content: Text(dialogContent),
+            actions: [
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    _board.fillRange(0, 9, '');
+                    _currentPlayer = 'X';
+                    _round++;
+                    _gameOver = false;
+                    if (winner == 'Player') {
+                      // _playerScore++;
+                    } else if (winner == 'Computer') {
+                      // _computerScore++;
+                    }
+                  });
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    _gameOver = true;
   }
 
   void _startNewGame() {
@@ -248,10 +289,12 @@ class _TicTacToeGameUnbeatableState extends State<TicTacToeGameUnbeatable> {
           title: Text('Game Over'),
           content: Text('The winner is $winner!'),
           actions: [
-            FlatButton(
-              child: Text('New Game'),
-              onPressed: _startNewGame,
-            ),
+            ElevatedButton(
+                child: Text('New Game'),
+                onPressed: () {
+                  _startNewGame();
+                  Navigator.of(context).pop();
+                }),
           ],
         );
       },
