@@ -18,6 +18,7 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy> {
   int _round = 1;
   bool _gameOver = false;
   bool _isComputerThinking = false;
+  List<int> _winningLine = [];
 
   @override
   Widget build(BuildContext context) {
@@ -48,56 +49,70 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy> {
             ],
           ),
           SizedBox(height: 16.0),
-          GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-            ),
-            shrinkWrap: true,
-            itemCount: _board.length,
-            itemBuilder: (BuildContext context, int index) {
-              return GestureDetector(
-                onTap: () {
-                  if (_isComputerThinking || _gameOver || _board[index] != '') {
-                    return;
-                  }
-                  setState(() {
-                    _board[index] = _currentPlayer;
-                    _currentPlayer = _currentPlayer == 'X' ? 'O' : 'X';
-                    if (_checkForWinner(_board, 'X')) {
-                      _playerScore++;
-                      _startNewRound();
-                    } else if (_checkForWinner(_board, 'O')) {
-                      _computerScore++;
-                      _startNewRound();
-                    } else if (_board.every((element) => element != '')) {
-                      _startNewRound();
-                    } else {
-                      _isComputerThinking = true;
-                      Future.delayed(Duration(seconds: 1), () {
-                        setState(() {
-                          _makeComputerMove();
-                          _isComputerThinking = false;
-                        });
+          Stack(
+            children: [
+              GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                ),
+                shrinkWrap: true,
+                itemCount: _board.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                    onTap: () {
+                      if (_isComputerThinking ||
+                          _gameOver ||
+                          _board[index] != '') {
+                        return;
+                      }
+                      setState(() {
+                        _board[index] = _currentPlayer;
+                        _currentPlayer = _currentPlayer == 'X' ? 'O' : 'X';
+                        if (_checkForWinner(_board, 'X')) {
+                          _playerScore++;
+                          _startNewRound();
+                        } else if (_checkForWinner(_board, 'O')) {
+                          _computerScore++;
+                          _startNewRound();
+                        } else if (_board.every((element) => element != '')) {
+                          _startNewRound();
+                        } else {
+                          _isComputerThinking = true;
+                          Future.delayed(Duration(seconds: 1), () {
+                            setState(() {
+                              _makeComputerMove();
+                              _isComputerThinking = false;
+                            });
+                          });
+                        }
                       });
-                    }
-                  });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: _winningLine.contains(index)
+                              ? Colors.green
+                              : Color.fromARGB(255, 116, 116, 116),
+                          width: 1.0,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          _board[index],
+                          style: TextStyle(fontSize: 48.0),
+                        ),
+                      ),
+                    ),
+                  );
                 },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 1.0,
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      _board[index],
-                      style: TextStyle(fontSize: 48.0),
-                    ),
+              ),
+              if (_gameOver && _winningLine.isNotEmpty)
+                Positioned.fill(
+                  child: CustomPaint(
+                    painter: WinningLinePainter(_winningLine),
                   ),
                 ),
-              );
-            },
+            ],
           ),
           _gameOver
               ? RaisedButton(
@@ -186,30 +201,34 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy> {
     return bestScore;
   }
 
-  bool _checkForWinner(List<String> board, String player) {
-    // check rows
+  bool _checkForWinner(List<String> board, String symbol) {
+    // Check rows
     for (int i = 0; i < 9; i += 3) {
-      if (board[i] == player &&
-          board[i + 1] == player &&
-          board[i + 2] == player) {
+      if (board[i] == symbol &&
+          board[i + 1] == symbol &&
+          board[i + 2] == symbol) {
+        _winningLine = [i, i + 1, i + 2];
         return true;
       }
     }
 
-    // check columns
+    // Check columns
     for (int i = 0; i < 3; i++) {
-      if (board[i] == player &&
-          board[i + 3] == player &&
-          board[i + 6] == player) {
+      if (board[i] == symbol &&
+          board[i + 3] == symbol &&
+          board[i + 6] == symbol) {
+        _winningLine = [i, i + 3, i + 6];
         return true;
       }
     }
 
-    // check diagonals
-    if (board[0] == player && board[4] == player && board[8] == player) {
+    // Check diagonals
+    if (board[0] == symbol && board[4] == symbol && board[8] == symbol) {
+      _winningLine = [0, 4, 8];
       return true;
     }
-    if (board[2] == player && board[4] == player && board[6] == player) {
+    if (board[2] == symbol && board[4] == symbol && board[6] == symbol) {
+      _winningLine = [2, 4, 6];
       return true;
     }
 
@@ -247,6 +266,7 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy> {
               TextButton(
                 child: Text('OK'),
                 onPressed: () {
+                  _winningLine.clear();
                   Navigator.of(context).pop();
                   setState(() {
                     _board.fillRange(0, 9, '');
@@ -278,6 +298,7 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy> {
       _round = 1;
       _gameOver = false;
       _currentPlayer = 'X';
+      _winningLine.clear();
     });
   }
 
@@ -308,5 +329,35 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy> {
       },
     );
     _gameOver = true;
+  }
+}
+
+class WinningLinePainter extends CustomPainter {
+  final List<int> winningSquares;
+
+  WinningLinePainter(this.winningSquares);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (winningSquares.isEmpty) {
+      return;
+    }
+
+    final squareSize = size.width / 3;
+    final paint = Paint()
+      ..color = Colors.green
+      ..strokeWidth = 5.0;
+
+    final x1 = (winningSquares.first % 3) * squareSize + squareSize / 2;
+    final y1 = (winningSquares.first ~/ 3) * squareSize + squareSize / 2;
+    final x2 = (winningSquares.last % 3) * squareSize + squareSize / 2;
+    final y2 = (winningSquares.last ~/ 3) * squareSize + squareSize / 2;
+
+    canvas.drawLine(Offset(x1, y1), Offset(x2, y2), paint);
+  }
+
+  @override
+  bool shouldRepaint(WinningLinePainter oldDelegate) {
+    return oldDelegate.winningSquares != winningSquares;
   }
 }
