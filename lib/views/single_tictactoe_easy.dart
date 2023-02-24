@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -10,7 +12,8 @@ class TicTacToeGameEasy extends StatefulWidget {
   __TicTacToeGameEasyState createState() => __TicTacToeGameEasyState();
 }
 
-class __TicTacToeGameEasyState extends State<TicTacToeGameEasy> {
+class __TicTacToeGameEasyState extends State<TicTacToeGameEasy>
+    with SingleTickerProviderStateMixin {
   final List<String> _board = List.filled(9, '');
   String _currentPlayer = 'X';
   int _playerScore = 0;
@@ -19,6 +22,20 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy> {
   bool _gameOver = false;
   bool _isComputerThinking = false;
   List<int> _winningLine = [];
+  late AnimationController _animationController;
+  late Tween<double> _animationTween;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    )..addListener(() {
+        setState(() {});
+      });
+    _animationTween = Tween<double>(begin: 0.0, end: 1.0);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,13 +83,18 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy> {
                         return;
                       }
                       setState(() {
+                        _animationController.reset();
+
+                        _animationController.forward();
                         _board[index] = _currentPlayer;
                         _currentPlayer = _currentPlayer == 'X' ? 'O' : 'X';
                         if (_checkForWinner(_board, 'X')) {
                           _playerScore++;
+
                           _startNewRound();
                         } else if (_checkForWinner(_board, 'O')) {
                           _computerScore++;
+
                           _startNewRound();
                         } else if (_board.every((element) => element != '')) {
                           _startNewRound();
@@ -87,12 +109,13 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy> {
                         }
                       });
                     },
-                    child: Container(
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: _winningLine.contains(index)
-                              ? Colors.green
-                              : Color.fromARGB(255, 116, 116, 116),
+                              ? Colors.purple
+                              : Colors.white24,
                           width: 1.0,
                         ),
                       ),
@@ -108,9 +131,16 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy> {
               ),
               if (_gameOver && _winningLine.isNotEmpty)
                 Positioned.fill(
-                  child: CustomPaint(
-                    painter: WinningLinePainter(_winningLine),
-                  ),
+                  child: AnimatedBuilder(
+                      animation: _animationController,
+                      builder: (context, child) {
+                        return CustomPaint(
+                          painter: WinningLinePainter(
+                              _winningLine,
+                              _animationTween.animate(_animationController),
+                              context),
+                        );
+                      }),
                 ),
             ],
           ),
@@ -244,6 +274,7 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy> {
 
     if (_round > 2) {
       // Game is over
+
       _showWinner();
     } else {
       // Round is over
@@ -253,6 +284,9 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy> {
       if (winner == 'Tie') {
         dialogContent = 'The round was a tie!';
       } else {
+        _animationController
+            .reset(); //use these two otherwise A.I animation will not work
+        _animationController.forward();
         dialogContent = '$winner won the round!';
       }
 
@@ -306,8 +340,12 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy> {
     String winner = '';
     if (_playerScore > _computerScore) {
       winner = 'Player';
+      _animationController.reset();
+      _animationController.forward();
     } else if (_computerScore > _playerScore) {
       winner = 'Computer';
+      _animationController.reset();
+      _animationController.forward();
     } else {
       winner = 'Nobody';
     }
@@ -333,31 +371,40 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy> {
 }
 
 class WinningLinePainter extends CustomPainter {
-  final List<int> winningSquares;
-
-  WinningLinePainter(this.winningSquares);
+  final List<int> _winningLine;
+  final Animation<double> _animation;
+  BuildContext _context;
+  WinningLinePainter(this._winningLine, this._animation, this._context);
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (winningSquares.isEmpty) {
+    if (_winningLine.isEmpty) {
       return;
     }
 
-    final squareSize = size.width / 3;
-    final paint = Paint()
-      ..color = Colors.green
+    Paint paint = Paint()
+      ..color = Colors.purple
       ..strokeWidth = 5.0;
 
-    final x1 = (winningSquares.first % 3) * squareSize + squareSize / 2;
-    final y1 = (winningSquares.first ~/ 3) * squareSize + squareSize / 2;
-    final x2 = (winningSquares.last % 3) * squareSize + squareSize / 2;
-    final y2 = (winningSquares.last ~/ 3) * squareSize + squareSize / 2;
+    double boxSize = MediaQuery.of(_context).size.width / 3;
+    double startx = _winningLine[0] % 3 * boxSize + boxSize / 2;
+    double starty = _winningLine[0] ~/ 3 * boxSize + boxSize / 2;
+    double endx = _winningLine.last % 3 * boxSize + boxSize / 2;
+    double endy = _winningLine.last ~/ 3 * boxSize + boxSize / 2;
 
-    canvas.drawLine(Offset(x1, y1), Offset(x2, y2), paint);
+    double dx = (endx - startx) * _animation.value;
+    double dy = (endy - starty) * _animation.value;
+
+    canvas.drawLine(
+      Offset(startx, starty),
+      Offset(startx + dx, starty + dy),
+      paint,
+    );
   }
 
   @override
   bool shouldRepaint(WinningLinePainter oldDelegate) {
-    return oldDelegate.winningSquares != winningSquares;
+    return _winningLine != oldDelegate._winningLine ||
+        _animation != oldDelegate._animation;
   }
 }
