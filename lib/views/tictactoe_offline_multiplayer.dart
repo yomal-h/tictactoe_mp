@@ -24,7 +24,7 @@ class __TicTacToeGameOfflineMultiplayerState
   int _computerScore = 0;
   int _round = 1;
   bool _gameOver = false;
-  bool _isComputerThinking = false;
+  final bool _isComputerThinking = false;
   List<int> _winningLine = [];
   late AnimationController _animationController;
   late Tween<double> _animationTween;
@@ -43,19 +43,13 @@ class __TicTacToeGameOfflineMultiplayerState
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxHeight: size.height * 0.7,
-        maxWidth: 500,
-      ),
-      child: Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(height: 90.0),
-            Container(
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(height: 90.0),
+          Center(
+            child: Container(
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Colors.white,
@@ -84,140 +78,140 @@ class __TicTacToeGameOfflineMultiplayerState
                 ),
               ),
             ),
-            SizedBox(height: 50.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Player 1',
-                        style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            shadows: [
-                              Shadow(blurRadius: 40, color: Colors.purpleAccent)
-                            ]),
+          ),
+          SizedBox(height: 50.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                child: Column(
+                  children: [
+                    Text(
+                      'Player 1',
+                      style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(blurRadius: 40, color: Colors.purpleAccent)
+                          ]),
+                    ),
+                    Text(
+                      '$_playerScore',
+                      style: const TextStyle(
+                        fontSize: 25,
+                        color: Colors.white,
                       ),
-                      Text(
-                        '$_playerScore',
-                        style: const TextStyle(
-                          fontSize: 25,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                Text(
-                  '   :   ',
-                  style: const TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      shadows: [
-                        Shadow(blurRadius: 40, color: Colors.purpleAccent)
-                      ]),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Player 2',
-                        style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            shadows: [
-                              Shadow(blurRadius: 40, color: Colors.purpleAccent)
-                            ]),
+              ),
+              Text(
+                '   :   ',
+                style: const TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(blurRadius: 40, color: Colors.purpleAccent)
+                    ]),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                child: Column(
+                  children: [
+                    Text(
+                      'Player 2',
+                      style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(blurRadius: 40, color: Colors.purpleAccent)
+                          ]),
+                    ),
+                    Text(
+                      '$_computerScore',
+                      style: const TextStyle(
+                        fontSize: 25,
+                        color: Colors.white,
                       ),
-                      Text(
-                        '$_computerScore',
-                        style: const TextStyle(
-                          fontSize: 25,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            SizedBox(height: 2.0),
-            Expanded(
+              ),
+            ],
+          ),
+          SizedBox(height: 2.0),
+          Expanded(
+            child: AspectRatio(
+              aspectRatio: 0.9,
               child: Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(5.0),
                 child: Stack(
                   children: [
-                    AspectRatio(
-                      aspectRatio: 0.9,
-                      child: GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                        ),
-                        shrinkWrap: true,
-                        itemCount: _board.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return GestureDetector(
-                            onTap: () {
-                              if (_gameOver || _board[index] != '') {
-                                return;
+                    GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                      ),
+                      shrinkWrap: true,
+                      itemCount: _board.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          onTap: () {
+                            if (_gameOver || _board[index] != '') {
+                              return;
+                            }
+                            setState(() {
+                              _animationController.reset();
+                              _animationController.forward();
+                              _board[index] = _currentPlayer;
+                              if (_checkForWinner(_board, 'X')) {
+                                _playerScore++;
+                                _startNewRound();
+                              } else if (_checkForWinner(_board, 'O')) {
+                                _computerScore++;
+                                _startNewRound();
+                              } else if (_board
+                                  .every((element) => element != '')) {
+                                _startNewRound();
+                              } else {
+                                _currentPlayer =
+                                    _currentPlayer == 'X' ? 'O' : 'X';
                               }
-                              setState(() {
-                                _animationController.reset();
-                                _animationController.forward();
-                                _board[index] = _currentPlayer;
-                                if (_checkForWinner(_board, 'X')) {
-                                  _playerScore++;
-                                  _startNewRound();
-                                } else if (_checkForWinner(_board, 'O')) {
-                                  _computerScore++;
-                                  _startNewRound();
-                                } else if (_board
-                                    .every((element) => element != '')) {
-                                  _startNewRound();
-                                } else {
-                                  _currentPlayer =
-                                      _currentPlayer == 'X' ? 'O' : 'X';
-                                }
-                              });
-                            },
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 300),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: _winningLine.contains(index)
-                                      ? Colors.purple
-                                      : Colors.white24,
-                                  width: 1.0,
-                                ),
+                            });
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: _winningLine.contains(index)
+                                    ? Colors.purple
+                                    : Colors.white24,
+                                width: 1.0,
                               ),
-                              child: Center(
-                                child: AnimatedSize(
-                                  duration: const Duration(milliseconds: 200),
-                                  child: Text(
-                                    _board[index],
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 90.0,
-                                        shadows: [
-                                          Shadow(
-                                            blurRadius: 40,
-                                            color: _board[index] == 'O'
-                                                ? Colors.greenAccent
-                                                : Colors.pink,
-                                          ),
-                                        ]),
-                                  ),
+                            ),
+                            child: Center(
+                              child: AnimatedSize(
+                                duration: const Duration(milliseconds: 200),
+                                child: Text(
+                                  _board[index],
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 100.0,
+                                      shadows: [
+                                        Shadow(
+                                          blurRadius: 40,
+                                          color: _board[index] == 'O'
+                                              ? Colors.greenAccent
+                                              : Colors.pink,
+                                        ),
+                                      ]),
                                 ),
                               ),
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
                     if (_gameOver && _winningLine.isNotEmpty)
                       ShaderMask(
@@ -256,35 +250,38 @@ class __TicTacToeGameOfflineMultiplayerState
                 ),
               ),
             ),
-            _gameOver
-                ? ElevatedButton(
-                    child: Text('New Game'),
-                    onPressed: _startNewGame,
-                  )
-                : SizedBox.shrink(),
-            _isComputerThinking
-                ? Text(
-                    'Computer is thinking...',
-                    style: TextStyle(fontSize: 24.0),
-                  )
-                : SizedBox.shrink(),
-            _gameOver
-                ? SizedBox.shrink()
-                : Text(
-                    'Current player: $_currentPlayer',
-                    style: TextStyle(fontSize: 24.0),
-                  ),
-            SizedBox(
-              height: 5.0,
-            ),
-            GlowButton(
-              onPressed: _startNewGame,
-              child: Text('Reset'),
-              blurRadius: 15,
-              color: Colors.purple,
-            )
-          ],
-        ),
+          ),
+          _gameOver
+              ? ElevatedButton(
+                  child: Text('New Game'),
+                  onPressed: _startNewGame,
+                )
+              : SizedBox.shrink(),
+          _isComputerThinking
+              ? Text(
+                  'Computer is thinking...',
+                  style: TextStyle(fontSize: 24.0),
+                )
+              : SizedBox.shrink(),
+          _gameOver
+              ? SizedBox.shrink()
+              : Text(
+                  'Current player: $_currentPlayer',
+                  style: TextStyle(fontSize: 24.0),
+                ),
+          SizedBox(
+            height: 20.0,
+          ),
+          GlowButton(
+            onPressed: _startNewGame,
+            child: Text('Reset'),
+            blurRadius: 15,
+            color: Colors.purple,
+          ),
+          SizedBox(
+            height: 40.0,
+          ),
+        ],
       ),
     );
   }
