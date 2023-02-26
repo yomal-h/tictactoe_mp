@@ -1,5 +1,7 @@
-import 'dart:ui';
+// ignore_for_file: prefer_const_constructors
 
+import 'dart:ui';
+import 'package:flutter_glow/flutter_glow.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -41,131 +43,250 @@ class __TicTacToeGameOfflineMultiplayerState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Tic-Tac-Toe with Minimax'),
+    final size = MediaQuery.of(context).size;
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: size.height * 0.7,
+        maxWidth: 500,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'Round $_round',
-            style: TextStyle(fontSize: 24.0),
-          ),
-          SizedBox(height: 16.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Player 1: $_playerScore',
-                style: TextStyle(fontSize: 24.0),
-              ),
-              SizedBox(width: 32.0),
-              Text(
-                'Player 2: $_computerScore',
-                style: TextStyle(fontSize: 24.0),
-              ),
-            ],
-          ),
-          SizedBox(height: 16.0),
-          Stack(
-            children: [
-              GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
+      child: Scaffold(
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: 90.0),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.white,
+                  width: 2,
                 ),
-                shrinkWrap: true,
-                itemCount: _board.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    onTap: () {
-                      if (_gameOver || _board[index] != '') {
-                        return;
-                      }
-                      setState(() {
-                        _animationController.reset();
-                        _animationController.forward();
-                        _board[index] = _currentPlayer;
-                        if (_checkForWinner(_board, 'X')) {
-                          _playerScore++;
-                          _startNewRound();
-                        } else if (_checkForWinner(_board, 'O')) {
-                          _computerScore++;
-                          _startNewRound();
-                        } else if (_board.every((element) => element != '')) {
-                          _startNewRound();
-                        } else {
-                          _currentPlayer = _currentPlayer == 'X' ? 'O' : 'X';
-                        }
-                      });
-                    },
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: _winningLine.contains(index)
-                              ? Colors.purple
-                              : Colors.white24,
-                          width: 1.0,
+                borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.purple.withOpacity(0.5),
+                    spreadRadius: 4,
+                    blurRadius: 7,
+                    offset: Offset(0, 0), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  'Round $_round',
+                  style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      shadows: [
+                        Shadow(blurRadius: 40, color: Colors.purpleAccent)
+                      ]),
+                ),
+              ),
+            ),
+            SizedBox(height: 50.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Player 1',
+                        style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            shadows: [
+                              Shadow(blurRadius: 40, color: Colors.purpleAccent)
+                            ]),
+                      ),
+                      Text(
+                        '$_playerScore',
+                        style: const TextStyle(
+                          fontSize: 25,
+                          color: Colors.white,
                         ),
                       ),
-                      child: Center(
-                        child: Text(
-                          _board[index],
-                          style: TextStyle(fontSize: 48.0),
+                    ],
+                  ),
+                ),
+                Text(
+                  '   :   ',
+                  style: const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      shadows: [
+                        Shadow(blurRadius: 40, color: Colors.purpleAccent)
+                      ]),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Player 2',
+                        style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            shadows: [
+                              Shadow(blurRadius: 40, color: Colors.purpleAccent)
+                            ]),
+                      ),
+                      Text(
+                        '$_computerScore',
+                        style: const TextStyle(
+                          fontSize: 25,
+                          color: Colors.white,
                         ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 2.0),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Stack(
+                  children: [
+                    AspectRatio(
+                      aspectRatio: 0.9,
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                        ),
+                        shrinkWrap: true,
+                        itemCount: _board.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                            onTap: () {
+                              if (_gameOver || _board[index] != '') {
+                                return;
+                              }
+                              setState(() {
+                                _animationController.reset();
+                                _animationController.forward();
+                                _board[index] = _currentPlayer;
+                                if (_checkForWinner(_board, 'X')) {
+                                  _playerScore++;
+                                  _startNewRound();
+                                } else if (_checkForWinner(_board, 'O')) {
+                                  _computerScore++;
+                                  _startNewRound();
+                                } else if (_board
+                                    .every((element) => element != '')) {
+                                  _startNewRound();
+                                } else {
+                                  _currentPlayer =
+                                      _currentPlayer == 'X' ? 'O' : 'X';
+                                }
+                              });
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: _winningLine.contains(index)
+                                      ? Colors.purple
+                                      : Colors.white24,
+                                  width: 1.0,
+                                ),
+                              ),
+                              child: Center(
+                                child: AnimatedSize(
+                                  duration: const Duration(milliseconds: 200),
+                                  child: Text(
+                                    _board[index],
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 90.0,
+                                        shadows: [
+                                          Shadow(
+                                            blurRadius: 40,
+                                            color: _board[index] == 'O'
+                                                ? Colors.greenAccent
+                                                : Colors.pink,
+                                          ),
+                                        ]),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
-                  );
-                },
-              ),
-              if (_gameOver && _winningLine.isNotEmpty)
-                Positioned.fill(
-                  child: AnimatedBuilder(
-                      animation: _animationController,
-                      builder: (context, child) {
-                        return CustomPaint(
+                    if (_gameOver && _winningLine.isNotEmpty)
+                      ShaderMask(
+                        blendMode: BlendMode.srcOver,
+                        shaderCallback: (Rect rect) {
+                          return LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Colors.white,
+                              Colors.pinkAccent.withOpacity(0.2),
+                              Colors.pinkAccent.withOpacity(0.4),
+                              Colors.pinkAccent.withOpacity(0.6),
+                              Colors.pinkAccent.withOpacity(0.4),
+                              Colors.white,
+                            ],
+                            stops: [
+                              0.0,
+                              0.2,
+                              0.4,
+                              0.6,
+                              0.8,
+                              1.0,
+                            ],
+                          ).createShader(rect);
+                        },
+                        child: CustomPaint(
                           painter: WinningLinePainter(
-                              _winningLine,
-                              _animationTween.animate(_animationController),
-                              context),
-                        );
-                      }),
+                            _winningLine,
+                            _animationTween.animate(_animationController),
+                            context,
+                          ),
+                        ),
+                      )
+                  ],
                 ),
-            ],
-          ),
-          _gameOver
-              ? RaisedButton(
-                  child: Text('New Game'),
-                  onPressed: _startNewGame,
-                )
-              : SizedBox.shrink(),
-          _isComputerThinking
-              ? Text(
-                  'Computer is thinking...',
-                  style: TextStyle(fontSize: 24.0),
-                )
-              : SizedBox.shrink(),
-          _gameOver
-              ? SizedBox.shrink()
-              : Text(
-                  'Current player: $_currentPlayer',
-                  style: TextStyle(fontSize: 24.0),
-                ),
-        ],
+              ),
+            ),
+            _gameOver
+                ? ElevatedButton(
+                    child: Text('New Game'),
+                    onPressed: _startNewGame,
+                  )
+                : SizedBox.shrink(),
+            _isComputerThinking
+                ? Text(
+                    'Computer is thinking...',
+                    style: TextStyle(fontSize: 24.0),
+                  )
+                : SizedBox.shrink(),
+            _gameOver
+                ? SizedBox.shrink()
+                : Text(
+                    'Current player: $_currentPlayer',
+                    style: TextStyle(fontSize: 24.0),
+                  ),
+            SizedBox(
+              height: 5.0,
+            ),
+            GlowButton(
+              onPressed: _startNewGame,
+              child: Text('Reset'),
+              blurRadius: 15,
+              color: Colors.purple,
+            )
+          ],
+        ),
       ),
     );
-  }
-
-  void _winnercheckandnextround() {
-    if (_checkForWinner(_board, 'O')) {
-      _computerScore++;
-      _startNewRound();
-    } else if (_board.every((element) => element != '')) {
-      _startNewRound();
-    } else {
-      _currentPlayer = 'X';
-    }
   }
 
   bool _checkForWinner(List<String> board, String symbol) {
@@ -241,13 +362,15 @@ class __TicTacToeGameOfflineMultiplayerState
                   Navigator.of(context).pop();
                   setState(() {
                     _board.fillRange(0, 9, '');
-                    _currentPlayer = 'X';
+                    //_currentPlayer = 'X';
                     _round++;
                     _gameOver = false;
                     if (winner == 'Player 1') {
                       // _playerScore++;
+                      _currentPlayer = 'O';
                     } else if (winner == 'Player 2') {
                       // _computerScore++;
+                      _currentPlayer = 'X';
                     }
                   });
                 },
@@ -310,7 +433,8 @@ class __TicTacToeGameOfflineMultiplayerState
 class WinningLinePainter extends CustomPainter {
   final List<int> _winningLine;
   final Animation<double> _animation;
-  BuildContext _context;
+  final BuildContext _context;
+
   WinningLinePainter(this._winningLine, this._animation, this._context);
 
   @override
@@ -318,10 +442,6 @@ class WinningLinePainter extends CustomPainter {
     if (_winningLine.isEmpty) {
       return;
     }
-
-    Paint paint = Paint()
-      ..color = Colors.purple
-      ..strokeWidth = 5.0;
 
     double boxSize = MediaQuery.of(_context).size.width / 3;
     double startx = _winningLine[0] % 3 * boxSize + boxSize / 2;
@@ -332,11 +452,32 @@ class WinningLinePainter extends CustomPainter {
     double dx = (endx - startx) * _animation.value;
     double dy = (endy - starty) * _animation.value;
 
-    canvas.drawLine(
-      Offset(startx, starty),
-      Offset(startx + dx, starty + dy),
-      paint,
-    );
+    Paint paint = Paint()
+      ..strokeWidth = 10.0
+      ..style = PaintingStyle.stroke
+      ..shader = LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Colors.purple,
+          Colors.purple,
+        ],
+      ).createShader(Rect.fromPoints(
+          Offset(startx, starty), Offset(startx + dx, starty + dy)));
+
+    Path path = Path();
+    path.moveTo(startx, starty);
+    path.lineTo(startx + dx, starty + dy);
+
+    // Add a pulsating effect to the neon glow
+    Paint glowPaint = Paint()
+      ..color = Colors.pinkAccent.withOpacity(0.6 + 0.4 * _animation.value)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 16.0
+      ..maskFilter = MaskFilter.blur(BlurStyle.normal, 16.0 * _animation.value);
+
+    canvas.drawPath(path, glowPaint);
+    canvas.drawPath(path, paint);
   }
 
   @override
