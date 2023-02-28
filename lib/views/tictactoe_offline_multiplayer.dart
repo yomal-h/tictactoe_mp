@@ -53,10 +53,15 @@ class __TicTacToeGameOfflineMultiplayerState
     if (aspectRatio < 0.6) {
       // for small screens
       fontSize = 60.0;
-    } else if (aspectRatio > 0.8) {
+    } else if (aspectRatio > 0.6) {
       // for wide screens
-      fontSize = 60.0;
+      fontSize = 150.0;
     }
+    if (screenWidth > 400 && screenWidth < 600) {
+      // for normal phone screens
+      fontSize = 100.0;
+    }
+
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
