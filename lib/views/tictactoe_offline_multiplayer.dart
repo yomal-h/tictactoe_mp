@@ -43,6 +43,20 @@ class __TicTacToeGameOfflineMultiplayerState
 
   @override
   Widget build(BuildContext context) {
+    final mediaQueryData = MediaQuery.of(context);
+    final screenWidth = mediaQueryData.size.width;
+    final screenHeight = mediaQueryData.size.height;
+    final aspectRatio = screenWidth / screenHeight;
+
+    double fontSize = 100.0;
+
+    if (aspectRatio < 0.6) {
+      // for small screens
+      fontSize = 60.0;
+    } else if (aspectRatio > 0.8) {
+      // for wide screens
+      fontSize = 60.0;
+    }
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -197,7 +211,7 @@ class __TicTacToeGameOfflineMultiplayerState
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 100.0,
+                                      fontSize: fontSize,
                                       shadows: [
                                         Shadow(
                                           blurRadius: 40,
