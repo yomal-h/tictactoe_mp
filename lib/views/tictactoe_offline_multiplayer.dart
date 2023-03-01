@@ -146,6 +146,12 @@ class __TicTacToeGameOfflineMultiplayerState
               aspectRatio: 0.9,
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
+                //LayoutBuilder to get the constraints of the parent container,
+                //and then calculate the font size based
+                //on the maximum width of the container (constraints.maxWidth).
+                //We set the font size to be a 4.5 of the maximum width
+                //(constraints.maxWidth / 4.5),
+                //this approach assumes that the font size scales linearly with the size of the GridView
                 child: LayoutBuilder(builder:
                     (BuildContext context, BoxConstraints constraints) {
                   double fontSize1 = constraints.maxWidth / 4.5;
