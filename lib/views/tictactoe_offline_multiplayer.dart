@@ -43,25 +43,6 @@ class __TicTacToeGameOfflineMultiplayerState
 
   @override
   Widget build(BuildContext context) {
-    final mediaQueryData = MediaQuery.of(context);
-    final screenWidth = mediaQueryData.size.width;
-    final screenHeight = mediaQueryData.size.height;
-    final aspectRatio = screenWidth / screenHeight;
-
-    double fontSize = 100.0;
-
-    if (aspectRatio < 0.6) {
-      // for small screens
-      fontSize = 60.0;
-    } else if (aspectRatio > 0.6) {
-      // for wide screens
-      fontSize = 150.0;
-    }
-    if (screenWidth > 400 && screenWidth < 600) {
-      // for normal phone screens
-      fontSize = 100.0;
-    }
-
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -165,108 +146,112 @@ class __TicTacToeGameOfflineMultiplayerState
               aspectRatio: 0.9,
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: Stack(
-                  children: [
-                    GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                      ),
-                      shrinkWrap: true,
-                      itemCount: _board.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                          onTap: () {
-                            if (_gameOver || _board[index] != '') {
-                              return;
-                            }
-                            setState(() {
-                              _animationController.reset();
-                              _animationController.forward();
-                              _board[index] = _currentPlayer;
-                              if (_checkForWinner(_board, 'X')) {
-                                _playerScore++;
-                                _startNewRound();
-                              } else if (_checkForWinner(_board, 'O')) {
-                                _computerScore++;
-                                _startNewRound();
-                              } else if (_board
-                                  .every((element) => element != '')) {
-                                _startNewRound();
-                              } else {
-                                _currentPlayer =
-                                    _currentPlayer == 'X' ? 'O' : 'X';
+                child: LayoutBuilder(builder:
+                    (BuildContext context, BoxConstraints constraints) {
+                  double fontSize1 = constraints.maxWidth / 4.5;
+                  return Stack(
+                    children: [
+                      GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                        ),
+                        shrinkWrap: true,
+                        itemCount: _board.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                            onTap: () {
+                              if (_gameOver || _board[index] != '') {
+                                return;
                               }
-                            });
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: _winningLine.contains(index)
-                                    ? Colors.purple
-                                    : Colors.white24,
-                                width: 1.0,
+                              setState(() {
+                                _animationController.reset();
+                                _animationController.forward();
+                                _board[index] = _currentPlayer;
+                                if (_checkForWinner(_board, 'X')) {
+                                  _playerScore++;
+                                  _startNewRound();
+                                } else if (_checkForWinner(_board, 'O')) {
+                                  _computerScore++;
+                                  _startNewRound();
+                                } else if (_board
+                                    .every((element) => element != '')) {
+                                  _startNewRound();
+                                } else {
+                                  _currentPlayer =
+                                      _currentPlayer == 'X' ? 'O' : 'X';
+                                }
+                              });
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: _winningLine.contains(index)
+                                      ? Colors.purple
+                                      : Colors.white24,
+                                  width: 1.0,
+                                ),
                               ),
-                            ),
-                            child: Center(
-                              child: AnimatedSize(
-                                duration: const Duration(milliseconds: 200),
-                                child: Text(
-                                  _board[index],
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: fontSize,
-                                      shadows: [
-                                        Shadow(
-                                          blurRadius: 40,
-                                          color: _board[index] == 'O'
-                                              ? Colors.greenAccent
-                                              : Colors.pink,
-                                        ),
-                                      ]),
+                              child: Center(
+                                child: AnimatedSize(
+                                  duration: const Duration(milliseconds: 200),
+                                  child: Text(
+                                    _board[index],
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: fontSize1,
+                                        shadows: [
+                                          Shadow(
+                                            blurRadius: 40,
+                                            color: _board[index] == 'O'
+                                                ? Colors.greenAccent
+                                                : Colors.pink,
+                                          ),
+                                        ]),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                    if (_gameOver && _winningLine.isNotEmpty)
-                      ShaderMask(
-                        blendMode: BlendMode.srcOver,
-                        shaderCallback: (Rect rect) {
-                          return LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              Colors.white,
-                              Colors.pinkAccent.withOpacity(0.2),
-                              Colors.pinkAccent.withOpacity(0.4),
-                              Colors.pinkAccent.withOpacity(0.6),
-                              Colors.pinkAccent.withOpacity(0.4),
-                              Colors.white,
-                            ],
-                            stops: [
-                              0.0,
-                              0.2,
-                              0.4,
-                              0.6,
-                              0.8,
-                              1.0,
-                            ],
-                          ).createShader(rect);
+                          );
                         },
-                        child: CustomPaint(
-                          painter: WinningLinePainter(
-                            _winningLine,
-                            _animationTween.animate(_animationController),
-                            context,
+                      ),
+                      if (_gameOver && _winningLine.isNotEmpty)
+                        ShaderMask(
+                          blendMode: BlendMode.srcOver,
+                          shaderCallback: (Rect rect) {
+                            return LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Colors.white,
+                                Colors.pinkAccent.withOpacity(0.2),
+                                Colors.pinkAccent.withOpacity(0.4),
+                                Colors.pinkAccent.withOpacity(0.6),
+                                Colors.pinkAccent.withOpacity(0.4),
+                                Colors.white,
+                              ],
+                              stops: [
+                                0.0,
+                                0.2,
+                                0.4,
+                                0.6,
+                                0.8,
+                                1.0,
+                              ],
+                            ).createShader(rect);
+                          },
+                          child: CustomPaint(
+                            painter: WinningLinePainter(
+                              _winningLine,
+                              _animationTween.animate(_animationController),
+                              context,
+                            ),
                           ),
-                        ),
-                      )
-                  ],
-                ),
+                        )
+                    ],
+                  );
+                }),
               ),
             ),
           ),

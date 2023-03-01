@@ -22,6 +22,24 @@ class _TicTacToeGameUnbeatableState extends State<TicTacToeGameUnbeatable> {
 
   @override
   Widget build(BuildContext context) {
+    // final mediaQueryData = MediaQuery.of(context);
+    // final screenWidth = mediaQueryData.size.width;
+    // final screenHeight = mediaQueryData.size.height;
+    // final aspectRatio = screenWidth / screenHeight;
+
+    // double fontSize = 100.0;
+
+    // if (aspectRatio < 0.6) {
+    //   // for small screens
+    //   fontSize = 60.0;
+    // } else if (aspectRatio > 0.8) {
+    //   // for wide screens
+    //   fontSize = 100.0;
+    // }
+    // if (screenWidth > 400 && screenWidth < 600) {
+    //   // for normal phone screens
+    //   fontSize = 30.0;
+    // }
     return Scaffold(
       appBar: AppBar(
         title: Text('Tic-Tac-Toe with Minimax'),
