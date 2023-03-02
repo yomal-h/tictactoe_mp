@@ -1,22 +1,20 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'dart:ui';
 import 'package:flutter_glow/flutter_glow.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-class TicTacToeGameOfflineMultiplayer extends StatefulWidget {
+class TicTacToeGameOfflineMultiplayerTest extends StatefulWidget {
   static String routeName = '/tictactoe_offline_multiplayer';
 
-  const TicTacToeGameOfflineMultiplayer({Key? key}) : super(key: key);
+  const TicTacToeGameOfflineMultiplayerTest({Key? key}) : super(key: key);
 
   @override
-  __TicTacToeGameOfflineMultiplayerState createState() =>
-      __TicTacToeGameOfflineMultiplayerState();
+  __TicTacToeGameOfflineMultiplayerStateTest createState() =>
+      __TicTacToeGameOfflineMultiplayerStateTest();
 }
 
-class __TicTacToeGameOfflineMultiplayerState
-    extends State<TicTacToeGameOfflineMultiplayer>
+class __TicTacToeGameOfflineMultiplayerStateTest
+    extends State<TicTacToeGameOfflineMultiplayerTest>
     with SingleTickerProviderStateMixin {
   final List<String> _board = List.filled(9, '');
   String _currentPlayer = 'X';
@@ -26,19 +24,10 @@ class __TicTacToeGameOfflineMultiplayerState
   bool _gameOver = false;
   final bool _isComputerThinking = false;
   List<int> _winningLine = [];
-  late AnimationController _animationController;
-  late Tween<double> _animationTween;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 500),
-    )..addListener(() {
-        setState(() {});
-      });
-    _animationTween = Tween<double>(begin: 0.0, end: 1.0);
   }
 
   @override
@@ -164,8 +153,6 @@ class __TicTacToeGameOfflineMultiplayerState
                                 return;
                               }
                               setState(() {
-                                _animationController.reset();
-                                _animationController.forward();
                                 _board[index] = _currentPlayer;
                                 if (_checkForWinner(_board, 'X')) {
                                   _playerScore++;
@@ -216,39 +203,6 @@ class __TicTacToeGameOfflineMultiplayerState
                           );
                         },
                       ),
-                      if (_gameOver && _winningLine.isNotEmpty)
-                        ShaderMask(
-                          blendMode: BlendMode.srcOver,
-                          shaderCallback: (Rect rect) {
-                            return LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Colors.white,
-                                Colors.pinkAccent.withOpacity(0.2),
-                                Colors.pinkAccent.withOpacity(0.4),
-                                Colors.pinkAccent.withOpacity(0.6),
-                                Colors.pinkAccent.withOpacity(0.4),
-                                Colors.white,
-                              ],
-                              stops: [
-                                0.0,
-                                0.2,
-                                0.4,
-                                0.6,
-                                0.8,
-                                1.0,
-                              ],
-                            ).createShader(rect);
-                          },
-                          child: CustomPaint(
-                            painter: WinningLinePainter(
-                              _winningLine,
-                              _animationTween.animate(_animationController),
-                              context,
-                            ),
-                          ),
-                        )
                     ],
                   );
                 }),
@@ -278,7 +232,7 @@ class __TicTacToeGameOfflineMultiplayerState
           ),
           GlowButton(
             onPressed: _startNewGame,
-            child: Text('Resetr4r4r4'),
+            child: Text('Reset'),
             blurRadius: 15,
             color: Colors.purple,
           ),
@@ -343,9 +297,6 @@ class __TicTacToeGameOfflineMultiplayerState
       if (winner == 'Tie') {
         dialogContent = 'The round was a tie!';
       } else {
-        _animationController
-            .reset(); //use these two otherwise A.I animation will not work
-        _animationController.forward();
         dialogContent = '$winner won the round!';
       }
 
@@ -401,12 +352,8 @@ class __TicTacToeGameOfflineMultiplayerState
     String winner = '';
     if (_playerScore > _computerScore) {
       winner = 'Player 1';
-      _animationController.reset();
-      _animationController.forward();
     } else if (_computerScore > _playerScore) {
       winner = 'Player 2';
-      _animationController.reset();
-      _animationController.forward();
     } else {
       winner = 'Nobody';
     }
@@ -428,62 +375,5 @@ class __TicTacToeGameOfflineMultiplayerState
       },
     );
     _gameOver = true;
-  }
-}
-
-class WinningLinePainter extends CustomPainter {
-  final List<int> _winningLine;
-  final Animation<double> _animation;
-  final BuildContext _context;
-
-  WinningLinePainter(this._winningLine, this._animation, this._context);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (_winningLine.isEmpty) {
-      return;
-    }
-
-    double boxSize = MediaQuery.of(_context).size.width / 3;
-    double startx = _winningLine[0] % 3 * boxSize + boxSize / 2;
-    double starty = _winningLine[0] ~/ 3 * boxSize + boxSize / 2;
-    double endx = _winningLine.last % 3 * boxSize + boxSize / 2;
-    double endy = _winningLine.last ~/ 3 * boxSize + boxSize / 2;
-
-    double dx = (endx - startx) * _animation.value;
-    double dy = (endy - starty) * _animation.value;
-
-    Paint paint = Paint()
-      ..strokeWidth = 10.0
-      ..style = PaintingStyle.stroke
-      ..shader = LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          Colors.purple,
-          Colors.purple,
-        ],
-      ).createShader(Rect.fromPoints(
-          Offset(startx, starty), Offset(startx + dx, starty + dy)));
-
-    Path path = Path();
-    path.moveTo(startx, starty);
-    path.lineTo(startx + dx, starty + dy);
-
-    // Add a pulsating effect to the neon glow
-    Paint glowPaint = Paint()
-      ..color = Colors.pinkAccent.withOpacity(0.6 + 0.4 * _animation.value)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 16.0
-      ..maskFilter = MaskFilter.blur(BlurStyle.normal, 16.0 * _animation.value);
-
-    canvas.drawPath(path, glowPaint);
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(WinningLinePainter oldDelegate) {
-    return _winningLine != oldDelegate._winningLine ||
-        _animation != oldDelegate._animation;
   }
 }

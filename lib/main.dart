@@ -10,6 +10,7 @@ import 'package:tictactoe_mp/views/single_tictactoe_hard.dart';
 import 'package:tictactoe_mp/views/single_tictactoe_medium.dart';
 import 'package:tictactoe_mp/views/single_tictactoe_unbeatable.dart';
 import 'package:tictactoe_mp/views/single_tictactoe_easy.dart';
+import 'package:tictactoe_mp/views/test.dart';
 import 'package:tictactoe_mp/views/tictactoe_offline_multiplayer.dart';
 
 void main() {
