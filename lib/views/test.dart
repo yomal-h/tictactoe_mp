@@ -1,10 +1,10 @@
 import 'dart:ui';
 import 'package:flutter_glow/flutter_glow.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
+import 'dart:math' as math;
 
 class TicTacToeGameOfflineMultiplayerTest extends StatefulWidget {
-  static String routeName = '/tictactoe_offline_multiplayer';
+  static String routeName = '/tictactoe_offline_multiplayer1';
 
   const TicTacToeGameOfflineMultiplayerTest({Key? key}) : super(key: key);
 
@@ -138,6 +138,20 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                 child: LayoutBuilder(builder:
                     (BuildContext context, BoxConstraints constraints) {
                   double fontSize1 = constraints.maxWidth / 4.5;
+
+                  List<Offset> boxCenters = List.generate(
+                    9,
+                    (index) {
+                      int row = index ~/ 3;
+                      int col = index % 3;
+                      double x = col * constraints.maxWidth / 3 +
+                          constraints.maxWidth / 6;
+                      double y = row * constraints.maxWidth / 3 +
+                          constraints.maxWidth / 6;
+                      return Offset(x, y);
+                    },
+                  );
+
                   return Stack(
                     children: [
                       GridView.builder(
@@ -202,6 +216,14 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                             ),
                           );
                         },
+                      ),
+                      // draw winning line using box centers
+                      CustomPaint(
+                        painter: _WinningLinePainter(
+                          winningLine: _winningLine,
+                          boxSize: constraints.maxWidth / 3,
+                          boxCenters: boxCenters,
+                        ),
                       ),
                     ],
                   );
@@ -376,4 +398,38 @@ class __TicTacToeGameOfflineMultiplayerStateTest
     );
     _gameOver = true;
   }
+}
+
+class _WinningLinePainter extends CustomPainter {
+  final List<int> winningLine;
+  final double boxSize;
+  final List<Offset> boxCenters;
+
+  _WinningLinePainter({
+    required this.winningLine,
+    required this.boxSize,
+    required this.boxCenters,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (winningLine.isNotEmpty) {
+      final paint = Paint()
+        ..color = Colors.green
+        ..strokeWidth = 10.0;
+
+      final startBoxIndex = winningLine[0];
+      final endBoxIndex = winningLine[2];
+
+      final startBoxCenter = boxCenters[startBoxIndex] -
+          Offset(paint.strokeWidth / 2, paint.strokeWidth / 2);
+      final endBoxCenter = boxCenters[endBoxIndex] -
+          Offset(paint.strokeWidth / 2, paint.strokeWidth / 2);
+
+      canvas.drawLine(startBoxCenter, endBoxCenter, paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

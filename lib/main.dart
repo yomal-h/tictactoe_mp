@@ -38,11 +38,13 @@ class MyApp extends StatelessWidget {
               const TicTacToeGameUnbeatable(),
           TicTacToeGameOfflineMultiplayer.routeName: (context) =>
               const TicTacToeGameOfflineMultiplayer(),
+          TicTacToeGameOfflineMultiplayerTest.routeName: (context) =>
+              const TicTacToeGameOfflineMultiplayerTest(),
           JoinRoomScreen.routeName: (context) => const JoinRoomScreen(),
           CreateRoomScreen.routeName: (context) => const CreateRoomScreen(),
           GameScreen.routeName: (context) => const GameScreen(),
         },
-        initialRoute: TicTacToeGameOfflineMultiplayer.routeName,
+        initialRoute: TicTacToeGameOfflineMultiplayerTest.routeName,
       ),
     );
   }
