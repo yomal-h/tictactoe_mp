@@ -15,7 +15,7 @@ class TicTacToeGameOfflineMultiplayerTest extends StatefulWidget {
 
 class __TicTacToeGameOfflineMultiplayerStateTest
     extends State<TicTacToeGameOfflineMultiplayerTest>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   final List<String> _board = List.filled(9, '');
   String _currentPlayer = 'X';
   int _playerScore = 0;
@@ -26,6 +26,9 @@ class __TicTacToeGameOfflineMultiplayerStateTest
   List<int> _winningLine = [];
   late AnimationController _controller;
   late Animation<double> _shakeAnimation;
+  late AnimationController _rotateController;
+  late Animation<double> _rotateAnimation;
+  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
@@ -43,6 +46,23 @@ class __TicTacToeGameOfflineMultiplayerStateTest
         curve: Curves.easeInOut,
       ),
     );
+
+    _rotateController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    )..addListener(() {
+        setState(() {});
+      });
+
+    _rotateAnimation = Tween<double>(begin: 0.0, end: 0.05).animate(
+      CurvedAnimation(
+        parent: _rotateController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    _scaleAnimation =
+        Tween<double>(begin: 1.0, end: 1.3).animate(_rotateController);
   }
 
   @override
@@ -173,10 +193,12 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                                 if (_checkForWinner(_board, 'X')) {
                                   _playerScore++;
                                   _controller.repeat(reverse: true);
+                                  _rotateController.repeat(reverse: true);
                                   _startNewRound();
                                 } else if (_checkForWinner(_board, 'O')) {
                                   _computerScore++;
                                   _controller.repeat(reverse: true);
+                                  _rotateController.repeat(reverse: true);
                                   _startNewRound();
                                 } else if (_board
                                     .every((element) => element != '')) {
@@ -189,10 +211,11 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                             },
                             child: Transform.translate(
                               offset: Offset(
-                                  _winningLine.contains(index)
-                                      ? _shakeAnimation.value
-                                      : 0.0,
-                                  0.0),
+                                0.0,
+                                _winningLine.contains(index)
+                                    ? -_shakeAnimation.value
+                                    : 0.0,
+                              ),
                               child: AnimatedContainer(
                                 duration: const Duration(milliseconds: 300),
                                 decoration: BoxDecoration(
@@ -200,26 +223,33 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                                     color: _winningLine.contains(index)
                                         ? Colors.purple
                                         : Colors.white24,
-                                    width: 1.0,
+                                    width: _winningLine.contains(index)
+                                        ? 5.0
+                                        : 1.0, // Default border width is 1.0
                                   ),
                                 ),
                                 child: Center(
                                   child: AnimatedSize(
                                     duration: const Duration(milliseconds: 200),
-                                    child: Text(
-                                      _board[index],
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: fontSize1,
-                                          shadows: [
-                                            Shadow(
-                                              blurRadius: 40,
-                                              color: _board[index] == 'O'
-                                                  ? Colors.greenAccent
-                                                  : Colors.pink,
-                                            ),
-                                          ]),
+                                    child: Transform.scale(
+                                      scale: _winningLine.contains(index)
+                                          ? _scaleAnimation.value
+                                          : 1.0,
+                                      child: Text(
+                                        _board[index],
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: fontSize1,
+                                            shadows: [
+                                              Shadow(
+                                                blurRadius: 40,
+                                                color: _board[index] == 'O'
+                                                    ? Colors.greenAccent
+                                                    : Colors.pink,
+                                              ),
+                                            ]),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -347,11 +377,15 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                       // _playerScore++;
                       _controller.stop();
                       _controller.reset();
+                      _rotateController.stop();
+                      _rotateController.reset();
                       _currentPlayer = 'O';
                     } else if (winner == 'Player 2') {
                       // _computerScore++;
                       _controller.stop();
                       _controller.reset();
+                      _rotateController.stop();
+                      _rotateController.reset();
                       _currentPlayer = 'X';
                     }
                   });
@@ -377,6 +411,8 @@ class __TicTacToeGameOfflineMultiplayerStateTest
       _winningLine.clear();
       _controller.stop();
       _controller.reset();
+      _rotateController.stop();
+      _rotateController.reset();
     });
   }
 
