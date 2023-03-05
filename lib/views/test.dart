@@ -24,10 +24,25 @@ class __TicTacToeGameOfflineMultiplayerStateTest
   bool _gameOver = false;
   final bool _isComputerThinking = false;
   List<int> _winningLine = [];
+  late AnimationController _controller;
+  late Animation<double> _shakeAnimation;
 
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    )..addListener(() {
+        setState(() {});
+      });
+
+    _shakeAnimation = Tween<double>(begin: 0.0, end: 10.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    );
   }
 
   @override
@@ -139,19 +154,6 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                     (BuildContext context, BoxConstraints constraints) {
                   double fontSize1 = constraints.maxWidth / 4.5;
 
-                  List<Offset> boxCenters = List.generate(
-                    9,
-                    (index) {
-                      int row = index ~/ 3;
-                      int col = index % 3;
-                      double x = col * constraints.maxWidth / 3 +
-                          constraints.maxWidth / 6;
-                      double y = row * constraints.maxWidth / 3 +
-                          constraints.maxWidth / 6;
-                      return Offset(x, y);
-                    },
-                  );
-
                   return Stack(
                     children: [
                       GridView.builder(
@@ -170,9 +172,11 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                                 _board[index] = _currentPlayer;
                                 if (_checkForWinner(_board, 'X')) {
                                   _playerScore++;
+                                  _controller.repeat(reverse: true);
                                   _startNewRound();
                                 } else if (_checkForWinner(_board, 'O')) {
                                   _computerScore++;
+                                  _controller.repeat(reverse: true);
                                   _startNewRound();
                                 } else if (_board
                                     .every((element) => element != '')) {
@@ -183,47 +187,46 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                                 }
                               });
                             },
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 300),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: _winningLine.contains(index)
-                                      ? Colors.purple
-                                      : Colors.white24,
-                                  width: 1.0,
+                            child: Transform.translate(
+                              offset: Offset(
+                                  _winningLine.contains(index)
+                                      ? _shakeAnimation.value
+                                      : 0.0,
+                                  0.0),
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 300),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: _winningLine.contains(index)
+                                        ? Colors.purple
+                                        : Colors.white24,
+                                    width: 1.0,
+                                  ),
                                 ),
-                              ),
-                              child: Center(
-                                child: AnimatedSize(
-                                  duration: const Duration(milliseconds: 200),
-                                  child: Text(
-                                    _board[index],
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: fontSize1,
-                                        shadows: [
-                                          Shadow(
-                                            blurRadius: 40,
-                                            color: _board[index] == 'O'
-                                                ? Colors.greenAccent
-                                                : Colors.pink,
-                                          ),
-                                        ]),
+                                child: Center(
+                                  child: AnimatedSize(
+                                    duration: const Duration(milliseconds: 200),
+                                    child: Text(
+                                      _board[index],
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: fontSize1,
+                                          shadows: [
+                                            Shadow(
+                                              blurRadius: 40,
+                                              color: _board[index] == 'O'
+                                                  ? Colors.greenAccent
+                                                  : Colors.pink,
+                                            ),
+                                          ]),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                           );
                         },
-                      ),
-                      // draw winning line using box centers
-                      CustomPaint(
-                        painter: _WinningLinePainter(
-                          winningLine: _winningLine,
-                          boxSize: constraints.maxWidth / 3,
-                          boxCenters: boxCenters,
-                        ),
                       ),
                     ],
                   );
@@ -273,6 +276,7 @@ class __TicTacToeGameOfflineMultiplayerStateTest
           board[i + 1] == symbol &&
           board[i + 2] == symbol) {
         _winningLine = [i, i + 1, i + 2];
+
         return true;
       }
     }
@@ -341,9 +345,13 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                     _gameOver = false;
                     if (winner == 'Player 1') {
                       // _playerScore++;
+                      _controller.stop();
+                      _controller.reset();
                       _currentPlayer = 'O';
                     } else if (winner == 'Player 2') {
                       // _computerScore++;
+                      _controller.stop();
+                      _controller.reset();
                       _currentPlayer = 'X';
                     }
                   });
@@ -367,6 +375,8 @@ class __TicTacToeGameOfflineMultiplayerStateTest
       _gameOver = false;
       _currentPlayer = 'X';
       _winningLine.clear();
+      _controller.stop();
+      _controller.reset();
     });
   }
 
@@ -398,38 +408,4 @@ class __TicTacToeGameOfflineMultiplayerStateTest
     );
     _gameOver = true;
   }
-}
-
-class _WinningLinePainter extends CustomPainter {
-  final List<int> winningLine;
-  final double boxSize;
-  final List<Offset> boxCenters;
-
-  _WinningLinePainter({
-    required this.winningLine,
-    required this.boxSize,
-    required this.boxCenters,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (winningLine.isNotEmpty) {
-      final paint = Paint()
-        ..color = Colors.green
-        ..strokeWidth = 10.0;
-
-      final startBoxIndex = winningLine[0];
-      final endBoxIndex = winningLine[2];
-
-      final startBoxCenter = boxCenters[startBoxIndex] -
-          Offset(paint.strokeWidth / 2, paint.strokeWidth / 2);
-      final endBoxCenter = boxCenters[endBoxIndex] -
-          Offset(paint.strokeWidth / 2, paint.strokeWidth / 2);
-
-      canvas.drawLine(startBoxCenter, endBoxCenter, paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
