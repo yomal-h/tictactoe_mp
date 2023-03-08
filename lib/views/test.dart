@@ -3,6 +3,8 @@ import 'package:flutter_glow/flutter_glow.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+import 'package:tictactoe_mp/utils/colors.dart';
+
 class TicTacToeGameOfflineMultiplayerTest extends StatefulWidget {
   static String routeName = '/tictactoe_offline_multiplayer1';
 
@@ -82,7 +84,7 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                 borderRadius: BorderRadius.circular(30),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.purple.withOpacity(0.5),
+                    color: boardBorderColor.withOpacity(0.4),
                     spreadRadius: 4,
                     blurRadius: 7,
                     offset: Offset(0, 0), // changes position of shadow
@@ -222,11 +224,19 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                                   border: Border.all(
                                     color: _winningLine.contains(index)
                                         ? Colors.purple
-                                        : Colors.white24,
+                                        : boardBorderColor.withOpacity(0.3),
                                     width: _winningLine.contains(index)
                                         ? 5.0
                                         : 1.0, // Default border width is 1.0
                                   ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: PrimaryColor.withOpacity(0.5),
+                                      spreadRadius: 5,
+                                      blurRadius: 10,
+                                      offset: Offset(0, 0),
+                                    ),
+                                  ],
                                 ),
                                 child: Center(
                                   child: AnimatedSize(
@@ -289,7 +299,7 @@ class __TicTacToeGameOfflineMultiplayerStateTest
             onPressed: _startNewGame,
             child: Text('Reset'),
             blurRadius: 15,
-            color: Colors.purple,
+            color: PrimaryColor,
           ),
           SizedBox(
             height: 40.0,
