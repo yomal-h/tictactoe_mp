@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter_glow/flutter_glow.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'dart:io' show Platform;
 
 import 'package:tictactoe_mp/utils/colors.dart';
 
@@ -73,7 +74,7 @@ class __TicTacToeGameOfflineMultiplayerStateTest
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: 90.0),
+          SizedBox(height: 90.0), //55 for android and //90 for ios
           Center(
             child: Container(
               decoration: BoxDecoration(
@@ -84,7 +85,7 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                 borderRadius: BorderRadius.circular(30),
                 boxShadow: [
                   BoxShadow(
-                    color: boardBorderColor.withOpacity(0.4),
+                    color: boardBorderColor.withOpacity(0.6),
                     spreadRadius: 4,
                     blurRadius: 7,
                     offset: Offset(0, 0), // changes position of shadow
@@ -99,7 +100,7 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       shadows: [
-                        Shadow(blurRadius: 40, color: Colors.purpleAccent)
+                        Shadow(blurRadius: 40, color: boardBorderColor)
                       ]),
                 ),
               ),
@@ -119,15 +120,17 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           shadows: [
-                            Shadow(blurRadius: 40, color: Colors.purpleAccent)
+                            Shadow(blurRadius: 40, color: boardBorderColor)
                           ]),
                     ),
                     Text(
                       '$_playerScore',
                       style: const TextStyle(
-                        fontSize: 25,
-                        color: Colors.white,
-                      ),
+                          fontSize: 25,
+                          color: Colors.white,
+                          shadows: [
+                            Shadow(blurRadius: 40, color: boardBorderColor)
+                          ]),
                     ),
                   ],
                 ),
@@ -157,9 +160,11 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                     Text(
                       '$_computerScore',
                       style: const TextStyle(
-                        fontSize: 25,
-                        color: Colors.white,
-                      ),
+                          fontSize: 25,
+                          color: Colors.white,
+                          shadows: [
+                            Shadow(blurRadius: 40, color: boardBorderColor)
+                          ]),
                     ),
                   ],
                 ),
@@ -169,9 +174,10 @@ class __TicTacToeGameOfflineMultiplayerStateTest
           SizedBox(height: 2.0),
           Expanded(
             child: AspectRatio(
-              aspectRatio: 0.9,
+              aspectRatio: 1,
               child: Padding(
-                padding: const EdgeInsets.all(5.0),
+                padding: EdgeInsets.all(
+                    Platform.isIOS ? 5 : 10), //10 for android and 5 for ios
                 child: LayoutBuilder(builder:
                     (BuildContext context, BoxConstraints constraints) {
                   double fontSize1 = constraints.maxWidth / 4.5;
@@ -283,26 +289,77 @@ class __TicTacToeGameOfflineMultiplayerStateTest
           _isComputerThinking
               ? Text(
                   'Computer is thinking...',
-                  style: TextStyle(fontSize: 24.0),
+                  style: TextStyle(fontSize: 20.0),
                 )
               : SizedBox.shrink(),
           _gameOver
               ? SizedBox.shrink()
               : Text(
                   'Current player: $_currentPlayer',
-                  style: TextStyle(fontSize: 24.0),
+                  style: TextStyle(fontSize: 23.0, shadows: [
+                    Shadow(blurRadius: 40, color: boardBorderColor)
+                  ]),
                 ),
           SizedBox(
             height: 20.0,
           ),
-          GlowButton(
-            onPressed: _startNewGame,
-            child: Text('Reset'),
-            blurRadius: 15,
-            color: PrimaryColor,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    textStyle: TextStyle(fontSize: 18),
+                  ),
+                  onPressed: _startNewGame,
+                  child: Ink(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(1),
+                    ),
+                    child: InkWell(
+                      splashColor: boardBorderColor.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(10),
+                      onTap: _startNewGame,
+                      child: Padding(
+                        padding: EdgeInsets.all(2),
+                        child: Text('Main Menu'),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    textStyle: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  onPressed: _startNewGame,
+                  child: Ink(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(1),
+                    ),
+                    child: InkWell(
+                      splashColor: boardBorderColor.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(10),
+                      onTap: _startNewGame,
+                      child: Padding(
+                        padding: EdgeInsets.all(2),
+                        child: Text('Reset'),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(
-            height: 40.0,
+            height: Platform.isIOS ? 40 : 2, //2 for android
           ),
         ],
       ),
