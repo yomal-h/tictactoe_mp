@@ -74,7 +74,9 @@ class __TicTacToeGameOfflineMultiplayerStateTest
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: 90.0), //55 for android and //90 for ios
+          SizedBox(
+              height:
+                  Platform.isIOS ? 90 : 70), //55 for android and //90 for ios
           Center(
             child: Container(
               decoration: BoxDecoration(
@@ -98,6 +100,7 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                   'Round $_round',
                   style: const TextStyle(
                       fontSize: 28,
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
                       shadows: [
                         Shadow(blurRadius: 40, color: boardBorderColor)
@@ -108,7 +111,7 @@ class __TicTacToeGameOfflineMultiplayerStateTest
           ),
           SizedBox(height: 50.0),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -119,18 +122,32 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                       style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          shadows: [
-                            Shadow(blurRadius: 40, color: boardBorderColor)
-                          ]),
-                    ),
-                    Text(
-                      '$_playerScore',
-                      style: const TextStyle(
-                          fontSize: 25,
                           color: Colors.white,
                           shadows: [
                             Shadow(blurRadius: 40, color: boardBorderColor)
                           ]),
+                    ),
+                    SizedBox(height: 10.0),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.purpleAccent.withOpacity(0.2),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 10.0),
+                        child: Text(
+                          '$_playerScore',
+                          style: const TextStyle(
+                              fontSize: 25,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              shadows: [
+                                Shadow(
+                                    blurRadius: 40, color: Colors.purpleAccent)
+                              ]),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -139,6 +156,7 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                 '   :   ',
                 style: const TextStyle(
                     fontSize: 30,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                     shadows: [
                       Shadow(blurRadius: 40, color: Colors.purpleAccent)
@@ -153,18 +171,32 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                       style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          shadows: [
-                            Shadow(blurRadius: 40, color: Colors.purpleAccent)
-                          ]),
-                    ),
-                    Text(
-                      '$_computerScore',
-                      style: const TextStyle(
-                          fontSize: 25,
                           color: Colors.white,
                           shadows: [
-                            Shadow(blurRadius: 40, color: boardBorderColor)
+                            Shadow(blurRadius: 40, color: Colors.greenAccent)
                           ]),
+                    ),
+                    SizedBox(height: 10.0),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.purpleAccent.withOpacity(0.2),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 10.0),
+                        child: Text(
+                          '$_computerScore',
+                          style: const TextStyle(
+                              fontSize: 25,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              shadows: [
+                                Shadow(
+                                    blurRadius: 40, color: Colors.purpleAccent)
+                              ]),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -280,12 +312,7 @@ class __TicTacToeGameOfflineMultiplayerStateTest
               ),
             ),
           ),
-          _gameOver
-              ? ElevatedButton(
-                  child: Text('New Game'),
-                  onPressed: _startNewGame,
-                )
-              : SizedBox.shrink(),
+
           _isComputerThinking
               ? Text(
                   'Computer is thinking...',
@@ -294,14 +321,27 @@ class __TicTacToeGameOfflineMultiplayerStateTest
               : SizedBox.shrink(),
           _gameOver
               ? SizedBox.shrink()
-              : Text(
-                  'Current player: $_currentPlayer',
-                  style: TextStyle(fontSize: 23.0, shadows: [
-                    Shadow(blurRadius: 40, color: boardBorderColor)
-                  ]),
+              : Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.purpleAccent.withOpacity(0.2),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 10.0),
+                    child: Text(
+                      'Current player: $_currentPlayer',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 23.0,
+                          shadows: [
+                            Shadow(blurRadius: 40, color: boardBorderColor)
+                          ]),
+                    ),
+                  ),
                 ),
           SizedBox(
-            height: 20.0,
+            height: 10.0,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
