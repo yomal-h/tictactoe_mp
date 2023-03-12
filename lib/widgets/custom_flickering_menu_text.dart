@@ -84,3 +84,15 @@ class _FlickeringTextState extends State<FlickeringText>
     );
   }
 }
+
+//here, 
+//the AnimationController uses a fixed duration to start 
+//with (duration: const Duration(milliseconds: 500)). 
+//However, instead of repeating the animation using the repeat() method, 
+//we add a addStatusListener() method to the controller to detect 
+//when the animation is completed or dismissed. When the animation is completed, 
+//we set a new random duration between 100 and 600 milliseconds 
+//(_controller.duration = Duration(milliseconds: Random().nextInt(500) + 100);) 
+//and reverse the animation using the reverse() method. Similarly, 
+//when the animation is dismissed, we set a new random duration and 
+//forward the animation using the forward() method.
