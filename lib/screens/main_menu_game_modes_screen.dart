@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fluttericon/entypo_icons.dart';
+import 'package:fluttericon/font_awesome5_icons.dart';
+
+import 'package:tictactoe_mp/utils/colors.dart';
+import 'package:tictactoe_mp/widgets/custom_flickering_menu_text.dart';
 
 class MainMenuGameModesScreen extends StatelessWidget {
   static const routeName = '/main_menu_game_modes_screen';
@@ -6,124 +11,95 @@ class MainMenuGameModesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Container(
-          width: screenSize.width,
-          height: screenSize.height,
-          padding: EdgeInsets.symmetric(horizontal: 40.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'Tic Tac Toe',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 48.0,
-                  fontWeight: FontWeight.bold,
-                  shadows: [
-                    Shadow(
-                      blurRadius: 5.0,
-                      color: Colors.blue,
-                      offset: Offset(1.0, 1.0),
+      backgroundColor: bgColor,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            FlickeringText(),
+            const SizedBox(height: 48),
+            _buildButton(
+              context,
+              'SinglePlayer',
+              Icons.person,
+              () => Navigator.pushNamed(context, '/single-player'),
+            ),
+            const SizedBox(height: 24),
+            _buildButton(
+              context,
+              'Multiplayer Offline',
+              Icons.people,
+              () => Navigator.pushNamed(context, '/multiplayer-offline'),
+            ),
+            const SizedBox(height: 24),
+            _buildButton(
+              context,
+              'Multiplayer Online',
+              FontAwesome5.globe,
+              () => Navigator.pushNamed(context, '/multiplayer-online'),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white.withOpacity(0.2),
                     ),
-                  ],
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 60.0),
-              ElevatedButton.icon(
-                onPressed: () {},
-                icon: Icon(Icons.person),
-                label: Text(
-                  'Singleplayer',
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 5.0,
-                        color: Colors.blue,
-                        offset: Offset(1.0, 1.0),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.settings,
+                        color: Colors.white,
                       ),
-                    ],
+                      onPressed: () =>
+                          Navigator.pushNamed(context, '/settings'),
+                    ),
                   ),
                 ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.pink,
-                  padding: EdgeInsets.symmetric(vertical: 20.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
-                  shadowColor: Colors.blue,
-                  elevation: 10.0,
-                ),
-              ),
-              SizedBox(height: 20.0),
-              ElevatedButton.icon(
-                onPressed: () {},
-                icon: Icon(Icons.people),
-                label: Text(
-                  'Multiplayer\n(Offline)',
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 5.0,
-                        color: Colors.blue,
-                        offset: Offset(1.0, 1.0),
+                SizedBox(width: 16),
+                Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white.withOpacity(0.2),
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        Entypo.info_circled,
+                        color: Colors.white,
                       ),
-                    ],
+                      onPressed: () =>
+                          Navigator.pushNamed(context, '/settings'),
+                    ),
                   ),
-                  textAlign: TextAlign.center,
                 ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.green,
-                  padding: EdgeInsets.symmetric(vertical: 20.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
-                  shadowColor: Colors.blue,
-                  elevation: 10.0,
-                ),
-              ),
-              SizedBox(height: 20.0),
-              ElevatedButton.icon(
-                onPressed: () {},
-                icon: Icon(Icons.people),
-                label: Text(
-                  'Multiplayer\n(Online)',
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 5.0,
-                        color: Colors.blue,
-                        offset: Offset(1.0, 1.0),
-                      ),
-                    ],
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.blue,
-                  padding: EdgeInsets.symmetric(vertical: 20.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
-                  shadowColor: Colors.blue,
-                  elevation: 10.0,
-                ),
-              ),
-            ],
-          ),
+              ],
+            )
+          ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildButton(BuildContext context, String text, IconData icon,
+      VoidCallback onPressed) {
+    final buttonStyle = ElevatedButton.styleFrom(
+      primary: Colors.white.withOpacity(0.2),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      shape: const StadiumBorder(),
+    );
+
+    return SizedBox(
+      width: 300, // Fixed width for all buttons
+      child: ElevatedButton.icon(
+        style: buttonStyle,
+        onPressed: onPressed,
+        icon: Icon(icon, color: Colors.white),
+        label: Text(text,
+            style: const TextStyle(fontSize: 24, color: Colors.white)),
       ),
     );
   }
