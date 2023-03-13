@@ -95,11 +95,32 @@ class MainMenuGameModesScreen extends StatelessWidget {
     return SizedBox(
       width: 300, // Fixed width for all buttons
       child: ElevatedButton.icon(
-        style: buttonStyle,
+        style: buttonStyle.copyWith(
+          side: MaterialStateProperty.all(BorderSide(
+            color: Colors.purple.withOpacity(0.9),
+            width: 3,
+          )),
+          overlayColor: MaterialStateProperty.all(Colors.white),
+        ),
         onPressed: onPressed,
         icon: Icon(icon, color: Colors.white),
-        label: Text(text,
-            style: const TextStyle(fontSize: 24, color: Colors.white)),
+        label: Text(
+          text,
+          style: TextStyle(
+            fontSize: 24,
+            foreground: Paint()
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 1
+              ..color = Colors.white,
+            shadows: [
+              Shadow(
+                blurRadius: 2,
+                color: Colors.blue,
+                offset: Offset(2, 2),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
