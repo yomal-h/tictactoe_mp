@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'dart:math';
 
+import 'package:tictactoe_mp/utils/colors.dart';
+
 class FlickeringText extends StatefulWidget {
   const FlickeringText({Key? key}) : super(key: key);
 
@@ -24,8 +26,8 @@ class _FlickeringTextState extends State<FlickeringText>
     );
     _opacityAnimation =
         Tween<double>(begin: 0.2, end: 1.0).animate(_controller);
-    _colorAnimation =
-        ColorTween(begin: Colors.blue, end: Colors.pink).animate(_controller);
+    _colorAnimation = ColorTween(begin: Colors.purple, end: boardBorderColor)
+        .animate(_controller);
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _controller.duration =
@@ -55,7 +57,7 @@ class _FlickeringTextState extends State<FlickeringText>
           textAlign: TextAlign.center,
           text: TextSpan(
             style: TextStyle(
-              fontSize: 48,
+              fontSize: 50,
               fontWeight: FontWeight.bold,
               fontFamily: 'Beon',
               color: _colorAnimation.value,
@@ -72,7 +74,7 @@ class _FlickeringTextState extends State<FlickeringText>
               TextSpan(
                 text: 'Xperience',
                 style: TextStyle(
-                  fontSize: 36,
+                  fontSize: 38,
                   color: _colorAnimation.value!
                       .withOpacity(_opacityAnimation.value),
                 ),

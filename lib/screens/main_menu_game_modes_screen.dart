@@ -18,28 +18,28 @@ class MainMenuGameModesScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FlickeringText(),
-            const SizedBox(height: 48),
+            const SizedBox(height: 55),
             _buildButton(
               context,
               'SinglePlayer',
               Icons.person,
               () => Navigator.pushNamed(context, '/single-player'),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 26),
             _buildButton(
               context,
-              'Multiplayer Offline',
+              'Multiplayer (Offline)',
               Icons.people,
               () => Navigator.pushNamed(context, '/multiplayer-offline'),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 26),
             _buildButton(
               context,
-              'Multiplayer Online',
+              'Multiplayer (Online)',
               FontAwesome5.globe,
-              () => Navigator.pushNamed(context, '/multiplayer-online'),
+              () {},
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 30),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -87,41 +87,81 @@ class MainMenuGameModesScreen extends StatelessWidget {
   Widget _buildButton(BuildContext context, String text, IconData icon,
       VoidCallback onPressed) {
     final buttonStyle = ElevatedButton.styleFrom(
-      primary: Colors.white.withOpacity(0.2),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      shape: const StadiumBorder(),
-    );
+        primary: Colors.transparent,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        shape: const StadiumBorder(),
+        side:
+            BorderSide(width: 2.0, color: Colors.purpleAccent.withOpacity(0.5)),
+        elevation: 20.0,
+        shadowColor: Color.fromARGB(255, 21, 125, 211));
+    //shadowColor: Color.fromARGB(255, 0, 52, 143));
 
     return SizedBox(
       width: 300, // Fixed width for all buttons
-      child: ElevatedButton.icon(
-        style: buttonStyle.copyWith(
-          side: MaterialStateProperty.all(BorderSide(
-            color: Colors.purple.withOpacity(0.9),
-            width: 3,
-          )),
-          overlayColor: MaterialStateProperty.all(Colors.white),
-        ),
-        onPressed: onPressed,
-        icon: Icon(icon, color: Colors.white),
-        label: Text(
-          text,
-          style: TextStyle(
-            fontSize: 24,
-            foreground: Paint()
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = 1
-              ..color = Colors.white,
-            shadows: [
-              Shadow(
-                blurRadius: 2,
-                color: Colors.blue,
-                offset: Offset(2, 2),
-              ),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          gradient: LinearGradient(
+            colors: [
+              boardBorderColor.withOpacity(0.6),
+              PrimaryColor.withOpacity(0.5),
+              boardBorderColor.withOpacity(0.6),
             ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: ElevatedButton.icon(
+          style: buttonStyle,
+          onPressed: onPressed,
+          icon: Icon(icon, color: Colors.white),
+          label: Text(
+            text,
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              shadows: [
+                Shadow(
+                  blurRadius: 10.0,
+                  color: Colors.blueAccent.withOpacity(0.9),
+                  offset: Offset(2, 2),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+//  Widget _buildButton(BuildContext context, String text, IconData icon,
+//       VoidCallback onPressed) {
+//     final buttonStyle = ElevatedButton.styleFrom(
+//       primary: Colors.purpleAccent.withOpacity(0.2),
+//       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+//       shape: const StadiumBorder(),
+//       side: BorderSide(
+//         color: Colors.red.withOpacity(0.9),
+//         width: 2.0,
+//         style: BorderStyle.solid,
+//       ),
+//       elevation: 10.0,
+//     );
+
+//     return SizedBox(
+//       width: 300, // Fixed width for all buttons
+//       child: ElevatedButton.icon(
+//         style: buttonStyle,
+//         onPressed: onPressed,
+//         icon: Icon(icon, color: Colors.white),
+//         label: Text(
+//           text,
+//           style: const TextStyle(
+//             fontSize: 24,
+//             color: Colors.white,
+//           ),
+//         ),
+//       ),
+//     );
+//   }
