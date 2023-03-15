@@ -66,11 +66,8 @@ class DifficultyLevelSelectionScreen extends StatelessWidget {
     final gradient = isDifferent
         ? LinearGradient(
             colors: [
-              boardBorderColor.withOpacity(0.5),
               Colors.pink.withOpacity(0.5),
-              PrimaryColor.withOpacity(0.3),
               Colors.pink.withOpacity(0.5),
-              boardBorderColor.withOpacity(0.5),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
