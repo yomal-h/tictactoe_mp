@@ -17,6 +17,7 @@ class MainMenuGameModesScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(height: 50),
             FlickeringText(),
             const SizedBox(height: 55),
             _buildButton(
@@ -47,6 +48,18 @@ class MainMenuGameModesScreen extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.blue,
+                          Colors.purple,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      border: Border.all(
+                        width: 2,
+                        color: Colors.purple.withOpacity(0.5),
+                      ),
                       color: Colors.white.withOpacity(0.2),
                     ),
                     child: IconButton(
@@ -64,6 +77,18 @@ class MainMenuGameModesScreen extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.blue,
+                          Colors.purple,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      border: Border.all(
+                        width: 2,
+                        color: Colors.purple.withOpacity(0.5),
+                      ),
                       color: Colors.white.withOpacity(0.2),
                     ),
                     child: IconButton(
@@ -103,9 +128,9 @@ class MainMenuGameModesScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(25),
           gradient: LinearGradient(
             colors: [
-              boardBorderColor.withOpacity(0.6),
-              PrimaryColor.withOpacity(0.5),
-              boardBorderColor.withOpacity(0.6),
+              boardBorderColor.withOpacity(0.5),
+              PrimaryColor.withOpacity(0.3),
+              boardBorderColor.withOpacity(0.5),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,

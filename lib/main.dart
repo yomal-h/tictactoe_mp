@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe_mp/provider/room_data_provider.dart';
 import 'package:tictactoe_mp/screens/create_room_screen.dart';
+import 'package:tictactoe_mp/screens/difficulty_level_selection_screen.dart';
 import 'package:tictactoe_mp/screens/game_screen.dart';
 import 'package:tictactoe_mp/screens/join_room_screen.dart';
 import 'package:tictactoe_mp/screens/main_menu_game_modes_screen.dart';
@@ -39,6 +40,8 @@ class MyApp extends StatelessWidget {
           MainMenuScreen.routeName: (context) => const MainMenuScreen(),
           MainMenuGameModesScreen.routeName: (context) =>
               const MainMenuGameModesScreen(),
+          DifficultyLevelSelectionScreen.routeName: (context) =>
+              const DifficultyLevelSelectionScreen(),
           TicTacToeGameEasy.routeName: (context) => const TicTacToeGameEasy(),
           TicTacToeGameMedium.routeName: (context) =>
               const TicTacToeGameMedium(),
@@ -53,7 +56,7 @@ class MyApp extends StatelessWidget {
           CreateRoomScreen.routeName: (context) => const CreateRoomScreen(),
           GameScreen.routeName: (context) => const GameScreen(),
         },
-        initialRoute: MainMenuGameModesScreen.routeName,
+        initialRoute: DifficultyLevelSelectionScreen.routeName,
       ),
     );
   }
