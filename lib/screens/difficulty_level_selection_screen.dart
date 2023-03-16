@@ -24,19 +24,19 @@ class DifficultyLevelSelectionScreen extends StatelessWidget {
               'Easy',
               () => Navigator.pushNamed(context, '/single-player'),
             ),
-            const SizedBox(height: 26),
+            const SizedBox(height: 28),
             _buildButton(
               context,
               'Medium',
               () => Navigator.pushNamed(context, '/multiplayer-offline'),
             ),
-            const SizedBox(height: 26),
+            const SizedBox(height: 28),
             _buildButton(
               context,
               'Hard',
               () {},
             ),
-            const SizedBox(height: 26),
+            const SizedBox(height: 28),
             _buildButton(
               context,
               'Expert',
@@ -54,14 +54,16 @@ class DifficultyLevelSelectionScreen extends StatelessWidget {
       [bool isDifferent = false]) {
     final buttonStyle = ElevatedButton.styleFrom(
         primary: Colors.transparent,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         shape: const StadiumBorder(),
         side: BorderSide(
           width: 1.0,
           color: Colors.purpleAccent.withOpacity(0.3),
         ),
         elevation: 20.0,
-        shadowColor: Color.fromARGB(255, 21, 125, 211));
+        shadowColor: isDifferent
+            ? Colors.pink.withOpacity(0.9)
+            : Color.fromARGB(255, 21, 125, 211));
 
     final gradient = isDifferent
         ? LinearGradient(
@@ -88,8 +90,6 @@ class DifficultyLevelSelectionScreen extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
           gradient: gradient,
-          border: Border.all(
-              color: Colors.purpleAccent.withOpacity(0.5), width: 2.0),
         ),
         child: ElevatedButton(
           style: buttonStyle,

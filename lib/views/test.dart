@@ -466,39 +466,88 @@ class __TicTacToeGameOfflineMultiplayerStateTest
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(dialogTitle),
-            content: Text(dialogContent),
-            actions: [
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  _winningLine.clear();
-                  Navigator.of(context).pop();
-                  setState(() {
-                    _board.fillRange(0, 9, '');
-                    //_currentPlayer = 'X';
-                    _round++;
-                    _gameOver = false;
-                    if (winner == 'Player 1') {
-                      // _playerScore++;
-                      _controller.stop();
-                      _controller.reset();
-                      _rotateController.stop();
-                      _rotateController.reset();
-                      _currentPlayer = 'O';
-                    } else if (winner == 'Player 2') {
-                      // _computerScore++;
-                      _controller.stop();
-                      _controller.reset();
-                      _rotateController.stop();
-                      _rotateController.reset();
-                      _currentPlayer = 'X';
-                    }
-                  });
-                },
+          return Dialog(
+            backgroundColor: Colors.black,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.black,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.blue.withOpacity(0.5),
+                    blurRadius: 12,
+                    offset: Offset(0, 6),
+                  ),
+                ],
               ),
-            ],
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    dialogTitle,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      shadows: [
+                        BoxShadow(
+                          color: Colors.blue.withOpacity(0.5),
+                          blurRadius: 12,
+                          offset: Offset(0, 6),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    dialogContent,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 24),
+                  TextButton(
+                    child: Text(
+                      'OK',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: () {
+                      _winningLine.clear();
+                      Navigator.of(context).pop();
+                      setState(() {
+                        _board.fillRange(0, 9, '');
+                        //_currentPlayer = 'X';
+                        _round++;
+                        _gameOver = false;
+                        if (winner == 'Player 1') {
+                          // _playerScore++;
+                          _controller.stop();
+                          _controller.reset();
+                          _rotateController.stop();
+                          _rotateController.reset();
+                          _currentPlayer = 'O';
+                        } else if (winner == 'Player 2') {
+                          // _computerScore++;
+                          _controller.stop();
+                          _controller.reset();
+                          _rotateController.stop();
+                          _rotateController.reset();
+                          _currentPlayer = 'X';
+                        }
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
           );
         },
       );
@@ -552,3 +601,43 @@ class __TicTacToeGameOfflineMultiplayerStateTest
     _gameOver = true;
   }
 }
+
+// showDialog(
+//         context: context,
+//         builder: (BuildContext context) {
+//           return AlertDialog(
+//             title: Text(dialogTitle),
+//             content: Text(dialogContent),
+//             actions: [
+//               TextButton(
+//                 child: Text('OK'),
+//                 onPressed: () {
+//                   _winningLine.clear();
+//                   Navigator.of(context).pop();
+//                   setState(() {
+//                     _board.fillRange(0, 9, '');
+//                     //_currentPlayer = 'X';
+//                     _round++;
+//                     _gameOver = false;
+//                     if (winner == 'Player 1') {
+//                       // _playerScore++;
+//                       _controller.stop();
+//                       _controller.reset();
+//                       _rotateController.stop();
+//                       _rotateController.reset();
+//                       _currentPlayer = 'O';
+//                     } else if (winner == 'Player 2') {
+//                       // _computerScore++;
+//                       _controller.stop();
+//                       _controller.reset();
+//                       _rotateController.stop();
+//                       _rotateController.reset();
+//                       _currentPlayer = 'X';
+//                     }
+//                   });
+//                 },
+//               ),
+//             ],
+//           );
+//         },
+//       );

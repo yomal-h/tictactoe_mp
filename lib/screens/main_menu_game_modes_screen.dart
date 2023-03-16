@@ -39,6 +39,7 @@ class MainMenuGameModesScreen extends StatelessWidget {
               'Multiplayer (Online)',
               FontAwesome5.globe,
               () {},
+              true, // Make this button different
             ),
             const SizedBox(height: 30),
             Row(
@@ -109,8 +110,9 @@ class MainMenuGameModesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildButton(BuildContext context, String text, IconData icon,
-      VoidCallback onPressed) {
+  Widget _buildButton(
+      BuildContext context, String text, IconData icon, VoidCallback onPressed,
+      [bool isDifferent = false]) {
     final buttonStyle = ElevatedButton.styleFrom(
         primary: Colors.transparent,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -118,15 +120,20 @@ class MainMenuGameModesScreen extends StatelessWidget {
         side:
             BorderSide(width: 2.0, color: Colors.purpleAccent.withOpacity(0.5)),
         elevation: 20.0,
-        shadowColor: Color.fromARGB(255, 21, 125, 211));
+        shadowColor: isDifferent
+            ? Colors.pink.withOpacity(0.9)
+            : Color.fromARGB(255, 21, 125, 211));
     //shadowColor: Color.fromARGB(255, 0, 52, 143));
-
-    return SizedBox(
-      width: 300, // Fixed width for all buttons
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          gradient: LinearGradient(
+    final gradient = isDifferent
+        ? LinearGradient(
+            colors: [
+              Colors.pink.withOpacity(0.5),
+              Colors.pink.withOpacity(0.5),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          )
+        : LinearGradient(
             colors: [
               boardBorderColor.withOpacity(0.5),
               PrimaryColor.withOpacity(0.3),
@@ -134,7 +141,13 @@ class MainMenuGameModesScreen extends StatelessWidget {
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-          ),
+          );
+    return SizedBox(
+      width: 300, // Fixed width for all buttons
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          gradient: gradient,
         ),
         child: ElevatedButton.icon(
           style: buttonStyle,
