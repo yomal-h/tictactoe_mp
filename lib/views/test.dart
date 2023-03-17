@@ -383,10 +383,18 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                           TextSpan(
                             text: _currentPlayer,
                             style: TextStyle(
-                              fontSize: 24.0,
-                              fontFamily: 'Beon',
-                              fontWeight: FontWeight.bold,
-                            ),
+                                fontSize: 24.0,
+                                fontFamily: 'Beon',
+                                fontWeight: FontWeight.bold,
+                                shadows: [
+                                  BoxShadow(
+                                    color: _currentPlayer == 'X'
+                                        ? Colors.pinkAccent.withOpacity(0.8)
+                                        : Colors.greenAccent,
+                                    blurRadius: 12,
+                                    offset: Offset(0, 0),
+                                  ),
+                                ]),
                           ),
                         ],
                       ),
