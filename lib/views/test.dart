@@ -547,18 +547,20 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                           winner == 'Player 1' ? Colors.pink : Colors.green;
                       return Transform.scale(
                         scale: _animation.value,
-                        child: Text(
-                          winner == 'Tie'
-                              ? ''
-                              : '${winner == 'Player 1' ? 'X' : 'O'}',
-                          style: TextStyle(
-                              fontSize: 55,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              shadows: [
-                                Shadow(blurRadius: 60, color: shadowColor)
-                              ]),
-                        ),
+                        child: winner == 'Tie'
+                            ? SizedBox
+                                .shrink() //text should be added after this otherwise it gives error
+                            : Text(
+                                '${winner == 'Player 1' ? 'X' : 'O'}',
+                                style: TextStyle(
+                                  fontSize: 55,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  shadows: [
+                                    Shadow(blurRadius: 60, color: shadowColor)
+                                  ],
+                                ),
+                              ),
                       );
                     },
                   ),
