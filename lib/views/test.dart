@@ -555,12 +555,19 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                     ),
                   ),
                   SizedBox(height: 16),
-                  TextButton(
+                  ElevatedButton(
                     child: Text(
                       'OK',
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.purple, // background color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            18.0), // rounded corner radius
                       ),
                     ),
                     onPressed: () {
