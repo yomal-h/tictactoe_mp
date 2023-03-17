@@ -33,6 +33,9 @@ class __TicTacToeGameOfflineMultiplayerStateTest
   late Animation<double> _rotateAnimation;
   late Animation<double> _scaleAnimation;
 
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
   @override
   void initState() {
     super.initState();
@@ -66,6 +69,25 @@ class __TicTacToeGameOfflineMultiplayerStateTest
 
     _scaleAnimation =
         Tween<double>(begin: 1.0, end: 1.3).animate(_rotateController);
+
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    )..forward();
+    _animation = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    _rotateController.dispose();
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -234,11 +256,13 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                                   _playerScore++;
                                   _controller.repeat(reverse: true);
                                   _rotateController.repeat(reverse: true);
+                                  _animationController.repeat(reverse: true);
                                   _startNewRound();
                                 } else if (_checkForWinner(_board, 'O')) {
                                   _computerScore++;
                                   _controller.repeat(reverse: true);
                                   _rotateController.repeat(reverse: true);
+                                  _animationController.repeat(reverse: true);
                                   _startNewRound();
                                 } else if (_board
                                     .every((element) => element != '')) {
@@ -475,12 +499,12 @@ class __TicTacToeGameOfflineMultiplayerStateTest
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                color: Colors.black,
+                color: PrimaryColor,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.blue.withOpacity(0.5),
+                    color: Colors.white.withOpacity(0.5),
                     blurRadius: 12,
-                    offset: Offset(0, 6),
+                    offset: Offset(1, 1),
                   ),
                 ],
               ),
@@ -503,6 +527,24 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                     ),
                   ),
                   SizedBox(height: 16),
+                  AnimatedBuilder(
+                    animation: _animationController,
+                    builder: (context, child) {
+                      return Transform.scale(
+                        scale: _animation.value,
+                        child: Text(
+                          winner == 'Tie'
+                              ? ''
+                              : '${winner == 'Player 1' ? 'X' : 'O'}',
+                          style: TextStyle(
+                            fontSize: 35,
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  SizedBox(height: 8),
                   Text(
                     dialogContent,
                     style: TextStyle(
@@ -510,7 +552,7 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(height: 24),
+                  SizedBox(height: 16),
                   TextButton(
                     child: Text(
                       'OK',
