@@ -254,12 +254,20 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                                 _board[index] = _currentPlayer;
                                 if (_checkForWinner(_board, 'X')) {
                                   _playerScore++;
+                                  Future.delayed(Duration(seconds: 3), () {
+                                    _controller.stop();
+                                    _rotateController.stop();
+                                  });
                                   _controller.repeat(reverse: true);
                                   _rotateController.repeat(reverse: true);
                                   _animationController.repeat(reverse: true);
                                   _startNewRound();
                                 } else if (_checkForWinner(_board, 'O')) {
                                   _computerScore++;
+                                  Future.delayed(Duration(seconds: 3), () {
+                                    _controller.stop();
+                                    _rotateController.stop();
+                                  });
                                   _controller.repeat(reverse: true);
                                   _rotateController.repeat(reverse: true);
                                   _animationController.repeat(reverse: true);
