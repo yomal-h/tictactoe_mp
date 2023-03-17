@@ -371,53 +371,29 @@ class __TicTacToeGameOfflineMultiplayerStateTest
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    primary: Colors.white,
-                    textStyle: TextStyle(fontSize: 18),
-                  ),
+                padding: const EdgeInsets.only(left: 15),
+                child: IconButton(
+                  icon: Icon(Icons.home),
                   onPressed: _startNewGame,
-                  child: Ink(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(1),
-                    ),
-                    child: InkWell(
-                      splashColor: boardBorderColor.withOpacity(0.9),
-                      borderRadius: BorderRadius.circular(10),
-                      onTap: _startNewGame,
-                      child: Padding(
-                        padding: EdgeInsets.all(2),
-                        child: Text('Main Menu'),
-                      ),
-                    ),
-                  ),
+                  splashRadius: 18,
+                  iconSize: 28,
+                  padding: const EdgeInsets.all(8.0),
+                  color: Colors.white,
+                  splashColor: boardBorderColor.withOpacity(0.9),
+                  highlightColor: Colors.transparent,
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    primary: Colors.white,
-                    textStyle: TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
+                padding: const EdgeInsets.only(right: 15),
+                child: IconButton(
+                  icon: Icon(Icons.refresh),
                   onPressed: _startNewGame,
-                  child: Ink(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(1),
-                    ),
-                    child: InkWell(
-                      splashColor: boardBorderColor.withOpacity(0.9),
-                      borderRadius: BorderRadius.circular(10),
-                      onTap: _startNewGame,
-                      child: Padding(
-                        padding: EdgeInsets.all(2),
-                        child: Text('Reset'),
-                      ),
-                    ),
-                  ),
+                  splashRadius: 18,
+                  iconSize: 28,
+                  padding: const EdgeInsets.all(8.0),
+                  color: Colors.white,
+                  splashColor: boardBorderColor.withOpacity(0.9),
+                  highlightColor: Colors.transparent,
                 ),
               ),
             ],
