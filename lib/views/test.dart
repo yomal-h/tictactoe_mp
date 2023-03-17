@@ -502,9 +502,9 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                 color: PrimaryColor,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.white.withOpacity(0.5),
+                    color: boardBorderColor.withOpacity(0.3),
                     blurRadius: 12,
-                    offset: Offset(1, 1),
+                    offset: Offset(0, 0),
                   ),
                 ],
               ),
@@ -519,9 +519,9 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                       color: Colors.white,
                       shadows: [
                         BoxShadow(
-                          color: Colors.blue.withOpacity(0.5),
+                          color: Colors.pinkAccent.withOpacity(0.8),
                           blurRadius: 12,
-                          offset: Offset(0, 6),
+                          offset: Offset(2, 2),
                         ),
                       ],
                     ),
@@ -530,6 +530,8 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                   AnimatedBuilder(
                     animation: _animationController,
                     builder: (context, child) {
+                      Color shadowColor =
+                          winner == 'Player 1' ? Colors.pink : Colors.green;
                       return Transform.scale(
                         scale: _animation.value,
                         child: Text(
@@ -537,9 +539,12 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                               ? ''
                               : '${winner == 'Player 1' ? 'X' : 'O'}',
                           style: TextStyle(
-                            fontSize: 35,
-                            color: Colors.white,
-                          ),
+                              fontSize: 55,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              shadows: [
+                                Shadow(blurRadius: 60, color: shadowColor)
+                              ]),
                         ),
                       );
                     },
