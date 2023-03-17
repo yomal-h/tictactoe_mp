@@ -285,7 +285,8 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                     color: _winningLine.contains(index)
-                                        ? Colors.purple
+                                        ? boardBorderColor.withOpacity(
+                                            0.5) //winning boxes highlight color
                                         : boardBorderColor.withOpacity(0.3),
                                     width: _winningLine.contains(index)
                                         ? 5.0
@@ -352,15 +353,35 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 10.0),
-                    child: Text(
-                      'Current player: $_currentPlayer',
-                      style: TextStyle(
+                      horizontal: 20.0,
+                      vertical: 10.0,
+                    ),
+                    child: RichText(
+                      text: TextSpan(
+                        style: TextStyle(
                           color: Colors.white,
-                          fontSize: 23.0,
+                          fontSize: 18.0,
                           shadows: [
-                            Shadow(blurRadius: 40, color: boardBorderColor)
-                          ]),
+                            Shadow(blurRadius: 40, color: boardBorderColor),
+                          ],
+                        ),
+                        children: [
+                          TextSpan(
+                            text: 'Current player:  ',
+                            style: TextStyle(
+                              fontFamily: 'Beon',
+                            ),
+                          ),
+                          TextSpan(
+                            text: _currentPlayer,
+                            style: TextStyle(
+                              fontSize: 24.0,
+                              fontFamily: 'Beon',
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -371,7 +392,7 @@ class __TicTacToeGameOfflineMultiplayerStateTest
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 15),
+                padding: const EdgeInsets.only(left: 10),
                 child: IconButton(
                   icon: Icon(Icons.home),
                   onPressed: _startNewGame,
@@ -384,7 +405,7 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 15),
+                padding: const EdgeInsets.only(right: 10),
                 child: IconButton(
                   icon: Icon(Icons.refresh),
                   onPressed: _startNewGame,
