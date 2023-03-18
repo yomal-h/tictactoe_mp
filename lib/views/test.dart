@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter_glow/flutter_glow.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'dart:io' show Platform;
@@ -674,22 +675,28 @@ class __TicTacToeGameOfflineMultiplayerStateTest
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  'Game Over',
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    shadows: [
-                      BoxShadow(
-                        color: Colors.pinkAccent.withOpacity(0.8),
-                        blurRadius: 12,
-                        offset: Offset(2, 2),
+                SizedBox(height: 10),
+                AnimatedTextKit(
+                  animatedTexts: [
+                    WavyAnimatedText(
+                      'Game Over',
+                      textStyle: TextStyle(
+                        fontSize: 40.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        shadows: [
+                          BoxShadow(
+                            color: Colors.pinkAccent.withOpacity(0.8),
+                            blurRadius: 12,
+                            offset: Offset(2, 2),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                  isRepeatingAnimation: false,
                 ),
-                SizedBox(height: 16),
+                SizedBox(height: 20),
                 AnimatedBuilder(
                   animation: _animationController,
                   builder: (context, child) {
@@ -697,7 +704,7 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                         winner == 'Player 1' ? Colors.pink : Colors.green;
                     return Transform.scale(
                       scale: _animation.value,
-                      child: winner == 'Tie'
+                      child: winner == 'Nobody'
                           ? SizedBox
                               .shrink() //text should be added after this otherwise it gives error
                           : Text(
@@ -864,3 +871,20 @@ class __TicTacToeGameOfflineMultiplayerStateTest
 //         );
 //       },
 //     );
+
+
+  //  Text(
+  //                 'Game Over',
+  //                 style: TextStyle(
+  //                   fontSize: 40,
+  //                   fontWeight: FontWeight.bold,
+  //                   color: Colors.white,
+  //                   shadows: [
+  //                     BoxShadow(
+  //                       color: Colors.pinkAccent.withOpacity(0.8),
+  //                       blurRadius: 12,
+  //                       offset: Offset(2, 2),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),

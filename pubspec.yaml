@@ -39,7 +39,7 @@ dependencies:
   share_extend: ^2.0.0
   flutter_glow: ^0.2.0
   fluttericon: ^2.0.0
-  animated_text_kit: ^4.0.0
+  animated_text_kit: ^4.2.1
   
 
 dev_dependencies:
