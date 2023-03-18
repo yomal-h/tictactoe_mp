@@ -153,7 +153,7 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        color: Colors.purpleAccent.withOpacity(0.2),
+                        color: boardBorderColor.withOpacity(0.2),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
@@ -202,7 +202,7 @@ class __TicTacToeGameOfflineMultiplayerStateTest
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        color: Colors.purpleAccent.withOpacity(0.2),
+                        color: boardBorderColor.withOpacity(0.2),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
@@ -357,7 +357,7 @@ class __TicTacToeGameOfflineMultiplayerStateTest
               : Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: Colors.purpleAccent.withOpacity(0.2),
+                    color: boardBorderColor.withOpacity(0.2),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -653,17 +653,153 @@ class __TicTacToeGameOfflineMultiplayerStateTest
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Game Over'),
-          content: Text('The winner is $winner!'),
-          actions: [
-            ElevatedButton(
-                child: Text('New Game'),
-                onPressed: () {
-                  _startNewGame();
-                  Navigator.of(context).pop();
-                }),
-          ],
+        return Dialog(
+          backgroundColor: Colors.black,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: PrimaryColor,
+              boxShadow: [
+                BoxShadow(
+                  color: boardBorderColor.withOpacity(0.3),
+                  blurRadius: 12,
+                  offset: Offset(0, 0),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Game Over',
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    shadows: [
+                      BoxShadow(
+                        color: Colors.pinkAccent.withOpacity(0.8),
+                        blurRadius: 12,
+                        offset: Offset(2, 2),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 16),
+                AnimatedBuilder(
+                  animation: _animationController,
+                  builder: (context, child) {
+                    Color shadowColor =
+                        winner == 'Player 1' ? Colors.pink : Colors.green;
+                    return Transform.scale(
+                      scale: _animation.value,
+                      child: winner == 'Tie'
+                          ? SizedBox
+                              .shrink() //text should be added after this otherwise it gives error
+                          : Text(
+                              '${winner == 'Player 1' ? 'X' : 'O'}',
+                              style: TextStyle(
+                                fontSize: 65,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                shadows: [
+                                  Shadow(blurRadius: 60, color: shadowColor)
+                                ],
+                              ),
+                            ),
+                    );
+                  },
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'The winner is',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: ShaderMask(
+                    shaderCallback: (bounds) {
+                      return LinearGradient(
+                        colors: [
+                          Colors.pinkAccent,
+                          Colors.blue,
+                          Colors.pinkAccent
+                        ],
+                        tileMode: TileMode.mirror,
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ).createShader(bounds);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        '$winner',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16),
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  ElevatedButton(
+                    child: Text(
+                      'Main Menu',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.purple, // background color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            18.0), // rounded corner radius
+                      ),
+                    ),
+                    onPressed: () {
+                      _startNewGame();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  SizedBox(width: 15),
+                  ElevatedButton(
+                    child: Text(
+                      'New Game',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.purple, // background color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            18.0), // rounded corner radius
+                      ),
+                    ),
+                    onPressed: () {
+                      _startNewGame();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ]),
+              ],
+            ),
+          ),
         );
       },
     );
@@ -710,3 +846,21 @@ class __TicTacToeGameOfflineMultiplayerStateTest
 //           );
 //         },
 //       );
+
+// showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+//           title: Text('Game Over'),
+//           content: Text('The winner is $winner!'),
+//           actions: [
+//             ElevatedButton(
+//                 child: Text('New Game'),
+//                 onPressed: () {
+//                   _startNewGame();
+//                   Navigator.of(context).pop();
+//                 }),
+//           ],
+//         );
+//       },
+//     );
