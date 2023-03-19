@@ -501,126 +501,255 @@ class __TicTacToeGameOfflineMultiplayerStateTest
         dialogContent = '$winner won the round!';
       }
 
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-            backgroundColor: Colors.black,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Container(
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: PrimaryColor,
-                boxShadow: [
-                  BoxShadow(
-                    color: boardBorderColor.withOpacity(0.3),
-                    blurRadius: 12,
-                    offset: Offset(0, 0),
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    dialogTitle,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      shadows: [
-                        BoxShadow(
-                          color: Colors.pinkAccent.withOpacity(0.8),
-                          blurRadius: 12,
-                          offset: Offset(2, 2),
-                        ),
-                      ],
+      showGeneralDialog(
+          barrierColor: Colors.black.withOpacity(0.5),
+          transitionBuilder: (context, a1, a2, widget) {
+            final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+            return Transform(
+              transform: Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+              child: Opacity(
+                  opacity: a1.value,
+                  child: Dialog(
+                    backgroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  ),
-                  SizedBox(height: 16),
-                  AnimatedBuilder(
-                    animation: _animationController,
-                    builder: (context, child) {
-                      Color shadowColor =
-                          winner == 'Player 1' ? Colors.pink : Colors.green;
-                      return Transform.scale(
-                        scale: _animation.value,
-                        child: winner == 'Tie'
-                            ? SizedBox
-                                .shrink() //text should be added after this otherwise it gives error
-                            : Text(
-                                '${winner == 'Player 1' ? 'X' : 'O'}',
-                                style: TextStyle(
-                                  fontSize: 55,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  shadows: [
-                                    Shadow(blurRadius: 60, color: shadowColor)
-                                  ],
+                    child: Container(
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: PrimaryColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: boardBorderColor.withOpacity(0.3),
+                            blurRadius: 12,
+                            offset: Offset(0, 0),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            dialogTitle,
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              shadows: [
+                                BoxShadow(
+                                  color: Colors.pinkAccent.withOpacity(0.8),
+                                  blurRadius: 12,
+                                  offset: Offset(2, 2),
                                 ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 16),
+                          AnimatedBuilder(
+                            animation: _animationController,
+                            builder: (context, child) {
+                              Color shadowColor = winner == 'Player 1'
+                                  ? Colors.pink
+                                  : Colors.green;
+                              return Transform.scale(
+                                scale: _animation.value,
+                                child: winner == 'Tie'
+                                    ? SizedBox
+                                        .shrink() //text should be added after this otherwise it gives error
+                                    : Text(
+                                        '${winner == 'Player 1' ? 'X' : 'O'}',
+                                        style: TextStyle(
+                                          fontSize: 55,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          shadows: [
+                                            Shadow(
+                                                blurRadius: 60,
+                                                color: shadowColor)
+                                          ],
+                                        ),
+                                      ),
+                              );
+                            },
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            dialogContent,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 16),
+                          ElevatedButton(
+                            child: Text(
+                              'OK',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
                               ),
-                      );
-                    },
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    dialogContent,
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.purple, // background color
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    18.0), // rounded corner radius
+                              ),
+                            ),
+                            onPressed: () {
+                              _winningLine.clear();
+                              Navigator.of(context).pop();
+                              setState(() {
+                                _board.fillRange(0, 9, '');
+                                //_currentPlayer = 'X';
+                                _round++;
+                                _gameOver = false;
+                                if (winner == 'Player 1') {
+                                  // _playerScore++;
+                                  _controller.stop();
+                                  _controller.reset();
+                                  _rotateController.stop();
+                                  _rotateController.reset();
+                                  _currentPlayer = 'O';
+                                } else if (winner == 'Player 2') {
+                                  // _computerScore++;
+                                  _controller.stop();
+                                  _controller.reset();
+                                  _rotateController.stop();
+                                  _rotateController.reset();
+                                  _currentPlayer = 'X';
+                                }
+                              });
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 16),
-                  ElevatedButton(
-                    child: Text(
-                      'OK',
+                  )),
+            );
+          },
+          transitionDuration: Duration(milliseconds: 600),
+          barrierDismissible: true,
+          barrierLabel: '',
+          context: context,
+          pageBuilder: (context, animation1, animation2) {
+            return Dialog(
+              backgroundColor: Colors.black,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Container(
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: PrimaryColor,
+                  boxShadow: [
+                    BoxShadow(
+                      color: boardBorderColor.withOpacity(0.3),
+                      blurRadius: 12,
+                      offset: Offset(0, 0),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      dialogTitle,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        shadows: [
+                          BoxShadow(
+                            color: Colors.pinkAccent.withOpacity(0.8),
+                            blurRadius: 12,
+                            offset: Offset(2, 2),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    AnimatedBuilder(
+                      animation: _animationController,
+                      builder: (context, child) {
+                        Color shadowColor =
+                            winner == 'Player 1' ? Colors.pink : Colors.green;
+                        return Transform.scale(
+                          scale: _animation.value,
+                          child: winner == 'Tie'
+                              ? SizedBox
+                                  .shrink() //text should be added after this otherwise it gives error
+                              : Text(
+                                  '${winner == 'Player 1' ? 'X' : 'O'}',
+                                  style: TextStyle(
+                                    fontSize: 55,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    shadows: [
+                                      Shadow(blurRadius: 60, color: shadowColor)
+                                    ],
+                                  ),
+                                ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      dialogContent,
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
                       ),
                     ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.purple, // background color
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            18.0), // rounded corner radius
+                    SizedBox(height: 16),
+                    ElevatedButton(
+                      child: Text(
+                        'OK',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
                       ),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.purple, // background color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              18.0), // rounded corner radius
+                        ),
+                      ),
+                      onPressed: () {
+                        _winningLine.clear();
+                        Navigator.of(context).pop();
+                        setState(() {
+                          _board.fillRange(0, 9, '');
+                          //_currentPlayer = 'X';
+                          _round++;
+                          _gameOver = false;
+                          if (winner == 'Player 1') {
+                            // _playerScore++;
+                            _controller.stop();
+                            _controller.reset();
+                            _rotateController.stop();
+                            _rotateController.reset();
+                            _currentPlayer = 'O';
+                          } else if (winner == 'Player 2') {
+                            // _computerScore++;
+                            _controller.stop();
+                            _controller.reset();
+                            _rotateController.stop();
+                            _rotateController.reset();
+                            _currentPlayer = 'X';
+                          }
+                        });
+                      },
                     ),
-                    onPressed: () {
-                      _winningLine.clear();
-                      Navigator.of(context).pop();
-                      setState(() {
-                        _board.fillRange(0, 9, '');
-                        //_currentPlayer = 'X';
-                        _round++;
-                        _gameOver = false;
-                        if (winner == 'Player 1') {
-                          // _playerScore++;
-                          _controller.stop();
-                          _controller.reset();
-                          _rotateController.stop();
-                          _rotateController.reset();
-                          _currentPlayer = 'O';
-                        } else if (winner == 'Player 2') {
-                          // _computerScore++;
-                          _controller.stop();
-                          _controller.reset();
-                          _rotateController.stop();
-                          _rotateController.reset();
-                          _currentPlayer = 'X';
-                        }
-                      });
-                    },
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          );
-        },
-      );
+            );
+          });
     }
 
     _gameOver = true;
@@ -651,165 +780,335 @@ class __TicTacToeGameOfflineMultiplayerStateTest
     } else {
       winner = 'Nobody';
     }
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.black,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Container(
-            padding: EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: PrimaryColor,
-              boxShadow: [
-                BoxShadow(
-                  color: boardBorderColor.withOpacity(0.3),
-                  blurRadius: 12,
-                  offset: Offset(0, 0),
+
+    showGeneralDialog(
+        barrierColor: Colors.black.withOpacity(0.5),
+        transitionBuilder: (context, a1, a2, widget) {
+          return Transform.scale(
+            scale: a1.value,
+            child: Opacity(
+              opacity: a1.value,
+              child: Dialog(
+                backgroundColor: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(height: 10),
-                AnimatedTextKit(
-                  animatedTexts: [
-                    WavyAnimatedText(
-                      'Game Over',
-                      textStyle: TextStyle(
-                        fontSize: 40.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        shadows: [
-                          BoxShadow(
-                            color: Colors.pinkAccent.withOpacity(0.8),
-                            blurRadius: 12,
-                            offset: Offset(2, 2),
+                child: Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: PrimaryColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: boardBorderColor.withOpacity(0.3),
+                        blurRadius: 12,
+                        offset: Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(height: 10),
+                      AnimatedTextKit(
+                        animatedTexts: [
+                          WavyAnimatedText(
+                            'Game Over',
+                            textStyle: TextStyle(
+                              fontSize: 40.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              shadows: [
+                                BoxShadow(
+                                  color: Colors.pinkAccent.withOpacity(0.8),
+                                  blurRadius: 12,
+                                  offset: Offset(2, 2),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
+                        isRepeatingAnimation: false,
                       ),
-                    ),
-                  ],
-                  isRepeatingAnimation: false,
-                ),
-                SizedBox(height: 20),
-                AnimatedBuilder(
-                  animation: _animationController,
-                  builder: (context, child) {
-                    Color shadowColor =
-                        winner == 'Player 1' ? Colors.pink : Colors.green;
-                    return Transform.scale(
-                      scale: _animation.value,
-                      child: winner == 'Nobody'
-                          ? SizedBox
-                              .shrink() //text should be added after this otherwise it gives error
-                          : Text(
-                              '${winner == 'Player 1' ? 'X' : 'O'}',
+                      SizedBox(height: 20),
+                      AnimatedBuilder(
+                        animation: _animationController,
+                        builder: (context, child) {
+                          Color shadowColor =
+                              winner == 'Player 1' ? Colors.pink : Colors.green;
+                          return Transform.scale(
+                            scale: _animation.value,
+                            child: winner == 'Nobody'
+                                ? SizedBox
+                                    .shrink() //text should be added after this otherwise it gives error
+                                : Text(
+                                    '${winner == 'Player 1' ? 'X' : 'O'}',
+                                    style: TextStyle(
+                                      fontSize: 65,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      shadows: [
+                                        Shadow(
+                                            blurRadius: 60, color: shadowColor)
+                                      ],
+                                    ),
+                                  ),
+                          );
+                        },
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'The winner is',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: ShaderMask(
+                          shaderCallback: (bounds) {
+                            return LinearGradient(
+                              colors: [
+                                Colors.pinkAccent,
+                                Colors.blue,
+                                Colors.pinkAccent
+                              ],
+                              tileMode: TileMode.mirror,
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                            ).createShader(bounds);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              '$winner',
                               style: TextStyle(
-                                fontSize: 65,
+                                fontSize: 24,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
-                                shadows: [
-                                  Shadow(blurRadius: 60, color: shadowColor)
-                                ],
                               ),
                             ),
-                    );
-                  },
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'The winner is',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              child: Text(
+                                'Main Menu',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.purple, // background color
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      18.0), // rounded corner radius
+                                ),
+                              ),
+                              onPressed: () {
+                                _startNewGame();
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            SizedBox(width: 15),
+                            ElevatedButton(
+                              child: Text(
+                                'New Game',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.purple, // background color
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      18.0), // rounded corner radius
+                                ),
+                              ),
+                              onPressed: () {
+                                _startNewGame();
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ]),
+                    ],
                   ),
                 ),
-                SizedBox(height: 8),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          );
+        },
+        transitionDuration: Duration(milliseconds: 600),
+        barrierDismissible: true,
+        barrierLabel: '',
+        context: context,
+        pageBuilder: (context, animation1, animation2) {
+          return Dialog(
+            backgroundColor: Colors.black,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: PrimaryColor,
+                boxShadow: [
+                  BoxShadow(
+                    color: boardBorderColor.withOpacity(0.3),
+                    blurRadius: 12,
+                    offset: Offset(0, 0),
                   ),
-                  child: ShaderMask(
-                    shaderCallback: (bounds) {
-                      return LinearGradient(
-                        colors: [
-                          Colors.pinkAccent,
-                          Colors.blue,
-                          Colors.pinkAccent
-                        ],
-                        tileMode: TileMode.mirror,
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ).createShader(bounds);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        '$winner',
-                        style: TextStyle(
-                          fontSize: 24,
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 10),
+                  AnimatedTextKit(
+                    animatedTexts: [
+                      WavyAnimatedText(
+                        'Game Over',
+                        textStyle: TextStyle(
+                          fontSize: 40.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
+                          shadows: [
+                            BoxShadow(
+                              color: Colors.pinkAccent.withOpacity(0.8),
+                              blurRadius: 12,
+                              offset: Offset(2, 2),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                    isRepeatingAnimation: false,
+                  ),
+                  SizedBox(height: 20),
+                  AnimatedBuilder(
+                    animation: _animationController,
+                    builder: (context, child) {
+                      Color shadowColor =
+                          winner == 'Player 1' ? Colors.pink : Colors.green;
+                      return Transform.scale(
+                        scale: _animation.value,
+                        child: winner == 'Nobody'
+                            ? SizedBox
+                                .shrink() //text should be added after this otherwise it gives error
+                            : Text(
+                                '${winner == 'Player 1' ? 'X' : 'O'}',
+                                style: TextStyle(
+                                  fontSize: 65,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  shadows: [
+                                    Shadow(blurRadius: 60, color: shadowColor)
+                                  ],
+                                ),
+                              ),
+                      );
+                    },
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'The winner is',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: ShaderMask(
+                      shaderCallback: (bounds) {
+                        return LinearGradient(
+                          colors: [
+                            Colors.pinkAccent,
+                            Colors.blue,
+                            Colors.pinkAccent
+                          ],
+                          tileMode: TileMode.mirror,
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                        ).createShader(bounds);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          '$winner',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 16),
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  ElevatedButton(
-                    child: Text(
-                      'Main Menu',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
+                  SizedBox(height: 16),
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    ElevatedButton(
+                      child: Text(
+                        'Main Menu',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.purple, // background color
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            18.0), // rounded corner radius
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.purple, // background color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              18.0), // rounded corner radius
+                        ),
                       ),
+                      onPressed: () {
+                        _startNewGame();
+                        Navigator.of(context).pop();
+                      },
                     ),
-                    onPressed: () {
-                      _startNewGame();
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  SizedBox(width: 15),
-                  ElevatedButton(
-                    child: Text(
-                      'New Game',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
+                    SizedBox(width: 15),
+                    ElevatedButton(
+                      child: Text(
+                        'New Game',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.purple, // background color
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            18.0), // rounded corner radius
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.purple, // background color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              18.0), // rounded corner radius
+                        ),
                       ),
+                      onPressed: () {
+                        _startNewGame();
+                        Navigator.of(context).pop();
+                      },
                     ),
-                    onPressed: () {
-                      _startNewGame();
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ]),
-              ],
+                  ]),
+                ],
+              ),
             ),
-          ),
-        );
-      },
-    );
+          );
+        });
+
     _gameOver = true;
   }
 }
@@ -888,3 +1187,284 @@ class __TicTacToeGameOfflineMultiplayerStateTest
   //                   ],
   //                 ),
   //               ),
+
+  // showDialog(
+      //   context: context,
+      //   builder: (BuildContext context) {
+      //     return Dialog(
+      //       backgroundColor: Colors.black,
+      //       shape: RoundedRectangleBorder(
+      //         borderRadius: BorderRadius.circular(12),
+      //       ),
+      //       child: Container(
+      //         padding: EdgeInsets.all(16),
+      //         decoration: BoxDecoration(
+      //           borderRadius: BorderRadius.circular(12),
+      //           color: PrimaryColor,
+      //           boxShadow: [
+      //             BoxShadow(
+      //               color: boardBorderColor.withOpacity(0.3),
+      //               blurRadius: 12,
+      //               offset: Offset(0, 0),
+      //             ),
+      //           ],
+      //         ),
+      //         child: Column(
+      //           mainAxisSize: MainAxisSize.min,
+      //           children: [
+      //             Text(
+      //               dialogTitle,
+      //               style: TextStyle(
+      //                 fontSize: 24,
+      //                 fontWeight: FontWeight.bold,
+      //                 color: Colors.white,
+      //                 shadows: [
+      //                   BoxShadow(
+      //                     color: Colors.pinkAccent.withOpacity(0.8),
+      //                     blurRadius: 12,
+      //                     offset: Offset(2, 2),
+      //                   ),
+      //                 ],
+      //               ),
+      //             ),
+      //             SizedBox(height: 16),
+      //             AnimatedBuilder(
+      //               animation: _animationController,
+      //               builder: (context, child) {
+      //                 Color shadowColor =
+      //                     winner == 'Player 1' ? Colors.pink : Colors.green;
+      //                 return Transform.scale(
+      //                   scale: _animation.value,
+      //                   child: winner == 'Tie'
+      //                       ? SizedBox
+      //                           .shrink() //text should be added after this otherwise it gives error
+      //                       : Text(
+      //                           '${winner == 'Player 1' ? 'X' : 'O'}',
+      //                           style: TextStyle(
+      //                             fontSize: 55,
+      //                             fontWeight: FontWeight.bold,
+      //                             color: Colors.white,
+      //                             shadows: [
+      //                               Shadow(blurRadius: 60, color: shadowColor)
+      //                             ],
+      //                           ),
+      //                         ),
+      //                 );
+      //               },
+      //             ),
+      //             SizedBox(height: 8),
+      //             Text(
+      //               dialogContent,
+      //               style: TextStyle(
+      //                 fontSize: 18,
+      //                 color: Colors.white,
+      //               ),
+      //             ),
+      //             SizedBox(height: 16),
+      //             ElevatedButton(
+      //               child: Text(
+      //                 'OK',
+      //                 style: TextStyle(
+      //                   fontSize: 18,
+      //                   color: Colors.white,
+      //                 ),
+      //               ),
+      //               style: ElevatedButton.styleFrom(
+      //                 primary: Colors.purple, // background color
+      //                 shape: RoundedRectangleBorder(
+      //                   borderRadius: BorderRadius.circular(
+      //                       18.0), // rounded corner radius
+      //                 ),
+      //               ),
+      //               onPressed: () {
+      //                 _winningLine.clear();
+      //                 Navigator.of(context).pop();
+      //                 setState(() {
+      //                   _board.fillRange(0, 9, '');
+      //                   //_currentPlayer = 'X';
+      //                   _round++;
+      //                   _gameOver = false;
+      //                   if (winner == 'Player 1') {
+      //                     // _playerScore++;
+      //                     _controller.stop();
+      //                     _controller.reset();
+      //                     _rotateController.stop();
+      //                     _rotateController.reset();
+      //                     _currentPlayer = 'O';
+      //                   } else if (winner == 'Player 2') {
+      //                     // _computerScore++;
+      //                     _controller.stop();
+      //                     _controller.reset();
+      //                     _rotateController.stop();
+      //                     _rotateController.reset();
+      //                     _currentPlayer = 'X';
+      //                   }
+      //                 });
+      //               },
+      //             ),
+      //           ],
+      //         ),
+      //       ),
+      //     );
+      //   },
+      // );
+
+    //   showDialog(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return Dialog(
+    //       backgroundColor: Colors.black,
+    //       shape: RoundedRectangleBorder(
+    //         borderRadius: BorderRadius.circular(12),
+    //       ),
+    //       child: Container(
+    //         padding: EdgeInsets.all(16),
+    //         decoration: BoxDecoration(
+    //           borderRadius: BorderRadius.circular(12),
+    //           color: PrimaryColor,
+    //           boxShadow: [
+    //             BoxShadow(
+    //               color: boardBorderColor.withOpacity(0.3),
+    //               blurRadius: 12,
+    //               offset: Offset(0, 0),
+    //             ),
+    //           ],
+    //         ),
+    //         child: Column(
+    //           mainAxisSize: MainAxisSize.min,
+    //           children: [
+    //             SizedBox(height: 10),
+    //             AnimatedTextKit(
+    //               animatedTexts: [
+    //                 WavyAnimatedText(
+    //                   'Game Over',
+    //                   textStyle: TextStyle(
+    //                     fontSize: 40.0,
+    //                     fontWeight: FontWeight.bold,
+    //                     color: Colors.white,
+    //                     shadows: [
+    //                       BoxShadow(
+    //                         color: Colors.pinkAccent.withOpacity(0.8),
+    //                         blurRadius: 12,
+    //                         offset: Offset(2, 2),
+    //                       ),
+    //                     ],
+    //                   ),
+    //                 ),
+    //               ],
+    //               isRepeatingAnimation: false,
+    //             ),
+    //             SizedBox(height: 20),
+    //             AnimatedBuilder(
+    //               animation: _animationController,
+    //               builder: (context, child) {
+    //                 Color shadowColor =
+    //                     winner == 'Player 1' ? Colors.pink : Colors.green;
+    //                 return Transform.scale(
+    //                   scale: _animation.value,
+    //                   child: winner == 'Nobody'
+    //                       ? SizedBox
+    //                           .shrink() //text should be added after this otherwise it gives error
+    //                       : Text(
+    //                           '${winner == 'Player 1' ? 'X' : 'O'}',
+    //                           style: TextStyle(
+    //                             fontSize: 65,
+    //                             fontWeight: FontWeight.bold,
+    //                             color: Colors.white,
+    //                             shadows: [
+    //                               Shadow(blurRadius: 60, color: shadowColor)
+    //                             ],
+    //                           ),
+    //                         ),
+    //                 );
+    //               },
+    //             ),
+    //             SizedBox(height: 8),
+    //             Text(
+    //               'The winner is',
+    //               style: TextStyle(
+    //                 fontSize: 20,
+    //                 color: Colors.white,
+    //               ),
+    //             ),
+    //             SizedBox(height: 8),
+    //             Container(
+    //               decoration: BoxDecoration(
+    //                 borderRadius: BorderRadius.circular(10),
+    //               ),
+    //               child: ShaderMask(
+    //                 shaderCallback: (bounds) {
+    //                   return LinearGradient(
+    //                     colors: [
+    //                       Colors.pinkAccent,
+    //                       Colors.blue,
+    //                       Colors.pinkAccent
+    //                     ],
+    //                     tileMode: TileMode.mirror,
+    //                     begin: Alignment.centerLeft,
+    //                     end: Alignment.centerRight,
+    //                   ).createShader(bounds);
+    //                 },
+    //                 child: Padding(
+    //                   padding: const EdgeInsets.all(8.0),
+    //                   child: Text(
+    //                     '$winner',
+    //                     style: TextStyle(
+    //                       fontSize: 24,
+    //                       fontWeight: FontWeight.bold,
+    //                       color: Colors.white,
+    //                     ),
+    //                   ),
+    //                 ),
+    //               ),
+    //             ),
+    //             SizedBox(height: 16),
+    //             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+    //               ElevatedButton(
+    //                 child: Text(
+    //                   'Main Menu',
+    //                   style: TextStyle(
+    //                     fontSize: 18,
+    //                     color: Colors.white,
+    //                   ),
+    //                 ),
+    //                 style: ElevatedButton.styleFrom(
+    //                   primary: Colors.purple, // background color
+    //                   shape: RoundedRectangleBorder(
+    //                     borderRadius: BorderRadius.circular(
+    //                         18.0), // rounded corner radius
+    //                   ),
+    //                 ),
+    //                 onPressed: () {
+    //                   _startNewGame();
+    //                   Navigator.of(context).pop();
+    //                 },
+    //               ),
+    //               SizedBox(width: 15),
+    //               ElevatedButton(
+    //                 child: Text(
+    //                   'New Game',
+    //                   style: TextStyle(
+    //                     fontSize: 18,
+    //                     color: Colors.white,
+    //                   ),
+    //                 ),
+    //                 style: ElevatedButton.styleFrom(
+    //                   primary: Colors.purple, // background color
+    //                   shape: RoundedRectangleBorder(
+    //                     borderRadius: BorderRadius.circular(
+    //                         18.0), // rounded corner radius
+    //                   ),
+    //                 ),
+    //                 onPressed: () {
+    //                   _startNewGame();
+    //                   Navigator.of(context).pop();
+    //                 },
+    //               ),
+    //             ]),
+    //           ],
+    //         ),
+    //       ),
+    //     );
+    //   },
+    // );
