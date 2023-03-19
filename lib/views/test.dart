@@ -502,6 +502,7 @@ class __TicTacToeGameOfflineMultiplayerStateTest
       }
 
       showGeneralDialog(
+          barrierDismissible: false,
           barrierColor: Colors.black.withOpacity(0.5),
           transitionBuilder: (context, a1, a2, widget) {
             final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
@@ -630,7 +631,6 @@ class __TicTacToeGameOfflineMultiplayerStateTest
             );
           },
           transitionDuration: Duration(milliseconds: 600),
-          barrierDismissible: true,
           barrierLabel: '',
           context: context,
           pageBuilder: (context, animation1, animation2) {
@@ -949,7 +949,7 @@ class __TicTacToeGameOfflineMultiplayerStateTest
           );
         },
         transitionDuration: Duration(milliseconds: 600),
-        barrierDismissible: true,
+        barrierDismissible: false,
         barrierLabel: '',
         context: context,
         pageBuilder: (context, animation1, animation2) {
