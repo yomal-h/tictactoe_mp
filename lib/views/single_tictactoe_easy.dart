@@ -110,7 +110,7 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy>
                     color: boardBorderColor.withOpacity(0.6),
                     spreadRadius: 4,
                     blurRadius: 7,
-                    offset: Offset(0, 0), // changes position of shadow
+                    offset: Offset(0, 0), // changes position of the shadow
                   ),
                 ],
               ),
@@ -370,7 +370,7 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy>
           _isComputerThinking
               ? Text(
                   'Computer is thinking...',
-                  style: TextStyle(fontSize: 24.0),
+                  style: TextStyle(fontSize: 1.0),
                 )
               : SizedBox.shrink(),
           _gameOver
