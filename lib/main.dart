@@ -8,9 +8,9 @@ import 'package:tictactoe_mp/screens/join_room_screen.dart';
 import 'package:tictactoe_mp/screens/main_menu_game_modes_screen.dart';
 import 'package:tictactoe_mp/screens/main_menu_screen.dart';
 import 'package:tictactoe_mp/utils/colors.dart';
+import 'package:tictactoe_mp/views/single_tictactoe_expert.dart';
 import 'package:tictactoe_mp/views/single_tictactoe_hard.dart';
 import 'package:tictactoe_mp/views/single_tictactoe_medium.dart';
-import 'package:tictactoe_mp/views/single_tictactoe_unbeatable.dart';
 import 'package:tictactoe_mp/views/single_tictactoe_easy.dart';
 import 'package:tictactoe_mp/views/tictactoe_offline_multiplayer.dart';
 
@@ -45,15 +45,15 @@ class MyApp extends StatelessWidget {
           TicTacToeGameMedium.routeName: (context) =>
               const TicTacToeGameMedium(),
           TicTacToeGameHard.routeName: (context) => const TicTacToeGameHard(),
-          TicTacToeGameUnbeatable.routeName: (context) =>
-              const TicTacToeGameUnbeatable(),
+          TicTacToeGameExpert.routeName: (context) =>
+              const TicTacToeGameExpert(),
           TicTacToeGameOfflineMultiplayer.routeName: (context) =>
               const TicTacToeGameOfflineMultiplayer(),
           JoinRoomScreen.routeName: (context) => const JoinRoomScreen(),
           CreateRoomScreen.routeName: (context) => const CreateRoomScreen(),
           GameScreen.routeName: (context) => const GameScreen(),
         },
-        initialRoute: TicTacToeGameEasy.routeName,
+        initialRoute: TicTacToeGameHard.routeName,
       ),
     );
   }

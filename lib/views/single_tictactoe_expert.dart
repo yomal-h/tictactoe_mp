@@ -6,16 +6,16 @@ import 'dart:io' show Platform;
 
 import 'package:tictactoe_mp/utils/colors.dart';
 
-class TicTacToeGameMedium extends StatefulWidget {
-  static String routeName = '/tictactoe_medium';
+class TicTacToeGameExpert extends StatefulWidget {
+  static String routeName = '/tictactoe_expert';
 
-  const TicTacToeGameMedium({Key? key}) : super(key: key);
+  const TicTacToeGameExpert({Key? key}) : super(key: key);
 
   @override
-  __TicTacToeGameMediumState createState() => __TicTacToeGameMediumState();
+  __TicTacToeGameExpertState createState() => __TicTacToeGameExpertState();
 }
 
-class __TicTacToeGameMediumState extends State<TicTacToeGameMedium>
+class __TicTacToeGameExpertState extends State<TicTacToeGameExpert>
     with TickerProviderStateMixin {
   final List<String> _board = List.filled(9, '');
   String _currentPlayer = 'X';
@@ -117,7 +117,7 @@ class __TicTacToeGameMediumState extends State<TicTacToeGameMedium>
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(
-                  'MRound $_round',
+                  'ExRound $_round',
                   style: const TextStyle(
                       fontSize: 28,
                       color: Colors.white,
@@ -464,78 +464,22 @@ class __TicTacToeGameMediumState extends State<TicTacToeGameMedium>
     );
   }
 
-//Prioritize blocking the player's winning moves. In the 'easy' implementation,
-//the computer is only making moves randomly,
-//without any strategy to block the player.
-//this code to check if the player is one move away
-//from winning and block that move. To do this, this function
-//checks if a given move results in a winning move for the player,
-//and use this function to prioritize blocking the player
-  int _findBlockingMove() {
-    // Check if there's a winning move for the player and block it
-    for (int i = 0; i < 9; i++) {
-      if (_board[i] == '') {
-        _board[i] = 'X';
-        if (_checkForWinner(_board, 'X')) {
-          _board[i] = 'O';
-          return i;
-        }
-        _board[i] = '';
-      }
-    }
-    return -1;
-  }
-
-//This function returns a list of the available moves on the current board.
-//You can use it in the _makeComputerMove() function to get a list of available moves
-//to choose from when making a move.
-  List<int> _getAvailableMoves() {
-    List<int> availableMoves = [];
-    for (int i = 0; i < 9; i++) {
-      if (_board[i] == '') {
-        availableMoves.add(i);
-      }
-    }
-    return availableMoves;
-  }
-
-  //Medium mode
-  //choose the corners or sides randomly, or with some probability,
+  //unbeatable mode
   void _makeComputerMove() {
-    int blockingMove = _findBlockingMove();
-
-    if (blockingMove != -1) {
-      _board[blockingMove] = 'O';
-    } else {
-      // Randomly choose the next move
-      List<int> availableMoves = _getAvailableMoves();
-      int randomIndex = Random().nextInt(availableMoves.length);
-      int randomMove = availableMoves[randomIndex];
-      if (availableMoves.length > 3 && randomIndex == 0) {
-        // With 60% probability, choose a random corner instead of the center
-        List<int> corners = [0, 2, 6, 8];
-        List<int> availableCorners =
-            corners.where((corner) => _board[corner] == '').toList();
-        if (availableCorners.isNotEmpty && Random().nextInt(10) < 6) {
-          int randomCorner =
-              availableCorners[Random().nextInt(availableCorners.length)];
-          randomMove = randomCorner;
-        }
-      } else if (availableMoves.length > 1 && randomIndex == 0) {
-        // With 60% probability, choose a random side instead of the center
-        List<int> sides = [1, 3, 5, 7];
-        List<int> availableSides =
-            sides.where((side) => _board[side] == '').toList();
-        if (availableSides.isNotEmpty && Random().nextInt(10) < 6) {
-          int randomSide =
-              availableSides[Random().nextInt(availableSides.length)];
-          randomMove = randomSide;
+    int bestMove = -1;
+    int bestScore = -1000;
+    for (int i = 0; i < _board.length; i++) {
+      if (_board[i] == '') {
+        _board[i] = 'O';
+        int score = _minimax(_board, 0, false);
+        _board[i] = '';
+        if (score > bestScore) {
+          bestScore = score;
+          bestMove = i;
         }
       }
-
-      _board[randomMove] = 'O';
     }
-
+    _board[bestMove] = 'O';
     if (_checkForWinner(_board, 'O')) {
       _computerScore++;
       _startNewRound();
