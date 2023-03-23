@@ -89,7 +89,7 @@ flutter:
         
     - family: SF
       fonts:
-        - asset: fonts/Apple.OTF
+        - asset: assets/fonts/Apple.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
