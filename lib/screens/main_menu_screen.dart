@@ -30,13 +30,13 @@ class MainMenuScreen extends StatelessWidget {
             const SizedBox(height: 55),
             _buildButton(
               context,
-              'Create Room',
+              'Host Match',
               () => createRoom(context),
             ),
             const SizedBox(height: 28),
             _buildButton(
               context,
-              'Join Room',
+              'Join Match',
               () => joinRoom(context),
             ),
             const SizedBox(height: 30),
