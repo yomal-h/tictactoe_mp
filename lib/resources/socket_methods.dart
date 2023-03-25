@@ -107,23 +107,23 @@ class SocketMethods {
     });
   }
 
-  void endGameListener(BuildContext context) {
-    _socketClient.on('endGame', (playerData) {
-      //final gameState = Provider.of<RoomDataProvider>(context, listen: false);
-      //_socketClient.emit('reset', {'id': 'roomId'});
-      //gameState.reset();
-      Navigator.pop(context);
-      // Navigator.pushReplacement(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => const MainMenuScreen(),
-      //   ),
-      // );
-      // Navigator.pushNamed(context, MainMenuScreen.routeName);//working
+  // void endGameListener(BuildContext context) {
+  //   _socketClient.on('endGame', (playerData) {
+  //     //final gameState = Provider.of<RoomDataProvider>(context, listen: false);
+  //     //_socketClient.emit('reset', {'id': 'roomId'});
+  //     //gameState.reset();
+  //     Navigator.pop(context);
+  //     // Navigator.pushReplacement(
+  //     //   context,
+  //     //   MaterialPageRoute(
+  //     //     builder: (context) => const MainMenuScreen(),
+  //     //   ),
+  //     // );
+  //     // Navigator.pushNamed(context, MainMenuScreen.routeName);//working
 
-      showEndGameDialog(context, '${playerData['nickname']}');
-      //Navigator.popUntil(context, ModalRoute.withName('/main_menu'));
-      //Navigator.popUntil(context, (route) => false);
-    });
-  }
+  //     showEndGameDialog(context, '${playerData['nickname']}');
+  //     //Navigator.popUntil(context, ModalRoute.withName('/main_menu'));
+  //     //Navigator.popUntil(context, (route) => false);
+  //   });
+  // }
 }

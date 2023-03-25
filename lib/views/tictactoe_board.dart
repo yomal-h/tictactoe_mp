@@ -2,6 +2,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart';
+import 'package:spring/spring.dart';
 import 'package:tictactoe_mp/provider/room_data_provider.dart';
 import 'package:tictactoe_mp/resources/game_methods.dart';
 import 'package:tictactoe_mp/resources/socket_client.dart';
@@ -19,7 +20,7 @@ class TicTacToeBoard extends StatefulWidget {
 }
 
 class _TicTacToeBoardState extends State<TicTacToeBoard>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   final SocketMethods _socketMethods = SocketMethods();
   final GlobalKey _key = GlobalKey();
   final _socketClient = SocketClient.instance.socket!;
@@ -27,6 +28,9 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
   Socket get socketClient => _socketClient;
   late AnimationController _animationController; // Add this line
   late Tween<double> _animationTween;
+
+  late AnimationController _animationController1;
+  late Animation<double> _animation;
 
   void tappedListener(BuildContext context) {
     _socketClient.off('tapped'); //double tap in new game error fixed
@@ -73,7 +77,19 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
       }
     });
 
+    _animationController1 = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    )..forward();
+    _animation = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController1,
+        curve: Curves.easeInOut,
+      ),
+    );
+
     //_socketMethods.tappedListener(context);
+    endGameListener(context);
     tappedListener(context);
   }
 
@@ -179,6 +195,396 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
         ),
       ),
     );
+  }
+
+  void showEndGameDialog(BuildContext context, String text) {
+    final gameState = Provider.of<RoomDataProvider>(context, listen: false);
+    RoomDataProvider roomDataProvider =
+        Provider.of<RoomDataProvider>(context, listen: false);
+
+    void navigateToMainMenu(BuildContext context) {
+      Navigator.of(context).pushNamed('/main_menu');
+    }
+
+    Color shadowColor =
+        text == roomDataProvider.player1.nickname ? Colors.pink : Colors.green;
+
+    final SpringController springController = SpringController();
+
+    showGeneralDialog(
+        barrierColor: Colors.black.withOpacity(0.5),
+        transitionBuilder: (context, a1, a2, widget) {
+          return Transform.scale(
+            scale: a1.value,
+            child: Opacity(
+              opacity: a1.value,
+              child: Dialog(
+                backgroundColor: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: PrimaryColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: boardBorderColor.withOpacity(0.3),
+                        blurRadius: 12,
+                        offset: Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(height: 10),
+                      AnimatedTextKit(
+                        animatedTexts: [
+                          WavyAnimatedText(
+                            'Game Over',
+                            textStyle: TextStyle(
+                              fontSize: 40.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              shadows: [
+                                BoxShadow(
+                                  color: Colors.pinkAccent.withOpacity(0.8),
+                                  blurRadius: 12,
+                                  offset: Offset(2, 2),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                        isRepeatingAnimation: false,
+                      ),
+                      SizedBox(height: 20),
+                      AnimatedBuilder(
+                        animation: _animationController1,
+                        builder: (context, child) {
+                          Color shadowColor =
+                              text == roomDataProvider.player1.nickname
+                                  ? Colors.pink
+                                  : Colors.green;
+                          return Transform.scale(
+                            scale: _animation.value,
+                            child: text == ''
+                                ? SizedBox
+                                    .shrink() //text should be added after this otherwise it gives error
+                                : Text(
+                                    '${text == roomDataProvider.player1.nickname ? 'X' : 'O'}',
+                                    style: TextStyle(
+                                      fontSize: 55,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      shadows: [
+                                        Shadow(
+                                            blurRadius: 60, color: shadowColor)
+                                      ],
+                                    ),
+                                  ),
+                          );
+                        },
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'The winner is',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: ShaderMask(
+                          shaderCallback: (bounds) {
+                            return LinearGradient(
+                              colors: [
+                                Colors.pinkAccent,
+                                Colors.blue,
+                                Colors.pinkAccent
+                              ],
+                              tileMode: TileMode.mirror,
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                            ).createShader(bounds);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              text,
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              child: Text(
+                                'Main Menu',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.purple, // background color
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      18.0), // rounded corner radius
+                                ),
+                              ),
+                              onPressed: () {
+                                GameMethods().clearBoard(context);
+
+                                Navigator.pop(context);
+//                 //navigateToMainMenu(context);
+                                Navigator.pushNamed(
+                                    context, MainMenuScreen.routeName);
+//
+                                gameState.reset();
+                              },
+                            ),
+                            SizedBox(width: 15),
+                            ElevatedButton(
+                              child: Text(
+                                'New Game',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.purple, // background color
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      18.0), // rounded corner radius
+                                ),
+                              ),
+                              onPressed: () {
+                                GameMethods().clearBoard(context);
+
+                                Navigator.pop(context);
+//                 //navigateToMainMenu(context);
+                                Navigator.pushNamed(
+                                    context, MainMenuScreen.routeName);
+//
+                                gameState.reset();
+                              },
+                            ),
+                          ]),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+        transitionDuration: Duration(milliseconds: 600),
+        barrierDismissible: false,
+        barrierLabel: '',
+        context: context,
+        pageBuilder: (context, animation1, animation2) {
+          return Dialog(
+            backgroundColor: Colors.black,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: PrimaryColor,
+                boxShadow: [
+                  BoxShadow(
+                    color: boardBorderColor.withOpacity(0.3),
+                    blurRadius: 12,
+                    offset: Offset(0, 0),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 10),
+                  AnimatedTextKit(
+                    animatedTexts: [
+                      WavyAnimatedText(
+                        'Game Over',
+                        textStyle: TextStyle(
+                          fontSize: 40.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          shadows: [
+                            BoxShadow(
+                              color: Colors.pinkAccent.withOpacity(0.8),
+                              blurRadius: 12,
+                              offset: Offset(2, 2),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                    isRepeatingAnimation: false,
+                  ),
+                  SizedBox(height: 20),
+                  AnimatedBuilder(
+                    animation: _animationController1,
+                    builder: (context, child) {
+                      Color shadowColor =
+                          text == roomDataProvider.player1.nickname
+                              ? Colors.pink
+                              : Colors.green;
+                      return Transform.scale(
+                        scale: _animation.value,
+                        child: text == ''
+                            ? SizedBox
+                                .shrink() //text should be added after this otherwise it gives error
+                            : Text(
+                                '${text == roomDataProvider.player1.nickname ? 'X' : 'O'}',
+                                style: TextStyle(
+                                  fontSize: 55,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  shadows: [
+                                    Shadow(blurRadius: 60, color: shadowColor)
+                                  ],
+                                ),
+                              ),
+                      );
+                    },
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'The winner is',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: ShaderMask(
+                      shaderCallback: (bounds) {
+                        return LinearGradient(
+                          colors: [
+                            Colors.pinkAccent,
+                            Colors.blue,
+                            Colors.pinkAccent
+                          ],
+                          tileMode: TileMode.mirror,
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                        ).createShader(bounds);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          text,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    ElevatedButton(
+                      child: Text(
+                        'Main Menu',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.purple, // background color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              18.0), // rounded corner radius
+                        ),
+                      ),
+                      onPressed: () {
+                        GameMethods().clearBoard(context);
+
+                        Navigator.pop(context);
+//                 //navigateToMainMenu(context);
+                        Navigator.pushNamed(context, MainMenuScreen.routeName);
+//
+                        gameState.reset();
+                      },
+                    ),
+                    SizedBox(width: 15),
+                    ElevatedButton(
+                      child: Text(
+                        'New Game',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.purple, // background color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              18.0), // rounded corner radius
+                        ),
+                      ),
+                      onPressed: () {
+                        GameMethods().clearBoard(context);
+
+                        Navigator.pop(context);
+//                 //navigateToMainMenu(context);
+                        Navigator.pushNamed(context, MainMenuScreen.routeName);
+//
+                        gameState.reset();
+                      },
+                    ),
+                  ]),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  void endGameListener(BuildContext context) {
+    _socketClient.on('endGame', (playerData) {
+      //final gameState = Provider.of<RoomDataProvider>(context, listen: false);
+      //_socketClient.emit('reset', {'id': 'roomId'});
+      //gameState.reset();
+      Navigator.pop(context);
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => const MainMenuScreen(),
+      //   ),
+      // );
+      // Navigator.pushNamed(context, MainMenuScreen.routeName);//working
+
+      showEndGameDialog(context, '${playerData['nickname']}');
+      _animationController1.repeat(reverse: true);
+      //Navigator.popUntil(context, ModalRoute.withName('/main_menu'));
+      //Navigator.popUntil(context, (route) => false);
+    });
   }
 }
 
