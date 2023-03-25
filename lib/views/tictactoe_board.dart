@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -5,7 +6,10 @@ import 'package:tictactoe_mp/provider/room_data_provider.dart';
 import 'package:tictactoe_mp/resources/game_methods.dart';
 import 'package:tictactoe_mp/resources/socket_client.dart';
 import 'package:tictactoe_mp/resources/socket_methods.dart';
+import 'package:tictactoe_mp/screens/main_menu_screen.dart';
 import 'dart:math' as math;
+
+import 'package:tictactoe_mp/utils/colors.dart';
 
 class TicTacToeBoard extends StatefulWidget {
   const TicTacToeBoard({Key? key}) : super(key: key);
@@ -68,6 +72,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
         _animationController.forward();
       }
     });
+
     //_socketMethods.tappedListener(context);
     tappedListener(context);
   }

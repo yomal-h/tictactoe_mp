@@ -121,7 +121,7 @@ class SocketMethods {
       // );
       // Navigator.pushNamed(context, MainMenuScreen.routeName);//working
 
-      showEndGameDialog(context, '${playerData['nickname']} won the game!');
+      showEndGameDialog(context, '${playerData['nickname']}');
       //Navigator.popUntil(context, ModalRoute.withName('/main_menu'));
       //Navigator.popUntil(context, (route) => false);
     });

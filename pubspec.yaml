@@ -41,7 +41,7 @@ dependencies:
   fluttericon: ^2.0.0
   animated_text_kit: ^4.2.1
   lottie: ^1.1.0
-  
+  spring: ^2.0.2
 
 dev_dependencies:
   flutter_test:

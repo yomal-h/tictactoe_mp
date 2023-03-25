@@ -29,7 +29,7 @@ class CustomTextfield extends StatelessWidget {
         borderRadius: BorderRadius.circular(50),
       ),
       child: TextField(
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(color: Colors.white, fontFamily: 'SF'),
         readOnly: isReadOnly,
         controller: controller,
         cursorColor: Colors.white,
