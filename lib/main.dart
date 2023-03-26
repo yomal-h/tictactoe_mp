@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe_mp/provider/room_data_provider.dart';
+import 'package:tictactoe_mp/resources/socket_methods.dart';
 import 'package:tictactoe_mp/screens/create_room_screen.dart';
 import 'package:tictactoe_mp/screens/difficulty_level_selection_screen.dart';
 import 'package:tictactoe_mp/screens/game_screen.dart';
@@ -12,6 +13,7 @@ import 'package:tictactoe_mp/views/single_tictactoe_expert.dart';
 import 'package:tictactoe_mp/views/single_tictactoe_hard.dart';
 import 'package:tictactoe_mp/views/single_tictactoe_medium.dart';
 import 'package:tictactoe_mp/views/single_tictactoe_easy.dart';
+import 'package:tictactoe_mp/views/tictactoe_board.dart';
 import 'package:tictactoe_mp/views/tictactoe_offline_multiplayer.dart';
 
 void main() {

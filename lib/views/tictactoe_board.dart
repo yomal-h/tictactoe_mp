@@ -48,7 +48,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
       );
       roomDataProvider.updateRoomData(data['room']);
       //check winner
-      GameMethods().checkWinner(newContext, _socketClient);
+      checkWinner(newContext, _socketClient);
 
       _animationController
           .reset(); //in order to animation to work from the begining otherwise animation will play after it was drawn
@@ -97,9 +97,9 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
   void dispose() {
     _socketClient.off('tapped');
     _animationController.dispose();
-
-    // TODO: implement dispose
+    _animationController1.dispose();
     super.dispose();
+    // TODO: implement dispose
   }
 
   void tapped(int index, RoomDataProvider roomDataProvider) {
@@ -333,33 +333,6 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
                           children: [
                             ElevatedButton(
                               child: Text(
-                                'Main Menu',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.purple, // background color
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      18.0), // rounded corner radius
-                                ),
-                              ),
-                              onPressed: () {
-                                GameMethods().clearBoard(context);
-
-                                Navigator.pop(context);
-//                 //navigateToMainMenu(context);
-                                Navigator.pushNamed(
-                                    context, MainMenuScreen.routeName);
-//
-                                gameState.reset();
-                              },
-                            ),
-                            SizedBox(width: 15),
-                            ElevatedButton(
-                              child: Text(
                                 'New Game',
                                 style: TextStyle(
                                   fontSize: 18,
@@ -374,7 +347,34 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
                                 ),
                               ),
                               onPressed: () {
-                                GameMethods().clearBoard(context);
+                                clearBoard(context);
+
+                                Navigator.pop(context);
+//                 //navigateToMainMenu(context);
+                                Navigator.pushNamed(
+                                    context, MainMenuScreen.routeName);
+//
+                                gameState.reset();
+                              },
+                            ),
+                            SizedBox(width: 15),
+                            ElevatedButton(
+                              child: Text(
+                                'Main Menu',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.purple, // background color
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      18.0), // rounded corner radius
+                                ),
+                              ),
+                              onPressed: () {
+                                clearBoard(context);
 
                                 Navigator.pop(context);
 //                 //navigateToMainMenu(context);
@@ -509,32 +509,6 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     ElevatedButton(
                       child: Text(
-                        'Main Menu',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.purple, // background color
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              18.0), // rounded corner radius
-                        ),
-                      ),
-                      onPressed: () {
-                        GameMethods().clearBoard(context);
-
-                        Navigator.pop(context);
-//                 //navigateToMainMenu(context);
-                        Navigator.pushNamed(context, MainMenuScreen.routeName);
-//
-                        gameState.reset();
-                      },
-                    ),
-                    SizedBox(width: 15),
-                    ElevatedButton(
-                      child: Text(
                         'New Game',
                         style: TextStyle(
                           fontSize: 18,
@@ -549,7 +523,33 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
                         ),
                       ),
                       onPressed: () {
-                        GameMethods().clearBoard(context);
+                        clearBoard(context);
+
+                        Navigator.pop(context);
+//                 //navigateToMainMenu(context);
+                        Navigator.pushNamed(context, MainMenuScreen.routeName);
+//
+                        gameState.reset();
+                      },
+                    ),
+                    SizedBox(width: 15),
+                    ElevatedButton(
+                      child: Text(
+                        'Main Menu',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.purple, // background color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              18.0), // rounded corner radius
+                        ),
+                      ),
+                      onPressed: () {
+                        clearBoard(context);
 
                         Navigator.pop(context);
 //                 //navigateToMainMenu(context);
@@ -585,6 +585,369 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
       //Navigator.popUntil(context, ModalRoute.withName('/main_menu'));
       //Navigator.popUntil(context, (route) => false);
     });
+  }
+
+  void showGameDialog(BuildContext context, String text) {
+    RoomDataProvider roomDataProvider =
+        Provider.of<RoomDataProvider>(context, listen: false);
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Round ${roomDataProvider.roomData['currentRound']}'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  clearBoard(context);
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  'Play Again',
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
+  // void _startNewRound() {
+  //   String winner = _checkForWinner(_board, 'X')
+  //       ? 'Player'
+  //       : _checkForWinner(_board, 'O')
+  //           ? 'Computer'
+  //           : 'Tie';
+
+  //   if (_round > 2) {
+  //     // Game is over
+
+  //     _showWinner();
+  //   } else {
+  //     // Round is over
+  //     String dialogTitle = 'Round $_round Result';
+  //     String dialogContent = '';
+
+  //     if (winner == 'Tie') {
+  //       dialogContent = 'The round was a tie!';
+  //     } else {
+  //       dialogContent = '$winner won the round!';
+  //     }
+
+  //     showGeneralDialog(
+  //         barrierDismissible: false,
+  //         barrierColor: Colors.black.withOpacity(0.5),
+  //         transitionBuilder: (context, a1, a2, widget) {
+  //           final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+  //           return Transform(
+  //             transform: Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+  //             child: Opacity(
+  //                 opacity: a1.value,
+  //                 child: Dialog(
+  //                   backgroundColor: Colors.black,
+  //                   shape: RoundedRectangleBorder(
+  //                     borderRadius: BorderRadius.circular(12),
+  //                   ),
+  //                   child: Container(
+  //                     padding: EdgeInsets.all(16),
+  //                     decoration: BoxDecoration(
+  //                       borderRadius: BorderRadius.circular(12),
+  //                       color: PrimaryColor,
+  //                       boxShadow: [
+  //                         BoxShadow(
+  //                           color: boardBorderColor.withOpacity(0.3),
+  //                           blurRadius: 12,
+  //                           offset: Offset(0, 0),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     child: Column(
+  //                       mainAxisSize: MainAxisSize.min,
+  //                       children: [
+  //                         Text(
+  //                           dialogTitle,
+  //                           style: TextStyle(
+  //                             fontSize: 24,
+  //                             fontWeight: FontWeight.bold,
+  //                             color: Colors.white,
+  //                             shadows: [
+  //                               BoxShadow(
+  //                                 color: Colors.pinkAccent.withOpacity(0.8),
+  //                                 blurRadius: 12,
+  //                                 offset: Offset(2, 2),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         ),
+  //                         SizedBox(height: 16),
+  //                         AnimatedBuilder(
+  //                           animation: _animationController,
+  //                           builder: (context, child) {
+  //                             Color shadowColor = winner == 'Player'
+  //                                 ? Colors.pink
+  //                                 : Colors.green;
+  //                             return Transform.scale(
+  //                               scale: _animation.value,
+  //                               child: winner == 'Tie'
+  //                                   ? SizedBox
+  //                                       .shrink() //text should be added after this otherwise it gives error
+  //                                   : Text(
+  //                                       '${winner == 'Player' ? 'X' : 'O'}',
+  //                                       style: TextStyle(
+  //                                         fontSize: 55,
+  //                                         fontWeight: FontWeight.bold,
+  //                                         color: Colors.white,
+  //                                         shadows: [
+  //                                           Shadow(
+  //                                               blurRadius: 60,
+  //                                               color: shadowColor)
+  //                                         ],
+  //                                       ),
+  //                                     ),
+  //                             );
+  //                           },
+  //                         ),
+  //                         SizedBox(height: 8),
+  //                         Text(
+  //                           dialogContent,
+  //                           style: TextStyle(
+  //                             fontSize: 18,
+  //                             color: Colors.white,
+  //                           ),
+  //                         ),
+  //                         SizedBox(height: 16),
+  //                         ElevatedButton(
+  //                           child: Text(
+  //                             'OK',
+  //                             style: TextStyle(
+  //                               fontSize: 18,
+  //                               color: Colors.white,
+  //                             ),
+  //                           ),
+  //                           style: ElevatedButton.styleFrom(
+  //                             primary: Colors.purple, // background color
+  //                             shape: RoundedRectangleBorder(
+  //                               borderRadius: BorderRadius.circular(
+  //                                   18.0), // rounded corner radius
+  //                             ),
+  //                           ),
+  //                           onPressed: () {
+  //                             _winningLine.clear();
+  //                            GameMethods().clearBoard(context);
+  //               Navigator.pop(context);
+  //                           },
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //                 )),
+  //           );
+  //         },
+  //         transitionDuration: Duration(milliseconds: 600),
+  //         barrierLabel: '',
+  //         context: context,
+  //         pageBuilder: (context, animation1, animation2) {
+  //           return Dialog(
+  //             backgroundColor: Colors.black,
+  //             shape: RoundedRectangleBorder(
+  //               borderRadius: BorderRadius.circular(12),
+  //             ),
+  //             child: Container(
+  //               padding: EdgeInsets.all(16),
+  //               decoration: BoxDecoration(
+  //                 borderRadius: BorderRadius.circular(12),
+  //                 color: PrimaryColor,
+  //                 boxShadow: [
+  //                   BoxShadow(
+  //                     color: boardBorderColor.withOpacity(0.3),
+  //                     blurRadius: 12,
+  //                     offset: Offset(0, 0),
+  //                   ),
+  //                 ],
+  //               ),
+  //               child: Column(
+  //                 mainAxisSize: MainAxisSize.min,
+  //                 children: [
+  //                   Text(
+  //                     dialogTitle,
+  //                     style: TextStyle(
+  //                       fontSize: 24,
+  //                       fontWeight: FontWeight.bold,
+  //                       color: Colors.white,
+  //                       shadows: [
+  //                         BoxShadow(
+  //                           color: Colors.pinkAccent.withOpacity(0.8),
+  //                           blurRadius: 12,
+  //                           offset: Offset(2, 2),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 16),
+  //                   AnimatedBuilder(
+  //                     animation: _animationController,
+  //                     builder: (context, child) {
+  //                       Color shadowColor =
+  //                           winner == 'Player' ? Colors.pink : Colors.green;
+  //                       return Transform.scale(
+  //                         scale: _animation.value,
+  //                         child: winner == 'Tie'
+  //                             ? SizedBox
+  //                                 .shrink() //text should be added after this otherwise it gives error
+  //                             : Text(
+  //                                 '${winner == 'Player' ? 'X' : 'O'}',
+  //                                 style: TextStyle(
+  //                                   fontSize: 55,
+  //                                   fontWeight: FontWeight.bold,
+  //                                   color: Colors.white,
+  //                                   shadows: [
+  //                                     Shadow(blurRadius: 60, color: shadowColor)
+  //                                   ],
+  //                                 ),
+  //                               ),
+  //                       );
+  //                     },
+  //                   ),
+  //                   SizedBox(height: 8),
+  //                   Text(
+  //                     dialogContent,
+  //                     style: TextStyle(
+  //                       fontSize: 18,
+  //                       color: Colors.white,
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 16),
+  //                   ElevatedButton(
+  //                     child: Text(
+  //                       'OK',
+  //                       style: TextStyle(
+  //                         fontSize: 18,
+  //                         color: Colors.white,
+  //                       ),
+  //                     ),
+  //                     style: ElevatedButton.styleFrom(
+  //                       primary: Colors.purple, // background color
+  //                       shape: RoundedRectangleBorder(
+  //                         borderRadius: BorderRadius.circular(
+  //                             18.0), // rounded corner radius
+  //                       ),
+  //                     ),
+  //                     onPressed: () {
+  //                       _winningLine.clear();
+  //                       GameMethods().clearBoard(context);
+  //               Navigator.pop(context);
+  //                     },
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           );
+  //         });
+  //   }
+
+  // }
+
+  void checkWinner(BuildContext context, Socket socketClient) {
+    RoomDataProvider roomDataProvider =
+        Provider.of<RoomDataProvider>(context, listen: false);
+
+    String winner = ''; //'X' or 'O'
+    int filledBoxes = 0;
+
+    // Checking rows
+    if (roomDataProvider.displayElements[0] ==
+            roomDataProvider.displayElements[1] &&
+        roomDataProvider.displayElements[0] ==
+            roomDataProvider.displayElements[2] &&
+        roomDataProvider.displayElements[0] != '') {
+      winner = roomDataProvider.displayElements[0];
+    }
+    if (roomDataProvider.displayElements[3] ==
+            roomDataProvider.displayElements[4] &&
+        roomDataProvider.displayElements[3] ==
+            roomDataProvider.displayElements[5] &&
+        roomDataProvider.displayElements[3] != '') {
+      winner = roomDataProvider.displayElements[3];
+    }
+    if (roomDataProvider.displayElements[6] ==
+            roomDataProvider.displayElements[7] &&
+        roomDataProvider.displayElements[6] ==
+            roomDataProvider.displayElements[8] &&
+        roomDataProvider.displayElements[6] != '') {
+      winner = roomDataProvider.displayElements[6];
+    }
+
+    // Checking Column
+    if (roomDataProvider.displayElements[0] ==
+            roomDataProvider.displayElements[3] &&
+        roomDataProvider.displayElements[0] ==
+            roomDataProvider.displayElements[6] &&
+        roomDataProvider.displayElements[0] != '') {
+      winner = roomDataProvider.displayElements[0];
+    }
+    if (roomDataProvider.displayElements[1] ==
+            roomDataProvider.displayElements[4] &&
+        roomDataProvider.displayElements[1] ==
+            roomDataProvider.displayElements[7] &&
+        roomDataProvider.displayElements[1] != '') {
+      winner = roomDataProvider.displayElements[1];
+    }
+    if (roomDataProvider.displayElements[2] ==
+            roomDataProvider.displayElements[5] &&
+        roomDataProvider.displayElements[2] ==
+            roomDataProvider.displayElements[8] &&
+        roomDataProvider.displayElements[2] != '') {
+      winner = roomDataProvider.displayElements[2];
+    }
+
+    // Checking Diagonal
+    if (roomDataProvider.displayElements[0] ==
+            roomDataProvider.displayElements[4] &&
+        roomDataProvider.displayElements[0] ==
+            roomDataProvider.displayElements[8] &&
+        roomDataProvider.displayElements[0] != '') {
+      winner = roomDataProvider.displayElements[0];
+    }
+    if (roomDataProvider.displayElements[2] ==
+            roomDataProvider.displayElements[4] &&
+        roomDataProvider.displayElements[2] ==
+            roomDataProvider.displayElements[6] &&
+        roomDataProvider.displayElements[2] != '') {
+      winner = roomDataProvider.displayElements[2];
+    }
+
+    if (winner != '') {
+      if (roomDataProvider.player1.playerType == winner) {
+        showGameDialog(
+            context, '${roomDataProvider.roomData['currentRound']} won!');
+        //display game dialog box saying player 1 is the winner
+        socketClient.emit('winner', {
+          'winnerSocketId': roomDataProvider.player1.socketID,
+          'roomId': roomDataProvider.roomData['_id'],
+        });
+      } else {
+        showGameDialog(context, '${roomDataProvider.player2.nickname} won!');
+        //display game dialog box saying player 2 is the winner
+        socketClient.emit('winner', {
+          'winnerSocketId': roomDataProvider.player2.socketID,
+          'roomId': roomDataProvider.roomData['_id'],
+        });
+      }
+    }
+    if (roomDataProvider.filledBoxes == 9) {
+      winner = '';
+      //display game dialog box saying draw
+      showGameDialog(context, 'Draw');
+    }
+  }
+
+  void clearBoard(BuildContext context) {
+    RoomDataProvider roomDataProvider =
+        Provider.of<RoomDataProvider>(context, listen: false);
+
+    for (int i = 0; i < roomDataProvider.displayElements.length; i++) {
+      roomDataProvider.updateDisplayElements(i, '');
+    }
+    roomDataProvider.setFilledBoxesTo0();
   }
 }
 

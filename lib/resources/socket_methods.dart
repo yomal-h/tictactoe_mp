@@ -7,6 +7,7 @@ import 'package:tictactoe_mp/resources/socket_client.dart';
 import 'package:tictactoe_mp/screens/game_screen.dart';
 import 'package:tictactoe_mp/screens/main_menu_screen.dart';
 import 'package:tictactoe_mp/utils/utils.dart';
+import 'package:tictactoe_mp/views/tictactoe_board.dart';
 
 class SocketMethods {
   final _socketClient = SocketClient.instance.socket!;
@@ -108,6 +109,7 @@ class SocketMethods {
   }
 
   // void endGameListener(BuildContext context) {
+
   //   _socketClient.on('endGame', (playerData) {
   //     //final gameState = Provider.of<RoomDataProvider>(context, listen: false);
   //     //_socketClient.emit('reset', {'id': 'roomId'});
