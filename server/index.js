@@ -132,6 +132,20 @@ io.on("connection", (socket) => {
         }
     });
 
+    socket.on('increaseCurrentRound', async ({ roomId }) => {
+        try {
+            console.log('Received increaseCurrentRound event for room', roomId);
+          const room = await Room.findById(roomId);
+          room.currentRound+= 1;
+          await room.save();
+          io.to(roomId).emit('updateRoom', room);
+        } catch (e) {
+          console.log(e);
+        }
+      });
+
+      
+
     socket.on("reset", async ({roomId}) =>  {
         
         // Clear the game state data from MongoDB

@@ -8,6 +8,7 @@ class RoomDataProvider extends ChangeNotifier {
   Map<String, dynamic> _roomData = {};
   List<String> _displayElement = ['', '', '', '', '', '', '', '', ''];
   int _filledBoxes = 0;
+  int _currentRound = 1;
 
   Player _player1 =
       Player(nickname: '', socketID: '', points: 0, playerType: 'X');
@@ -18,6 +19,7 @@ class RoomDataProvider extends ChangeNotifier {
   Map<String, dynamic> get roomData => _roomData;
   List<String> get displayElements => _displayElement;
   int get filledBoxes => _filledBoxes;
+  int get currentRound => _currentRound;
   List<int> get winningLine => getWinningLine();
   Player get player1 => _player1;
   Player get player2 => _player2;

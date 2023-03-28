@@ -14,6 +14,7 @@ class SocketMethods {
 
   Socket get socketClient => _socketClient;
   Socket? socket;
+  bool isUpdatingRound = false;
 
   // EMITS
   void createRoom(String nickname) {
@@ -44,6 +45,7 @@ class SocketMethods {
         'index': index,
         'roomId': roomId,
       });
+
       filledBoxes++;
       // Print the number of filled boxes after each tap
       print('Filled boxes after each tap: $filledBoxes');
@@ -106,6 +108,13 @@ class SocketMethods {
         roomDataProvider.updatePlayer2(playerData);
       }
     });
+  }
+
+  void increaseCurrentRound(String roomId) {
+    //gets room id with 'roomId'
+    //backend code increases the round after
+
+    _socketClient.emit('increaseCurrentRound', {'roomId': roomId});
   }
 
   // void endGameListener(BuildContext context) {

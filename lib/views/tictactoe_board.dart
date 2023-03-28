@@ -107,6 +107,10 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
         roomDataProvider.displayElements, roomDataProvider.filledBoxes);
   }
 
+  void increaseRound(RoomDataProvider roomDataProvider) {
+    _socketMethods.increaseCurrentRound(roomDataProvider.roomData['_id']);
+  }
+
   @override
   Widget build(BuildContext context) {
     final roomData = Provider.of<RoomDataProvider>(context);
@@ -924,6 +928,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
           'winnerSocketId': roomDataProvider.player1.socketID,
           'roomId': roomDataProvider.roomData['_id'],
         });
+        increaseRound(roomDataProvider);
       } else {
         showGameDialog(context, '${roomDataProvider.player2.nickname} won!');
         //display game dialog box saying player 2 is the winner
@@ -931,6 +936,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
           'winnerSocketId': roomDataProvider.player2.socketID,
           'roomId': roomDataProvider.roomData['_id'],
         });
+        increaseRound(roomDataProvider);
       }
     }
     if (roomDataProvider.filledBoxes == 9) {
