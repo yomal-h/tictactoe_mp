@@ -605,6 +605,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
                 onPressed: () {
                   clearBoard(context);
                   Navigator.pop(context);
+                  increaseRound(roomDataProvider);
                 },
                 child: const Text(
                   'Play Again',
@@ -928,7 +929,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
           'winnerSocketId': roomDataProvider.player1.socketID,
           'roomId': roomDataProvider.roomData['_id'],
         });
-        increaseRound(roomDataProvider);
+        //increaseRound(roomDataProvider);
       } else {
         showGameDialog(context, '${roomDataProvider.player2.nickname} won!');
         //display game dialog box saying player 2 is the winner
@@ -936,7 +937,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
           'winnerSocketId': roomDataProvider.player2.socketID,
           'roomId': roomDataProvider.roomData['_id'],
         });
-        increaseRound(roomDataProvider);
+        // increaseRound(roomDataProvider);
       }
     }
     if (roomDataProvider.filledBoxes == 9) {
