@@ -112,6 +112,7 @@ io.on("connection", (socket) => {
                 (playerr) => playerr.socketID == winnerSocketId
             );
             player.points += 1;
+            room.currentRound += 1;
             room = await room.save();
 
             if (player.points >= room.maxRounds) {
@@ -125,6 +126,11 @@ io.on("connection", (socket) => {
                     }
                   });
             } else {
+                //too winner's socket id and made sure only the winner's device will increase the round 
+                //otherwise both devices were updating the round
+                //same logic was also used for the points increment
+                io.to(winnerSocketId).emit("roundIncrease", { currentRound: room.currentRound });
+                console.log('Received increaseCurrentRound event for room', roomId);
                 io.to(roomId).emit("pointIncrease", player);
             }
         } catch (e) {
@@ -132,19 +138,6 @@ io.on("connection", (socket) => {
         }
     });
 
-    socket.on('increaseCurrentRound', async ({ roomId }) => {
-        try {
-            console.log('Received increaseCurrentRound event for room', roomId);
-          const room = await Room.findById(roomId);
-          room.currentRound+= 1;
-          await room.save();
-          io.to(roomId).emit('updateRoom', room);
-        } catch (e) {
-          console.log(e);
-        }
-      });
-
-      
 
     socket.on("reset", async ({roomId}) =>  {
         
@@ -192,3 +185,42 @@ mongoose.connect(DB).then(() => {
 server.listen(port, '0.0.0.0', () => {
     console.log(`Server started and running on port ${port}`)
 });
+
+
+   // socket.on("winner", async ({ winnerSocketId, roomId}) => {
+    //     try {
+    //       let room = await Room.findById(roomId);
+    //       let player = room.players.find(
+    //         (playerr) => playerr.socketID == winnerSocketId
+    //       );
+          
+      
+    //       if (player.points >= room.maxRounds) {
+    //         // Store the ID of the winning player's socket in the game room object
+    //         room.winnerSocketId = winnerSocketId;
+    //         await room.save();
+      
+    //         // Emit the endGame event only to the winning player
+    //         io.to(winnerSocketId).emit("endGame", player);
+      
+    //         // Delete the game room from the database
+    //         await Room.deleteOne({ _id: roomId });
+    //       } else {
+    //         io.to(roomId).emit("pointIncrease", player);
+    //       }
+    //     } catch (e) {
+    //       console.log(e);
+    //     }
+    //   });
+
+    // socket.on('increaseCurrentRound', async ({ roomId }) => {
+    //     try {
+    //         console.log('Received increaseCurrentRound event for room', roomId);
+    //       const room = await Room.findById(roomId);
+    //       room.currentRound+= 1;
+    //       await room.save();
+    //       io.to(roomId).emit('updateRoom', room);
+    //     } catch (e) {
+    //       console.log(e);
+    //     }
+    //   });

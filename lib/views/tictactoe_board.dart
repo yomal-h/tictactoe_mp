@@ -605,7 +605,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
                 onPressed: () {
                   clearBoard(context);
                   Navigator.pop(context);
-                  increaseRound(roomDataProvider);
+                  //increaseRound(roomDataProvider);
                 },
                 child: const Text(
                   'Play Again',
