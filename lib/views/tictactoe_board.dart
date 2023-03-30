@@ -594,26 +594,248 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
   void showGameDialog(BuildContext context, String text) {
     RoomDataProvider roomDataProvider =
         Provider.of<RoomDataProvider>(context, listen: false);
-    showDialog(
+
+    String dialogContent = '';
+
+    if (text == '') {
+      dialogContent = 'The round was a tie!';
+    } else {
+      dialogContent = '$text won the round!';
+    }
+
+    showGeneralDialog(
         barrierDismissible: false,
+        barrierColor: Colors.black.withOpacity(0.5),
+        transitionBuilder: (context, a1, a2, widget) {
+          final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+          return Transform(
+            transform: Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+            child: Opacity(
+                opacity: a1.value,
+                child: Dialog(
+                  backgroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: PrimaryColor,
+                      boxShadow: [
+                        BoxShadow(
+                          color: boardBorderColor.withOpacity(0.3),
+                          blurRadius: 12,
+                          offset: Offset(0, 0),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Round ${roomDataProvider.roomData['currentRound']} Result',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            shadows: [
+                              BoxShadow(
+                                color: Colors.pinkAccent.withOpacity(0.8),
+                                blurRadius: 12,
+                                offset: Offset(2, 2),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        AnimatedBuilder(
+                          animation: _animationController1,
+                          builder: (context, child) {
+                            Color shadowColor =
+                                text == roomDataProvider.player1.nickname
+                                    ? Colors.pink
+                                    : Colors.green;
+                            return Transform.scale(
+                              scale: _animation.value,
+                              child: text == ''
+                                  ? SizedBox
+                                      .shrink() //text should be added after this otherwise it gives error
+                                  : Text(
+                                      '${text == roomDataProvider.player1.nickname ? 'X' : 'O'}',
+                                      style: TextStyle(
+                                        fontSize: 55,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        shadows: [
+                                          Shadow(
+                                              blurRadius: 60,
+                                              color: shadowColor)
+                                        ],
+                                      ),
+                                    ),
+                            );
+                          },
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          dialogContent,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        ElevatedButton(
+                          child: Text(
+                            'OK',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.purple, // background color
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  18.0), // rounded corner radius
+                            ),
+                          ),
+                          onPressed: () {
+                            _winningLine.clear();
+                            clearBoard(context);
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                )),
+          );
+        },
+        transitionDuration: Duration(milliseconds: 600),
+        barrierLabel: '',
         context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Round ${roomDataProvider.roomData['currentRound']}'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  clearBoard(context);
-                  Navigator.pop(context);
-                  //increaseRound(roomDataProvider);
-                },
-                child: const Text(
-                  'Play Again',
-                ),
+        pageBuilder: (context, animation1, animation2) {
+          return Dialog(
+            backgroundColor: Colors.black,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: PrimaryColor,
+                boxShadow: [
+                  BoxShadow(
+                    color: boardBorderColor.withOpacity(0.3),
+                    blurRadius: 12,
+                    offset: Offset(0, 0),
+                  ),
+                ],
               ),
-            ],
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Round ${roomDataProvider.roomData['currentRound']} Result',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      shadows: [
+                        BoxShadow(
+                          color: Colors.pinkAccent.withOpacity(0.8),
+                          blurRadius: 12,
+                          offset: Offset(2, 2),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  AnimatedBuilder(
+                    animation: _animationController1,
+                    builder: (context, child) {
+                      Color shadowColor =
+                          text == roomDataProvider.player1.nickname
+                              ? Colors.pink
+                              : Colors.green;
+                      return Transform.scale(
+                        scale: _animation.value,
+                        child: text == ''
+                            ? SizedBox
+                                .shrink() //text should be added after this otherwise it gives error
+                            : Text(
+                                '${text == roomDataProvider.player1.nickname ? 'X' : 'O'}',
+                                style: TextStyle(
+                                  fontSize: 55,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  shadows: [
+                                    Shadow(blurRadius: 60, color: shadowColor)
+                                  ],
+                                ),
+                              ),
+                      );
+                    },
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    dialogContent,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    child: Text(
+                      'OK',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.purple, // background color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            18.0), // rounded corner radius
+                      ),
+                    ),
+                    onPressed: () {
+                      _winningLine.clear();
+                      clearBoard(context);
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+            ),
           );
         });
+
+    // showDialog(
+    //     barrierDismissible: false,
+    //     context: context,
+    //     builder: (context) {
+    //       return AlertDialog(
+    //         title: Text('Round ${roomDataProvider.roomData['currentRound']}'),
+    //         actions: [
+    //           TextButton(
+    //             onPressed: () {
+    //               clearBoard(context);
+    //               Navigator.pop(context);
+    //               //increaseRound(roomDataProvider);
+    //             },
+    //             child: const Text(
+    //               'Play Again',
+    //             ),
+    //           ),
+    //         ],
+    //       );
+    //     });
   }
 
   // void _startNewRound() {
@@ -637,6 +859,9 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
   //     } else {
   //       dialogContent = '$winner won the round!';
   //     }
+
+  //     RoomDataProvider roomDataProvider =
+  //       Provider.of<RoomDataProvider>(context, listen: false);
 
   //     showGeneralDialog(
   //         barrierDismissible: false,
@@ -669,7 +894,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
   //                       mainAxisSize: MainAxisSize.min,
   //                       children: [
   //                         Text(
-  //                           dialogTitle,
+  //                           'Round ${roomDataProvider.roomData['currentRound']} Result',
   //                           style: TextStyle(
   //                             fontSize: 24,
   //                             fontWeight: FontWeight.bold,
@@ -687,7 +912,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
   //                         AnimatedBuilder(
   //                           animation: _animationController,
   //                           builder: (context, child) {
-  //                             Color shadowColor = winner == 'Player'
+  //                             Color shadowColor = text == roomDataProvider.player1.nickname
   //                                 ? Colors.pink
   //                                 : Colors.green;
   //                             return Transform.scale(
@@ -696,7 +921,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
   //                                   ? SizedBox
   //                                       .shrink() //text should be added after this otherwise it gives error
   //                                   : Text(
-  //                                       '${winner == 'Player' ? 'X' : 'O'}',
+  //                                       '${text == roomDataProvider.player1.nickname ? 'X' : 'O'}',
   //                                       style: TextStyle(
   //                                         fontSize: 55,
   //                                         fontWeight: FontWeight.bold,
@@ -737,7 +962,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
   //                           ),
   //                           onPressed: () {
   //                             _winningLine.clear();
-  //                            GameMethods().clearBoard(context);
+  //                           clearBoard(context);
   //               Navigator.pop(context);
   //                           },
   //                         ),
@@ -792,14 +1017,14 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
   //                     animation: _animationController,
   //                     builder: (context, child) {
   //                       Color shadowColor =
-  //                           winner == 'Player' ? Colors.pink : Colors.green;
+  //                           text == roomDataProvider.player1.nickname ? Colors.pink : Colors.green;
   //                       return Transform.scale(
   //                         scale: _animation.value,
   //                         child: winner == 'Tie'
   //                             ? SizedBox
   //                                 .shrink() //text should be added after this otherwise it gives error
   //                             : Text(
-  //                                 '${winner == 'Player' ? 'X' : 'O'}',
+  //                                 '${text == roomDataProvider.player1.nickname ? 'X' : 'O'}',
   //                                 style: TextStyle(
   //                                   fontSize: 55,
   //                                   fontWeight: FontWeight.bold,
@@ -838,7 +1063,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
   //                     ),
   //                     onPressed: () {
   //                       _winningLine.clear();
-  //                       GameMethods().clearBoard(context);
+  //                       clearBoard(context);
   //               Navigator.pop(context);
   //                     },
   //                   ),
@@ -922,17 +1147,18 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
 
     if (winner != '') {
       if (roomDataProvider.player1.playerType == winner) {
-        showGameDialog(
-            context, '${roomDataProvider.roomData['currentRound']} won!');
+        showGameDialog(context, '${roomDataProvider.player1.nickname}');
         //display game dialog box saying player 1 is the winner
+        _animationController1.repeat(reverse: true);
         socketClient.emit('winner', {
           'winnerSocketId': roomDataProvider.player1.socketID,
           'roomId': roomDataProvider.roomData['_id'],
         });
         //increaseRound(roomDataProvider);
       } else {
-        showGameDialog(context, '${roomDataProvider.player2.nickname} won!');
+        showGameDialog(context, '${roomDataProvider.player2.nickname}');
         //display game dialog box saying player 2 is the winner
+        _animationController1.repeat(reverse: true);
         socketClient.emit('winner', {
           'winnerSocketId': roomDataProvider.player2.socketID,
           'roomId': roomDataProvider.roomData['_id'],
