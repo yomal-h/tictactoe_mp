@@ -61,6 +61,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
   @override
   void initState() {
     super.initState();
+
     _animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
     _animationController.forward();
@@ -91,6 +92,16 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
     //_socketMethods.tappedListener(context);
     endGameListener(context);
     tappedListener(context);
+  }
+
+  @override
+  void didUpdateWidget(TicTacToeBoard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (_animationController.status == AnimationStatus.completed) {
+      _animationController.reset();
+      _animationController.forward();
+    }
   }
 
   @override
@@ -838,7 +849,164 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
     //     });
   }
 
-  // void _startNewRound() {
+  void checkWinner(BuildContext context, Socket socketClient) {
+    RoomDataProvider roomDataProvider =
+        Provider.of<RoomDataProvider>(context, listen: false);
+
+    String winner = ''; //'X' or 'O'
+    int filledBoxes = 0;
+
+    // Checking rows
+    if (roomDataProvider.displayElements[0] ==
+            roomDataProvider.displayElements[1] &&
+        roomDataProvider.displayElements[0] ==
+            roomDataProvider.displayElements[2] &&
+        roomDataProvider.displayElements[0] != '') {
+      winner = roomDataProvider.displayElements[0];
+    }
+    if (roomDataProvider.displayElements[3] ==
+            roomDataProvider.displayElements[4] &&
+        roomDataProvider.displayElements[3] ==
+            roomDataProvider.displayElements[5] &&
+        roomDataProvider.displayElements[3] != '') {
+      winner = roomDataProvider.displayElements[3];
+    }
+    if (roomDataProvider.displayElements[6] ==
+            roomDataProvider.displayElements[7] &&
+        roomDataProvider.displayElements[6] ==
+            roomDataProvider.displayElements[8] &&
+        roomDataProvider.displayElements[6] != '') {
+      winner = roomDataProvider.displayElements[6];
+    }
+
+    // Checking Column
+    if (roomDataProvider.displayElements[0] ==
+            roomDataProvider.displayElements[3] &&
+        roomDataProvider.displayElements[0] ==
+            roomDataProvider.displayElements[6] &&
+        roomDataProvider.displayElements[0] != '') {
+      winner = roomDataProvider.displayElements[0];
+    }
+    if (roomDataProvider.displayElements[1] ==
+            roomDataProvider.displayElements[4] &&
+        roomDataProvider.displayElements[1] ==
+            roomDataProvider.displayElements[7] &&
+        roomDataProvider.displayElements[1] != '') {
+      winner = roomDataProvider.displayElements[1];
+    }
+    if (roomDataProvider.displayElements[2] ==
+            roomDataProvider.displayElements[5] &&
+        roomDataProvider.displayElements[2] ==
+            roomDataProvider.displayElements[8] &&
+        roomDataProvider.displayElements[2] != '') {
+      winner = roomDataProvider.displayElements[2];
+    }
+
+    // Checking Diagonal
+    if (roomDataProvider.displayElements[0] ==
+            roomDataProvider.displayElements[4] &&
+        roomDataProvider.displayElements[0] ==
+            roomDataProvider.displayElements[8] &&
+        roomDataProvider.displayElements[0] != '') {
+      winner = roomDataProvider.displayElements[0];
+    }
+    if (roomDataProvider.displayElements[2] ==
+            roomDataProvider.displayElements[4] &&
+        roomDataProvider.displayElements[2] ==
+            roomDataProvider.displayElements[6] &&
+        roomDataProvider.displayElements[2] != '') {
+      winner = roomDataProvider.displayElements[2];
+    }
+
+    if (winner != '') {
+      if (roomDataProvider.player1.playerType == winner) {
+        showGameDialog(context, '${roomDataProvider.player1.nickname}');
+        //display game dialog box saying player 1 is the winner
+        _animationController1.repeat(reverse: true);
+        socketClient.emit('winner', {
+          'winnerSocketId': roomDataProvider.player1.socketID,
+          'roomId': roomDataProvider.roomData['_id'],
+        });
+        //increaseRound(roomDataProvider);
+      } else {
+        showGameDialog(context, '${roomDataProvider.player2.nickname}');
+        //display game dialog box saying player 2 is the winner
+        _animationController1.repeat(reverse: true);
+        socketClient.emit('winner', {
+          'winnerSocketId': roomDataProvider.player2.socketID,
+          'roomId': roomDataProvider.roomData['_id'],
+        });
+        // increaseRound(roomDataProvider);
+      }
+    } else if (roomDataProvider.filledBoxes == 9) {
+      winner = '';
+      //display game dialog box saying draw
+      showGameDialog(context, 'Draw');
+    }
+  }
+
+  void clearBoard(BuildContext context) {
+    RoomDataProvider roomDataProvider =
+        Provider.of<RoomDataProvider>(context, listen: false);
+
+    for (int i = 0; i < roomDataProvider.displayElements.length; i++) {
+      roomDataProvider.updateDisplayElements(i, '');
+    }
+    roomDataProvider.setFilledBoxesTo0();
+  }
+}
+
+class LinePainter extends CustomPainter {
+  final List<int> boxes;
+  final Color color;
+  final double strokeWidth;
+  final double progress;
+
+  LinePainter({
+    required this.boxes,
+    required this.color,
+    required this.strokeWidth,
+    required this.progress,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.square;
+
+    final boxSize = size.width / 3;
+    final start = Offset(
+      (boxes.first % 3 + 0.5) * boxSize,
+      (boxes.first ~/ 3 + 0.5) * boxSize,
+    );
+    final end = Offset(
+      (boxes.last % 3 + 0.5) * boxSize,
+      (boxes.last ~/ 3 + 0.5) * boxSize,
+    );
+
+    final lineLength = (end - start).distance;
+    final currentLength = lineLength * progress;
+
+    final currentEnd = start + ((end - start) * (currentLength / lineLength));
+
+    canvas.drawLine(
+      start,
+      currentEnd,
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(LinePainter oldDelegate) {
+    return progress != oldDelegate.progress;
+  }
+}
+
+
+
+// void _startNewRound() {
   //   String winner = _checkForWinner(_board, 'X')
   //       ? 'Player'
   //       : _checkForWinner(_board, 'O')
@@ -1075,159 +1243,3 @@ class _TicTacToeBoardState extends State<TicTacToeBoard>
   //   }
 
   // }
-
-  void checkWinner(BuildContext context, Socket socketClient) {
-    RoomDataProvider roomDataProvider =
-        Provider.of<RoomDataProvider>(context, listen: false);
-
-    String winner = ''; //'X' or 'O'
-    int filledBoxes = 0;
-
-    // Checking rows
-    if (roomDataProvider.displayElements[0] ==
-            roomDataProvider.displayElements[1] &&
-        roomDataProvider.displayElements[0] ==
-            roomDataProvider.displayElements[2] &&
-        roomDataProvider.displayElements[0] != '') {
-      winner = roomDataProvider.displayElements[0];
-    }
-    if (roomDataProvider.displayElements[3] ==
-            roomDataProvider.displayElements[4] &&
-        roomDataProvider.displayElements[3] ==
-            roomDataProvider.displayElements[5] &&
-        roomDataProvider.displayElements[3] != '') {
-      winner = roomDataProvider.displayElements[3];
-    }
-    if (roomDataProvider.displayElements[6] ==
-            roomDataProvider.displayElements[7] &&
-        roomDataProvider.displayElements[6] ==
-            roomDataProvider.displayElements[8] &&
-        roomDataProvider.displayElements[6] != '') {
-      winner = roomDataProvider.displayElements[6];
-    }
-
-    // Checking Column
-    if (roomDataProvider.displayElements[0] ==
-            roomDataProvider.displayElements[3] &&
-        roomDataProvider.displayElements[0] ==
-            roomDataProvider.displayElements[6] &&
-        roomDataProvider.displayElements[0] != '') {
-      winner = roomDataProvider.displayElements[0];
-    }
-    if (roomDataProvider.displayElements[1] ==
-            roomDataProvider.displayElements[4] &&
-        roomDataProvider.displayElements[1] ==
-            roomDataProvider.displayElements[7] &&
-        roomDataProvider.displayElements[1] != '') {
-      winner = roomDataProvider.displayElements[1];
-    }
-    if (roomDataProvider.displayElements[2] ==
-            roomDataProvider.displayElements[5] &&
-        roomDataProvider.displayElements[2] ==
-            roomDataProvider.displayElements[8] &&
-        roomDataProvider.displayElements[2] != '') {
-      winner = roomDataProvider.displayElements[2];
-    }
-
-    // Checking Diagonal
-    if (roomDataProvider.displayElements[0] ==
-            roomDataProvider.displayElements[4] &&
-        roomDataProvider.displayElements[0] ==
-            roomDataProvider.displayElements[8] &&
-        roomDataProvider.displayElements[0] != '') {
-      winner = roomDataProvider.displayElements[0];
-    }
-    if (roomDataProvider.displayElements[2] ==
-            roomDataProvider.displayElements[4] &&
-        roomDataProvider.displayElements[2] ==
-            roomDataProvider.displayElements[6] &&
-        roomDataProvider.displayElements[2] != '') {
-      winner = roomDataProvider.displayElements[2];
-    }
-
-    if (winner != '') {
-      if (roomDataProvider.player1.playerType == winner) {
-        showGameDialog(context, '${roomDataProvider.player1.nickname}');
-        //display game dialog box saying player 1 is the winner
-        _animationController1.repeat(reverse: true);
-        socketClient.emit('winner', {
-          'winnerSocketId': roomDataProvider.player1.socketID,
-          'roomId': roomDataProvider.roomData['_id'],
-        });
-        //increaseRound(roomDataProvider);
-      } else {
-        showGameDialog(context, '${roomDataProvider.player2.nickname}');
-        //display game dialog box saying player 2 is the winner
-        _animationController1.repeat(reverse: true);
-        socketClient.emit('winner', {
-          'winnerSocketId': roomDataProvider.player2.socketID,
-          'roomId': roomDataProvider.roomData['_id'],
-        });
-        // increaseRound(roomDataProvider);
-      }
-    }
-    if (roomDataProvider.filledBoxes == 9) {
-      winner = '';
-      //display game dialog box saying draw
-      showGameDialog(context, 'Draw');
-    }
-  }
-
-  void clearBoard(BuildContext context) {
-    RoomDataProvider roomDataProvider =
-        Provider.of<RoomDataProvider>(context, listen: false);
-
-    for (int i = 0; i < roomDataProvider.displayElements.length; i++) {
-      roomDataProvider.updateDisplayElements(i, '');
-    }
-    roomDataProvider.setFilledBoxesTo0();
-  }
-}
-
-class LinePainter extends CustomPainter {
-  final List<int> boxes;
-  final Color color;
-  final double strokeWidth;
-  final double progress;
-
-  LinePainter({
-    required this.boxes,
-    required this.color,
-    required this.strokeWidth,
-    required this.progress,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.square;
-
-    final boxSize = size.width / 3;
-    final start = Offset(
-      (boxes.first % 3 + 0.5) * boxSize,
-      (boxes.first ~/ 3 + 0.5) * boxSize,
-    );
-    final end = Offset(
-      (boxes.last % 3 + 0.5) * boxSize,
-      (boxes.last ~/ 3 + 0.5) * boxSize,
-    );
-
-    final lineLength = (end - start).distance;
-    final currentLength = lineLength * progress;
-
-    final currentEnd = start + ((end - start) * (currentLength / lineLength));
-
-    canvas.drawLine(
-      start,
-      currentEnd,
-      paint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(LinePainter oldDelegate) {
-    return progress != oldDelegate.progress;
-  }
-}
