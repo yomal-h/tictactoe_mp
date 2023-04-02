@@ -98,10 +98,13 @@ class SocketMethods {
     });
   }
 
-  void pointIncreaseListener(BuildContext context) {
+  void pointIncreaseListener(
+    BuildContext context,
+  ) {
     _socketClient.on('pointIncrease', (playerData) {
       var roomDataProvider =
           Provider.of<RoomDataProvider>(context, listen: false);
+
       if (playerData['socketID'] == roomDataProvider.player1.socketID) {
         roomDataProvider.updatePlayer1(playerData);
       } else {
@@ -114,7 +117,7 @@ class SocketMethods {
     //gets room id with 'roomId'
     //backend code increases the round after
 
-    _socketClient.emit('increaseCurrentRound', {'roomId': roomId});
+    _socketClient.emit('roundIncrease', {'roomId': roomId});
   }
 
   // void endGameListener(BuildContext context) {

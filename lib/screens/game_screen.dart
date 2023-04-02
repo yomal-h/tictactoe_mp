@@ -59,14 +59,6 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     });
   }
 
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   void initState() {
     // TODO: implement initState
@@ -104,10 +96,11 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         curve: Curves.easeInOut,
       ),
     );
-
+    increaseRound();
     //_socketMethods.tappedListener(context);
     endGameListener(context);
     tappedListener(context);
+    //increaseRound(roomDataProvider);
   }
 
   @override
@@ -122,6 +115,11 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   void tapped(int index, RoomDataProvider roomDataProvider) {
     _socketMethods.tapGrid(index, roomDataProvider.roomData['_id'],
         roomDataProvider.displayElements, roomDataProvider.filledBoxes);
+  }
+
+  void increaseRound() {
+    RoomDataProvider roomDataProvider = Provider.of<RoomDataProvider>(context);
+    _socketMethods.increaseCurrentRound(roomDataProvider.roomData['_id']);
   }
 
   @override
@@ -239,10 +237,6 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                                       blurRadius: 40,
                                       color: Colors.purpleAccent)
                                 ]),
-                          ),
-                          Text(
-                            '$_counter',
-                            style: Theme.of(context).textTheme.headline4,
                           ),
                           Padding(
                             padding:
@@ -950,7 +944,6 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                             ),
                           ),
                           onPressed: () {
-                            _incrementCounter;
                             _winningLine.clear();
                             clearBoard(context);
                             Navigator.pop(context);
@@ -1054,7 +1047,6 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                       ),
                     ),
                     onPressed: () {
-                      _incrementCounter;
                       _winningLine.clear();
                       clearBoard(context);
                       Navigator.pop(context);
