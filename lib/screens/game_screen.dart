@@ -32,6 +32,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
 
   late AnimationController _animationController1;
   late Animation<double> _animation;
+  RoomDataProvider? _roomDataProvider;
 
   void tappedListener(BuildContext context) {
     _socketClient.off('tapped'); //double tap in new game error fixed
@@ -96,11 +97,10 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         curve: Curves.easeInOut,
       ),
     );
-    increaseRound();
+
     //_socketMethods.tappedListener(context);
     endGameListener(context);
     tappedListener(context);
-    //increaseRound(roomDataProvider);
   }
 
   @override
@@ -117,8 +117,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         roomDataProvider.displayElements, roomDataProvider.filledBoxes);
   }
 
-  void increaseRound() {
-    RoomDataProvider roomDataProvider = Provider.of<RoomDataProvider>(context);
+  void increaseRound(RoomDataProvider roomDataProvider) {
+    print('round increased');
     _socketMethods.increaseCurrentRound(roomDataProvider.roomData['_id']);
   }
 
@@ -130,6 +130,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     final roomData = Provider.of<RoomDataProvider>(context);
     final winningLine = roomData.winningLine;
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
         body: roomDataProvider.roomData.containsKey('isJoin')
             ? roomDataProvider.roomData['isJoin']
