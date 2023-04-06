@@ -43,6 +43,7 @@ dependencies:
   lottie: ^1.1.0
   spring: ^2.0.2
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

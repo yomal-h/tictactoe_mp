@@ -104,8 +104,11 @@ class RoomDataProvider extends ChangeNotifier {
 //which will increase the current round by 1 and notify all listeners.
 //The Text widget in UI will automatically update to display the new current round.
   void updateCurrentRound(int round) {
-    _currentRound = round;
-    notifyListeners();
+    Future.delayed(Duration(seconds: 5), () {
+      //added an delay
+      _currentRound = round;
+      notifyListeners();
+    });
   }
 
   void setFilledBoxesTo0() {

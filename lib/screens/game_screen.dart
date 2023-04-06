@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +34,6 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
 
   late AnimationController _animationController1;
   late Animation<double> _animation;
-  RoomDataProvider? _roomDataProvider;
 
   void tappedListener(BuildContext context) {
     _socketClient.off('tapped'); //double tap in new game error fixed
@@ -845,7 +846,11 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     } else {
       dialogContent = '$text won the round!';
     }
-
+    Timer? timer = Timer(Duration(milliseconds: 5000), () {
+      _winningLine.clear();
+      clearBoard(context);
+      Navigator.pop(context);
+    });
     showGeneralDialog(
         barrierDismissible: false,
         barrierColor: Colors.black.withOpacity(0.5),
@@ -1057,7 +1062,17 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
               ),
             ),
           );
-        });
+        }).then((value) {
+      // dispose the timer in case something else has triggered the dismiss.
+      timer?.cancel();
+      timer = null;
+    });
+
+    // Future.delayed(Duration(seconds: 5), () {
+    //   Navigator.of(context).pop();
+    //   _winningLine.clear();
+    //   clearBoard(context);
+    // });
 
     // showDialog(
     //     barrierDismissible: false,
