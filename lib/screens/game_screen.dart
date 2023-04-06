@@ -68,7 +68,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     _socketMethods.updateRoomListener(context);
     _socketMethods.updatePlayersStateListener(context);
     _socketMethods.pointIncreaseListener(context);
-
+    _socketMethods.increaseCurrentRoundListener(context);
     //_socketMethods.endGameListener(context);
 
     _animationController = AnimationController(
@@ -165,7 +165,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Text(
-                              'Round ${roomDataProvider.roomData['currentRound']}',
+                              'Round ${Provider.of<RoomDataProvider>(context).currentRound}',
                               style: const TextStyle(
                                   fontSize: 28,
                                   color: Colors.white,

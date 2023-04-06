@@ -8,8 +8,8 @@ class RoomDataProvider extends ChangeNotifier {
   Map<String, dynamic> _roomData = {};
   List<String> _displayElement = ['', '', '', '', '', '', '', '', ''];
   int _filledBoxes = 0;
-  int _currentRound = 1;
 
+  int _currentRound = 1;
   Player _player1 =
       Player(nickname: '', socketID: '', points: 0, playerType: 'X');
 
@@ -19,10 +19,11 @@ class RoomDataProvider extends ChangeNotifier {
   Map<String, dynamic> get roomData => _roomData;
   List<String> get displayElements => _displayElement;
   int get filledBoxes => _filledBoxes;
-  int get currentRound => _currentRound;
+
   List<int> get winningLine => getWinningLine();
   Player get player1 => _player1;
   Player get player2 => _player2;
+  int get currentRound => _currentRound;
 
   // Returns the indices of the boxes that form the winning line based on the current displayElements.
   List<int> getWinningLine() {
@@ -73,6 +74,7 @@ class RoomDataProvider extends ChangeNotifier {
       _player1 = Player(nickname: '', socketID: '', points: 0, playerType: 'X');
       _player2 = Player(nickname: '', socketID: '', points: 0, playerType: 'O');
       winningLine.clear();
+      _currentRound = 1;
       print("RESET METHOD");
       // print("Filled boxes before reset: $_filledBoxes");
 
@@ -94,6 +96,15 @@ class RoomDataProvider extends ChangeNotifier {
   void updateDisplayElements(int index, String choice) {
     _displayElement[index] = choice;
     _filledBoxes += 1; //checks how many boxes filled
+    notifyListeners();
+  }
+
+//when the roundIncrease event is emitted from the backend server,
+//the increaseRound method of the RoomDataProvider will be called,
+//which will increase the current round by 1 and notify all listeners.
+//The Text widget in UI will automatically update to display the new current round.
+  void updateCurrentRound(int round) {
+    _currentRound = round;
     notifyListeners();
   }
 

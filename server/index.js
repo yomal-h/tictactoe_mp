@@ -129,7 +129,8 @@ io.on("connection", (socket) => {
                 //too winner's socket id and made sure only the winner's device will increase the round 
                 //otherwise both devices were updating the round
                 //same logic was also used for the points increment
-                io.to(winnerSocketId).emit("roundIncrease", { currentRound: room.currentRound });
+                //io.to(winnerSocketId).emit("roundIncrease", { currentRound: room.currentRound }); //this will shows the new round number in winner's device only
+                io.to(roomId).emit("roundIncrease", { currentRound: room.currentRound }); //This will emit the roundIncrease event to all sockets in the roomId room, except for the socket that triggered the event (in this case, the winner's socket).
                 console.log('Received increaseCurrentRound event for room', roomId);
                 io.to(roomId).emit("pointIncrease", player);
             }

@@ -113,6 +113,15 @@ class SocketMethods {
     });
   }
 
+  void increaseCurrentRoundListener(
+    BuildContext context,
+  ) {
+    _socketClient.on('roundIncrease', (data) {
+      Provider.of<RoomDataProvider>(context, listen: false)
+          .updateCurrentRound(data['currentRound']);
+    });
+  }
+
   void increaseCurrentRound(String roomId) {
     //gets room id with 'roomId'
     //backend code increases the round after
