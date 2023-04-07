@@ -663,6 +663,13 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy>
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.white,
+                              shadows: [
+                                Shadow(
+                                  blurRadius: 35,
+                                  color: Colors.pinkAccent,
+                                  offset: Offset(2.0, 2.0),
+                                )
+                              ],
                             ),
                           ),
                           SizedBox(height: 16),
@@ -792,6 +799,12 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy>
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
+                        shadows: [
+                          Shadow(
+                              blurRadius: 35,
+                              color: Colors.pinkAccent,
+                              offset: Offset(2.0, 2.0))
+                        ],
                       ),
                     ),
                     SizedBox(height: 16),

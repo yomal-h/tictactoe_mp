@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
           CreateRoomScreen.routeName: (context) => const CreateRoomScreen(),
           GameScreen.routeName: (context) => const GameScreen(),
         },
-        initialRoute: MainMenuScreen.routeName,
+        initialRoute: TicTacToeGameEasy.routeName,
       ),
     );
   }
