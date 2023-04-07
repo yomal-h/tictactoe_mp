@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -16,6 +17,7 @@ import 'dart:io' show Platform;
 
 class GameScreen extends StatefulWidget {
   static String routeName = '/game';
+
   const GameScreen({Key? key}) : super(key: key);
 
   @override
@@ -929,32 +931,49 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                         Text(
                           dialogContent,
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 20,
                             color: Colors.white,
                           ),
                         ),
                         SizedBox(height: 16),
-                        ElevatedButton(
-                          child: Text(
-                            'OK',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.purple, // background color
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  18.0), // rounded corner radius
-                            ),
-                          ),
-                          onPressed: () {
-                            _winningLine.clear();
-                            clearBoard(context);
-                            Navigator.pop(context);
+                        Text(
+                          'The next round starting in...',
+                          style: TextStyle(fontSize: 15.0, color: Colors.white),
+                        ),
+                        SizedBox(height: 5),
+                        CustomTimer(
+                          from: Duration(seconds: 5),
+                          to: Duration(seconds: 0),
+                          onBuildAction: CustomTimerAction.auto_start,
+                          builder: (CustomTimerRemainingTime remaining) {
+                            return Text(
+                              '${remaining.secondsWithoutFill}',
+                              style: TextStyle(
+                                  fontSize: 30.0, color: Colors.white),
+                            );
                           },
                         ),
+                        // ElevatedButton(
+                        //   child: Text(
+                        //     'OK',
+                        //     style: TextStyle(
+                        //       fontSize: 18,
+                        //       color: Colors.white,
+                        //     ),
+                        //   ),
+                        //   style: ElevatedButton.styleFrom(
+                        //     primary: Colors.purple, // background color
+                        //     shape: RoundedRectangleBorder(
+                        //       borderRadius: BorderRadius.circular(
+                        //           18.0), // rounded corner radius
+                        //     ),
+                        //   ),
+                        //   onPressed: () {
+                        //     _winningLine.clear();
+                        //     clearBoard(context);
+                        //     Navigator.pop(context);
+                        //   },
+                        // ),
                       ],
                     ),
                   ),
@@ -1037,27 +1056,43 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                     ),
                   ),
                   SizedBox(height: 16),
-                  ElevatedButton(
-                    child: Text(
-                      'OK',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.purple, // background color
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            18.0), // rounded corner radius
-                      ),
-                    ),
-                    onPressed: () {
-                      _winningLine.clear();
-                      clearBoard(context);
-                      Navigator.pop(context);
+                  Text(
+                    'The next round starting in...',
+                    style: TextStyle(fontSize: 15.0, color: Colors.white),
+                  ),
+                  SizedBox(height: 5),
+                  CustomTimer(
+                    from: Duration(seconds: 5),
+                    to: Duration(seconds: 0),
+                    onBuildAction: CustomTimerAction.auto_start,
+                    builder: (CustomTimerRemainingTime remaining) {
+                      return Text(
+                        'the next round starting in...${remaining.secondsWithoutFill}',
+                        style: TextStyle(fontSize: 30.0, color: Colors.white),
+                      );
                     },
                   ),
+                  // ElevatedButton(
+                  //   child: Text(
+                  //     'OK',
+                  //     style: TextStyle(
+                  //       fontSize: 18,
+                  //       color: Colors.white,
+                  //     ),
+                  //   ),
+                  //   style: ElevatedButton.styleFrom(
+                  //     primary: Colors.purple, // background color
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(
+                  //           18.0), // rounded corner radius
+                  //     ),
+                  //   ),
+                  //   onPressed: () {
+                  //     _winningLine.clear();
+                  //     clearBoard(context);
+                  //     Navigator.pop(context);
+                  //   },
+                  // ),
                 ],
               ),
             ),
