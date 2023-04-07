@@ -578,63 +578,33 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                         ),
                       ),
                       SizedBox(height: 16),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton(
-                              child: Text(
-                                'New Game',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.purple, // background color
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      18.0), // rounded corner radius
-                                ),
-                              ),
-                              onPressed: () {
-                                clearBoard(context);
+                      SizedBox(width: 15),
+                      ElevatedButton(
+                        child: Text(
+                          'Main Menu',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.purple, // background color
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                                18.0), // rounded corner radius
+                          ),
+                        ),
+                        onPressed: () {
+                          clearBoard(context);
 
-                                Navigator.pop(context);
+                          Navigator.pop(context);
 //                 //navigateToMainMenu(context);
-                                Navigator.pushNamed(
-                                    context, MainMenuScreen.routeName);
+                          Navigator.pushNamed(
+                              context, MainMenuScreen.routeName);
 //
-                                gameState.reset();
-                              },
-                            ),
-                            SizedBox(width: 15),
-                            ElevatedButton(
-                              child: Text(
-                                'Main Menu',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.purple, // background color
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      18.0), // rounded corner radius
-                                ),
-                              ),
-                              onPressed: () {
-                                clearBoard(context);
-
-                                Navigator.pop(context);
-//                 //navigateToMainMenu(context);
-                                Navigator.pushNamed(
-                                    context, MainMenuScreen.routeName);
-//
-                                gameState.reset();
-                              },
-                            ),
-                          ]),
+                          gameState.reset();
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -756,59 +726,32 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                     ),
                   ),
                   SizedBox(height: 16),
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    ElevatedButton(
-                      child: Text(
-                        'New Game',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
+                  SizedBox(width: 15),
+                  ElevatedButton(
+                    child: Text(
+                      'Main Menu',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
                       ),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.purple, // background color
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              18.0), // rounded corner radius
-                        ),
-                      ),
-                      onPressed: () {
-                        clearBoard(context);
-
-                        Navigator.pop(context);
-//                 //navigateToMainMenu(context);
-                        Navigator.pushNamed(context, MainMenuScreen.routeName);
-//
-                        gameState.reset();
-                      },
                     ),
-                    SizedBox(width: 15),
-                    ElevatedButton(
-                      child: Text(
-                        'Main Menu',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.purple, // background color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            18.0), // rounded corner radius
                       ),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.purple, // background color
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              18.0), // rounded corner radius
-                        ),
-                      ),
-                      onPressed: () {
-                        clearBoard(context);
-
-                        Navigator.pop(context);
-//                 //navigateToMainMenu(context);
-                        Navigator.pushNamed(context, MainMenuScreen.routeName);
-//
-                        gameState.reset();
-                      },
                     ),
-                  ]),
+                    onPressed: () {
+                      clearBoard(context);
+
+                      Navigator.pop(context);
+//                 //navigateToMainMenu(context);
+                      Navigator.pushNamed(context, MainMenuScreen.routeName);
+//
+                      gameState.reset();
+                    },
+                  ),
                 ],
               ),
             ),
