@@ -311,6 +311,7 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy>
                                     : 0.0,
                               ),
                               child: AnimatedContainer(
+                                //grid container
                                 duration: const Duration(milliseconds: 300),
                                 decoration: BoxDecoration(
                                   border: Border.all(

@@ -59,8 +59,10 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                         ], text: 'Host Match', fontSize: 40),
                         SizedBox(height: size.height * 0.04),
                         CustomTextfield(
-                            controller: _nameController,
-                            hintText: 'Enter your nickname'),
+                          controller: _nameController,
+                          hintText: 'Enter your nickname',
+                          limit: 5,
+                        ),
                         SizedBox(height: size.height * 0.03),
                         CustomButton(
                             onTap: () => _socketMethods.createRoom(

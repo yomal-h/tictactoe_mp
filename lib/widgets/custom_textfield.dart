@@ -6,12 +6,14 @@ import 'package:tictactoe_mp/utils/colors.dart';
 class CustomTextfield extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
+  final int limit;
   final bool isReadOnly;
   const CustomTextfield({
     Key? key,
     required this.controller,
     required this.hintText,
     this.isReadOnly = false,
+    required this.limit,
   }) : super(key: key);
 
   @override
@@ -32,8 +34,10 @@ class CustomTextfield extends StatelessWidget {
         style: TextStyle(color: Colors.white, fontFamily: 'SF'),
         readOnly: isReadOnly,
         controller: controller,
+        maxLength: limit,
         cursorColor: Colors.white,
         decoration: InputDecoration(
+          counterText: '',
           fillColor: bgColor,
           filled: true,
           border: OutlineInputBorder(

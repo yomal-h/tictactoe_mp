@@ -57,12 +57,18 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
             ], text: 'Join Match', fontSize: 40),
             SizedBox(height: size.height * 0.04),
             CustomTextfield(
-                controller: _nameController, hintText: 'Enter your nickname'),
+              controller: _nameController,
+              hintText: 'Enter your nickname',
+              limit: 5,
+            ),
             const SizedBox(
               height: 20,
             ),
             CustomTextfield(
-                controller: _gameIdController, hintText: 'Enter Game ID'),
+              controller: _gameIdController,
+              hintText: 'Enter Game ID',
+              limit: 15,
+            ),
             SizedBox(height: size.height * 0.03),
             CustomButton(
                 onTap: (() => _socketMethods.joinRoom(

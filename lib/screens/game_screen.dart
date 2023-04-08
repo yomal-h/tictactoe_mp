@@ -36,6 +36,11 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
 
   late AnimationController _animationController1;
   late Animation<double> _animation;
+  late AnimationController _controller;
+  late Animation<double> _shakeAnimation;
+  late AnimationController _rotateController;
+  late Animation<double> _rotateAnimation;
+  late Animation<double> _scaleAnimation;
 
   void tappedListener(BuildContext context) {
     _socketClient.off('tapped'); //double tap in new game error fixed
@@ -101,6 +106,37 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
       ),
     );
 
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    )..addListener(() {
+        setState(() {});
+      });
+
+    _shakeAnimation = Tween<double>(begin: 0.0, end: 10.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    _rotateController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    )..addListener(() {
+        setState(() {});
+      });
+
+    _rotateAnimation = Tween<double>(begin: 0.0, end: 0.05).animate(
+      CurvedAnimation(
+        parent: _rotateController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    _scaleAnimation =
+        Tween<double>(begin: 1.0, end: 1.3).animate(_rotateController);
+
     //_socketMethods.tappedListener(context);
     endGameListener(context);
     tappedListener(context);
@@ -111,6 +147,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     _socketClient.off('tapped');
     _animationController.dispose();
     _animationController1.dispose();
+    _rotateController.dispose();
+    _controller.dispose();
     super.dispose();
     // TODO: implement dispose
   }
@@ -123,6 +161,17 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   void increaseRound(RoomDataProvider roomDataProvider) {
     print('round increased');
     _socketMethods.increaseCurrentRound(roomDataProvider.roomData['_id']);
+  }
+
+  void _goToMainMenu() {
+    final gameState = Provider.of<RoomDataProvider>(context, listen: false);
+    clearBoard(context);
+
+    Navigator.pop(context);
+//                 //navigateToMainMenu(context);
+    Navigator.pushNamed(context, MainMenuScreen.routeName);
+//
+    gameState.reset();
   }
 
   @override
@@ -138,8 +187,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         body: roomDataProvider.roomData.containsKey('isJoin')
             ? roomDataProvider.roomData['isJoin']
                 ? const WaitingLobby()
-                : SafeArea(
-                    child: Column(
+                : Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     // ignore: prefer_const_literals_to_create_immutables
                     children: [
@@ -187,7 +235,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                         children: [
                           Padding(
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 40.0),
+                                const EdgeInsets.symmetric(horizontal: 32.0),
                             child: Column(
                               children: [
                                 Text(
@@ -319,39 +367,72 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                                         return GestureDetector(
                                           onTap: () =>
                                               tapped(index, roomDataProvider),
-                                          child: AnimatedContainer(
-                                            duration: const Duration(
-                                                milliseconds: 300),
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color:
-                                                    winningLine.contains(index)
-                                                        ? Colors.red
-                                                        : Colors.white24,
-                                              ),
+                                          child: Transform.translate(
+                                            offset: Offset(
+                                              0.0,
+                                              winningLine.contains(index)
+                                                  ? -_shakeAnimation.value
+                                                  : 0.0,
                                             ),
-                                            child: Center(
-                                              child: AnimatedSize(
-                                                duration: const Duration(
-                                                    milliseconds: 200),
-                                                child: Text(
-                                                  roomDataProvider
-                                                      .displayElements[index],
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: fontSize1,
-                                                    shadows: [
-                                                      Shadow(
-                                                        blurRadius: 40,
-                                                        color: roomDataProvider
-                                                                        .displayElements[
-                                                                    index] ==
-                                                                'O'
-                                                            ? Colors.red
-                                                            : Colors.blue,
+                                            child: AnimatedContainer(
+                                              //grid container
+                                              duration: const Duration(
+                                                  milliseconds: 300),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: winningLine
+                                                          .contains(index)
+                                                      ? boardBorderColor
+                                                          .withOpacity(
+                                                              0.5) //winning boxes highlight color
+                                                      : boardBorderColor
+                                                          .withOpacity(0.3),
+                                                  width: winningLine
+                                                          .contains(index)
+                                                      ? 5.0
+                                                      : 1.0,
+                                                ),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: PrimaryColor
+                                                        .withOpacity(0.5),
+                                                    spreadRadius: 5,
+                                                    blurRadius: 10,
+                                                    offset: Offset(0, 0),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Center(
+                                                child: AnimatedSize(
+                                                  duration: const Duration(
+                                                      milliseconds: 200),
+                                                  child: Transform.scale(
+                                                    scale: winningLine
+                                                            .contains(index)
+                                                        ? _scaleAnimation.value
+                                                        : 1.0,
+                                                    child: Text(
+                                                      roomDataProvider
+                                                              .displayElements[
+                                                          index],
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: fontSize1,
+                                                        shadows: [
+                                                          Shadow(
+                                                            blurRadius: 40,
+                                                            color: roomDataProvider.displayElements[
+                                                                        index] ==
+                                                                    'O'
+                                                                ? Colors
+                                                                    .greenAccent
+                                                                : Colors.pink,
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),
@@ -360,29 +441,29 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                                         );
                                       },
                                     ),
-                                    AnimatedBuilder(
-                                      animation: _animationController,
-                                      builder: (BuildContext context,
-                                          Widget? child) {
-                                        return CustomPaint(
-                                          size: Size.infinite,
-                                          painter: winningLine.isEmpty
-                                              ? null
-                                              : LinePainter(
-                                                  boxes: winningLine,
-                                                  color: Colors.red,
-                                                  strokeWidth: 10.0,
-                                                  progress: _animationTween
-                                                      .animate(CurvedAnimation(
-                                                          parent:
-                                                              _animationController,
-                                                          curve: Curves
-                                                              .easeInOutCirc))
-                                                      .value,
-                                                ),
-                                        );
-                                      },
-                                    ),
+                                    // AnimatedBuilder(
+                                    //   animation: _animationController,
+                                    //   builder: (BuildContext context,
+                                    //       Widget? child) {
+                                    //     return CustomPaint(
+                                    //       size: Size.infinite,
+                                    //       painter: winningLine.isEmpty
+                                    //           ? null
+                                    //           : LinePainter(
+                                    //               boxes: winningLine,
+                                    //               color: Colors.red,
+                                    //               strokeWidth: 10.0,
+                                    //               progress: _animationTween
+                                    //                   .animate(CurvedAnimation(
+                                    //                       parent:
+                                    //                           _animationController,
+                                    //                       curve: Curves
+                                    //                           .easeInOutCirc))
+                                    //                   .value,
+                                    //             ),
+                                    //     );
+                                    //   },
+                                    // ),
                                   ],
                                 ),
                               );
@@ -391,6 +472,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                         ),
                       ),
                       Container(
+                        width: 300,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: boardBorderColor.withOpacity(0.2),
@@ -400,52 +482,74 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                             horizontal: 20.0,
                             vertical: 10.0,
                           ),
-                          child: RichText(
-                            text: TextSpan(
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18.0,
-                                shadows: [
-                                  Shadow(
-                                      blurRadius: 40, color: boardBorderColor),
+                          child: Center(
+                            child: RichText(
+                              text: TextSpan(
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18.0,
+                                  shadows: [
+                                    Shadow(
+                                        blurRadius: 40,
+                                        color: boardBorderColor),
+                                  ],
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: 'Current player:  ',
+                                    style: TextStyle(
+                                      fontFamily: 'Beon',
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text:
+                                        '${roomDataProvider.roomData['turn']['nickname']}',
+                                    style: TextStyle(
+                                        fontSize: 24.0,
+                                        fontFamily: 'Beon',
+                                        fontWeight: FontWeight.bold,
+                                        shadows: [
+                                          BoxShadow(
+                                            color:
+                                                '${roomDataProvider.roomData['turn']['nickname']}' ==
+                                                        'X'
+                                                    ? Colors.pinkAccent
+                                                        .withOpacity(0.8)
+                                                    : Colors.greenAccent,
+                                            blurRadius: 12,
+                                            offset: Offset(0, 0),
+                                          ),
+                                        ]),
+                                  ),
                                 ],
                               ),
-                              children: [
-                                TextSpan(
-                                  text: 'Current player:  ',
-                                  style: TextStyle(
-                                    fontFamily: 'Beon',
-                                  ),
-                                ),
-                                TextSpan(
-                                  text:
-                                      '${roomDataProvider.roomData['turn']['nickname']}',
-                                  style: TextStyle(
-                                      fontSize: 24.0,
-                                      fontFamily: 'Beon',
-                                      fontWeight: FontWeight.bold,
-                                      shadows: [
-                                        BoxShadow(
-                                          color:
-                                              '${roomDataProvider.roomData['turn']['nickname']}' ==
-                                                      'X'
-                                                  ? Colors.pinkAccent
-                                                      .withOpacity(0.8)
-                                                  : Colors.greenAccent,
-                                          blurRadius: 12,
-                                          offset: Offset(0, 0),
-                                        ),
-                                      ]),
-                                ),
-                              ],
                             ),
                           ),
                         ),
                       ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: IconButton(
+                          icon: Icon(Icons.home),
+                          onPressed: _goToMainMenu,
+                          splashRadius: 18,
+                          iconSize: 28,
+                          padding: const EdgeInsets.all(8.0),
+                          color: Colors.white,
+                          splashColor: boardBorderColor.withOpacity(0.9),
+                          highlightColor: Colors.transparent,
+                        ),
+                      ),
+                      SizedBox(
+                        height: Platform.isIOS ? 40 : 2, //2 for android
+                      ),
                       // Text(
                       //     '${roomDataProvider.roomData['turn']['nickname']}\'s turn'),
                     ],
-                  ))
+                  )
             : Container());
   }
 
@@ -791,11 +895,17 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     } else {
       dialogContent = '$text won the round!';
     }
+
     Timer? timer = Timer(Duration(milliseconds: 5000), () {
       _winningLine.clear();
       clearBoard(context);
+      _rotateController.stop();
+      _rotateController.reset();
+      _controller.stop();
+      _controller.reset();
       Navigator.pop(context);
     });
+
     showGeneralDialog(
         barrierDismissible: false,
         barrierColor: Colors.black.withOpacity(0.5),
@@ -1152,6 +1262,12 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
           'winnerSocketId': roomDataProvider.player1.socketID,
           'roomId': roomDataProvider.roomData['_id'],
         });
+        Future.delayed(Duration(seconds: 3), () {
+          _controller.stop();
+          _rotateController.stop();
+        });
+        _rotateController.repeat(reverse: true);
+        _controller.repeat(reverse: true);
         //increaseRound(roomDataProvider);
       } else {
         showGameDialog(context, '${roomDataProvider.player2.nickname}');
@@ -1161,6 +1277,12 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
           'winnerSocketId': roomDataProvider.player2.socketID,
           'roomId': roomDataProvider.roomData['_id'],
         });
+        Future.delayed(Duration(seconds: 3), () {
+          _controller.stop();
+          _rotateController.stop();
+        });
+        _rotateController.repeat(reverse: true);
+        _controller.repeat(reverse: true);
         // increaseRound(roomDataProvider);
       }
     } else if (roomDataProvider.filledBoxes == 9) {
