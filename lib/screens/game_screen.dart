@@ -167,7 +167,6 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     final gameState = Provider.of<RoomDataProvider>(context, listen: false);
     clearBoard(context);
 
-    Navigator.pop(context);
 //                 //navigateToMainMenu(context);
     Navigator.pushNamed(context, MainMenuScreen.routeName);
 //
