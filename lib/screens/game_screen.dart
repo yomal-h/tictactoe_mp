@@ -234,7 +234,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                         children: [
                           Padding(
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 32.0),
+                                const EdgeInsets.symmetric(horizontal: 30.0),
                             child: Column(
                               children: [
                                 Text(
