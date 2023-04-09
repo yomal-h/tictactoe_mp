@@ -1010,6 +1010,13 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.white,
+                            shadows: [
+                              BoxShadow(
+                                color: Colors.red.withOpacity(0.8),
+                                blurRadius: 12,
+                                offset: Offset(2, 2),
+                              ),
+                            ],
                           ),
                         ),
                         SizedBox(height: 16),
