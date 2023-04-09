@@ -21,26 +21,32 @@ class MainMenuScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: bgColor,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 55),
-            _buildButton(
-              context,
-              'Host Match',
-              () => createRoom(context),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: GestureDetector(
+        onHorizontalDragUpdate: (_) {},
+        child: Scaffold(
+          backgroundColor: bgColor,
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 55),
+                _buildButton(
+                  context,
+                  'Host Match',
+                  () => createRoom(context),
+                ),
+                const SizedBox(height: 28),
+                _buildButton(
+                  context,
+                  'Join Match',
+                  () => joinRoom(context),
+                ),
+                const SizedBox(height: 30),
+              ],
             ),
-            const SizedBox(height: 28),
-            _buildButton(
-              context,
-              'Join Match',
-              () => joinRoom(context),
-            ),
-            const SizedBox(height: 30),
-          ],
+          ),
         ),
       ),
     );

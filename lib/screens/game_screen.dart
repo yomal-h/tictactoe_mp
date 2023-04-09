@@ -182,374 +182,386 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     final winningLine = roomData.winningLine;
     final size = MediaQuery.of(context).size;
 
-    return Scaffold(
-        body: roomDataProvider.roomData.containsKey('isJoin')
-            ? roomDataProvider.roomData['isJoin']
-                ? const WaitingLobby()
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    // ignore: prefer_const_literals_to_create_immutables
-                    children: [
-                      SizedBox(
-                          height: Platform.isIOS
-                              ? 90
-                              : 70), //55 for android and //90 for ios
-                      Center(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.white,
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.circular(30),
-                            boxShadow: [
-                              BoxShadow(
-                                color: boardBorderColor.withOpacity(0.6),
-                                spreadRadius: 4,
-                                blurRadius: 7,
-                                offset: Offset(
-                                    0, 0), // changes position of the shadow
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Text(
-                              'Round ${Provider.of<RoomDataProvider>(context).currentRound}',
-                              style: const TextStyle(
-                                  fontSize: 28,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  shadows: [
-                                    Shadow(
-                                        blurRadius: 40, color: boardBorderColor)
-                                  ]),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 50.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: GestureDetector(
+        child: Scaffold(
+            body: roomDataProvider.roomData.containsKey('isJoin')
+                ? roomDataProvider.roomData['isJoin']
+                    ? const WaitingLobby()
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        // ignore: prefer_const_literals_to_create_immutables
                         children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 30.0),
-                            child: Column(
-                              children: [
-                                Text(
-                                  roomDataProvider.player1.nickname,
+                          SizedBox(
+                              height: Platform.isIOS
+                                  ? 90
+                                  : 70), //55 for android and //90 for ios
+                          Center(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(30),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: boardBorderColor.withOpacity(0.6),
+                                    spreadRadius: 4,
+                                    blurRadius: 7,
+                                    offset: Offset(
+                                        0, 0), // changes position of the shadow
+                                  ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Text(
+                                  'Round ${Provider.of<RoomDataProvider>(context).currentRound}',
                                   style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
+                                      fontSize: 28,
                                       color: Colors.white,
+                                      fontWeight: FontWeight.bold,
                                       shadows: [
                                         Shadow(
                                             blurRadius: 40,
                                             color: boardBorderColor)
                                       ]),
                                 ),
-                                SizedBox(height: 10.0),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: boardBorderColor.withOpacity(0.2),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    child: Text(
-                                      roomDataProvider.player1.points
-                                          .toInt()
-                                          .toString(),
-                                      style: const TextStyle(
-                                          fontSize: 25,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          shadows: [
-                                            Shadow(
-                                                blurRadius: 40,
-                                                color: Colors.purpleAccent)
-                                          ]),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
-                          Text(
-                            '   :   ',
-                            style: const TextStyle(
-                                fontSize: 30,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                shadows: [
-                                  Shadow(
-                                      blurRadius: 40,
-                                      color: Colors.purpleAccent)
-                                ]),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 25.0),
-                            child: Column(
-                              children: [
-                                Text(
-                                  roomDataProvider.player2.nickname,
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                      shadows: [
-                                        Shadow(
-                                            blurRadius: 40,
-                                            color: Colors.greenAccent)
-                                      ]),
-                                ),
-                                SizedBox(height: 10.0),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: boardBorderColor.withOpacity(0.2),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    child: Text(
-                                      roomDataProvider.player2.points
-                                          .toInt()
-                                          .toString(),
-                                      style: const TextStyle(
-                                          fontSize: 25,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          shadows: [
-                                            Shadow(
-                                                blurRadius: 40,
-                                                color: Colors.purpleAccent)
-                                          ]),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 2.0),
-                      //const Scoreboard(),
-                      Expanded(
-                        key: _key,
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: Padding(
-                            padding: EdgeInsets.all(Platform.isIOS ? 5 : 10),
-                            child: LayoutBuilder(builder: (BuildContext context,
-                                BoxConstraints constraints) {
-                              double fontSize1 = constraints.maxWidth / 4.5;
-                              return AbsorbPointer(
-                                absorbing: roomDataProvider.roomData['turn']
-                                        ['socketID'] !=
-                                    _socketMethods.socketClient.id,
-                                child: Stack(
+                          SizedBox(height: 50.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 30.0),
+                                child: Column(
                                   children: [
-                                    GridView.builder(
-                                      itemCount: 9,
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 3,
+                                    Text(
+                                      roomDataProvider.player1.nickname,
+                                      style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          shadows: [
+                                            Shadow(
+                                                blurRadius: 40,
+                                                color: boardBorderColor)
+                                          ]),
+                                    ),
+                                    SizedBox(height: 10.0),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color:
+                                            boardBorderColor.withOpacity(0.2),
                                       ),
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        final displayValue =
-                                            roomData.displayElements[index];
-                                        return GestureDetector(
-                                          onTap: () =>
-                                              tapped(index, roomDataProvider),
-                                          child: Transform.translate(
-                                            offset: Offset(
-                                              0.0,
-                                              winningLine.contains(index)
-                                                  ? -_shakeAnimation.value
-                                                  : 0.0,
-                                            ),
-                                            child: AnimatedContainer(
-                                              //grid container
-                                              duration: const Duration(
-                                                  milliseconds: 300),
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  color: winningLine
-                                                          .contains(index)
-                                                      ? boardBorderColor
-                                                          .withOpacity(
-                                                              0.5) //winning boxes highlight color
-                                                      : boardBorderColor
-                                                          .withOpacity(0.3),
-                                                  width: winningLine
-                                                          .contains(index)
-                                                      ? 5.0
-                                                      : 1.0,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20.0, vertical: 10.0),
+                                        child: Text(
+                                          roomDataProvider.player1.points
+                                              .toInt()
+                                              .toString(),
+                                          style: const TextStyle(
+                                              fontSize: 25,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              shadows: [
+                                                Shadow(
+                                                    blurRadius: 40,
+                                                    color: Colors.purpleAccent)
+                                              ]),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text(
+                                '   :   ',
+                                style: const TextStyle(
+                                    fontSize: 30,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    shadows: [
+                                      Shadow(
+                                          blurRadius: 40,
+                                          color: Colors.purpleAccent)
+                                    ]),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 25.0),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      roomDataProvider.player2.nickname,
+                                      style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          shadows: [
+                                            Shadow(
+                                                blurRadius: 40,
+                                                color: Colors.greenAccent)
+                                          ]),
+                                    ),
+                                    SizedBox(height: 10.0),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color:
+                                            boardBorderColor.withOpacity(0.2),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20.0, vertical: 10.0),
+                                        child: Text(
+                                          roomDataProvider.player2.points
+                                              .toInt()
+                                              .toString(),
+                                          style: const TextStyle(
+                                              fontSize: 25,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              shadows: [
+                                                Shadow(
+                                                    blurRadius: 40,
+                                                    color: Colors.purpleAccent)
+                                              ]),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 2.0),
+                          //const Scoreboard(),
+                          Expanded(
+                            key: _key,
+                            child: AspectRatio(
+                              aspectRatio: 1,
+                              child: Padding(
+                                padding:
+                                    EdgeInsets.all(Platform.isIOS ? 5 : 10),
+                                child: LayoutBuilder(builder:
+                                    (BuildContext context,
+                                        BoxConstraints constraints) {
+                                  double fontSize1 = constraints.maxWidth / 4.5;
+                                  return AbsorbPointer(
+                                    absorbing: roomDataProvider.roomData['turn']
+                                            ['socketID'] !=
+                                        _socketMethods.socketClient.id,
+                                    child: Stack(
+                                      children: [
+                                        GridView.builder(
+                                          itemCount: 9,
+                                          gridDelegate:
+                                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 3,
+                                          ),
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            final displayValue =
+                                                roomData.displayElements[index];
+                                            return GestureDetector(
+                                              onTap: () => tapped(
+                                                  index, roomDataProvider),
+                                              child: Transform.translate(
+                                                offset: Offset(
+                                                  0.0,
+                                                  winningLine.contains(index)
+                                                      ? -_shakeAnimation.value
+                                                      : 0.0,
                                                 ),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: PrimaryColor
-                                                        .withOpacity(0.5),
-                                                    spreadRadius: 5,
-                                                    blurRadius: 10,
-                                                    offset: Offset(0, 0),
-                                                  ),
-                                                ],
-                                              ),
-                                              child: Center(
-                                                child: AnimatedSize(
+                                                child: AnimatedContainer(
+                                                  //grid container
                                                   duration: const Duration(
-                                                      milliseconds: 200),
-                                                  child: Transform.scale(
-                                                    scale: winningLine
-                                                            .contains(index)
-                                                        ? _scaleAnimation.value
-                                                        : 1.0,
-                                                    child: Text(
-                                                      roomDataProvider
-                                                              .displayElements[
-                                                          index],
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: fontSize1,
-                                                        shadows: [
-                                                          Shadow(
-                                                            blurRadius: 40,
-                                                            color: roomDataProvider.displayElements[
-                                                                        index] ==
-                                                                    'O'
-                                                                ? Colors
-                                                                    .greenAccent
-                                                                : Colors.pink,
+                                                      milliseconds: 300),
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                      color: winningLine
+                                                              .contains(index)
+                                                          ? boardBorderColor
+                                                              .withOpacity(
+                                                                  0.5) //winning boxes highlight color
+                                                          : boardBorderColor
+                                                              .withOpacity(0.3),
+                                                      width: winningLine
+                                                              .contains(index)
+                                                          ? 5.0
+                                                          : 1.0,
+                                                    ),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: PrimaryColor
+                                                            .withOpacity(0.5),
+                                                        spreadRadius: 5,
+                                                        blurRadius: 10,
+                                                        offset: Offset(0, 0),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  child: Center(
+                                                    child: AnimatedSize(
+                                                      duration: const Duration(
+                                                          milliseconds: 200),
+                                                      child: Transform.scale(
+                                                        scale: winningLine
+                                                                .contains(index)
+                                                            ? _scaleAnimation
+                                                                .value
+                                                            : 1.0,
+                                                        child: Text(
+                                                          roomDataProvider
+                                                                  .displayElements[
+                                                              index],
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: fontSize1,
+                                                            shadows: [
+                                                              Shadow(
+                                                                blurRadius: 40,
+                                                                color: roomDataProvider.displayElements[
+                                                                            index] ==
+                                                                        'O'
+                                                                    ? Colors
+                                                                        .greenAccent
+                                                                    : Colors
+                                                                        .pink,
+                                                              ),
+                                                            ],
                                                           ),
-                                                        ],
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                          ),
-                                        );
-                                      },
+                                            );
+                                          },
+                                        ),
+                                        // AnimatedBuilder(
+                                        //   animation: _animationController,
+                                        //   builder: (BuildContext context,
+                                        //       Widget? child) {
+                                        //     return CustomPaint(
+                                        //       size: Size.infinite,
+                                        //       painter: winningLine.isEmpty
+                                        //           ? null
+                                        //           : LinePainter(
+                                        //               boxes: winningLine,
+                                        //               color: Colors.red,
+                                        //               strokeWidth: 10.0,
+                                        //               progress: _animationTween
+                                        //                   .animate(CurvedAnimation(
+                                        //                       parent:
+                                        //                           _animationController,
+                                        //                       curve: Curves
+                                        //                           .easeInOutCirc))
+                                        //                   .value,
+                                        //             ),
+                                        //     );
+                                        //   },
+                                        // ),
+                                      ],
                                     ),
-                                    // AnimatedBuilder(
-                                    //   animation: _animationController,
-                                    //   builder: (BuildContext context,
-                                    //       Widget? child) {
-                                    //     return CustomPaint(
-                                    //       size: Size.infinite,
-                                    //       painter: winningLine.isEmpty
-                                    //           ? null
-                                    //           : LinePainter(
-                                    //               boxes: winningLine,
-                                    //               color: Colors.red,
-                                    //               strokeWidth: 10.0,
-                                    //               progress: _animationTween
-                                    //                   .animate(CurvedAnimation(
-                                    //                       parent:
-                                    //                           _animationController,
-                                    //                       curve: Curves
-                                    //                           .easeInOutCirc))
-                                    //                   .value,
-                                    //             ),
-                                    //     );
-                                    //   },
-                                    // ),
-                                  ],
-                                ),
-                              );
-                            }),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: 300,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: boardBorderColor.withOpacity(0.2),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20.0,
-                            vertical: 10.0,
-                          ),
-                          child: Center(
-                            child: RichText(
-                              text: TextSpan(
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.0,
-                                  shadows: [
-                                    Shadow(
-                                        blurRadius: 40,
-                                        color: boardBorderColor),
-                                  ],
-                                ),
-                                children: [
-                                  TextSpan(
-                                    text: 'Current player:  ',
-                                    style: TextStyle(
-                                      fontFamily: 'Beon',
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text:
-                                        '${roomDataProvider.roomData['turn']['nickname']}',
-                                    style: TextStyle(
-                                        fontSize: 24.0,
-                                        fontFamily: 'Beon',
-                                        fontWeight: FontWeight.bold,
-                                        shadows: [
-                                          BoxShadow(
-                                            color:
-                                                '${roomDataProvider.roomData['turn']['nickname']}' ==
-                                                        'X'
-                                                    ? Colors.pinkAccent
-                                                        .withOpacity(0.8)
-                                                    : Colors.greenAccent,
-                                            blurRadius: 12,
-                                            offset: Offset(0, 0),
-                                          ),
-                                        ]),
-                                  ),
-                                ],
+                                  );
+                                }),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: IconButton(
-                          icon: Icon(Icons.home),
-                          onPressed: _goToMainMenu,
-                          splashRadius: 18,
-                          iconSize: 28,
-                          padding: const EdgeInsets.all(8.0),
-                          color: Colors.white,
-                          splashColor: boardBorderColor.withOpacity(0.9),
-                          highlightColor: Colors.transparent,
-                        ),
-                      ),
-                      SizedBox(
-                        height: Platform.isIOS ? 40 : 2, //2 for android
-                      ),
-                      // Text(
-                      //     '${roomDataProvider.roomData['turn']['nickname']}\'s turn'),
-                    ],
-                  )
-            : Container());
+                          Container(
+                            width: 300,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: boardBorderColor.withOpacity(0.2),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0,
+                                vertical: 10.0,
+                              ),
+                              child: Center(
+                                child: RichText(
+                                  text: TextSpan(
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18.0,
+                                      shadows: [
+                                        Shadow(
+                                            blurRadius: 40,
+                                            color: boardBorderColor),
+                                      ],
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: 'Current player:  ',
+                                        style: TextStyle(
+                                          fontFamily: 'Beon',
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text:
+                                            '${roomDataProvider.roomData['turn']['nickname']}',
+                                        style: TextStyle(
+                                            fontSize: 24.0,
+                                            fontFamily: 'Beon',
+                                            fontWeight: FontWeight.bold,
+                                            shadows: [
+                                              BoxShadow(
+                                                color:
+                                                    '${roomDataProvider.roomData['turn']['nickname']}' ==
+                                                            'X'
+                                                        ? Colors.pinkAccent
+                                                            .withOpacity(0.8)
+                                                        : Colors.greenAccent,
+                                                blurRadius: 12,
+                                                offset: Offset(0, 0),
+                                              ),
+                                            ]),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: IconButton(
+                              icon: Icon(Icons.home),
+                              onPressed: _goToMainMenu,
+                              splashRadius: 18,
+                              iconSize: 28,
+                              padding: const EdgeInsets.all(8.0),
+                              color: Colors.white,
+                              splashColor: boardBorderColor.withOpacity(0.9),
+                              highlightColor: Colors.transparent,
+                            ),
+                          ),
+                          SizedBox(
+                            height: Platform.isIOS ? 40 : 2, //2 for android
+                          ),
+                          // Text(
+                          //     '${roomDataProvider.roomData['turn']['nickname']}\'s turn'),
+                        ],
+                      )
+                : Container()),
+      ),
+    );
   }
 
   void showEndGameDialog(BuildContext context, String text) {
@@ -889,7 +901,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
 
     String dialogContent = '';
 
-    if (text == '') {
+    if (text == 'Draw') {
       dialogContent = 'The round was a tie!';
     } else {
       dialogContent = '$text won the round!';
@@ -960,7 +972,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                                     : Colors.green;
                             return Transform.scale(
                               scale: _animation.value,
-                              child: text == ''
+                              child: text == 'Draw'
                                   ? SizedBox
                                       .shrink() //text should be added after this otherwise it gives error
                                   : Text(
@@ -1082,7 +1094,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                               : Colors.green;
                       return Transform.scale(
                         scale: _animation.value,
-                        child: text == ''
+                        child: text == 'Draw'
                             ? SizedBox
                                 .shrink() //text should be added after this otherwise it gives error
                             : Text(
