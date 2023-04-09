@@ -158,6 +158,18 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         roomDataProvider.displayElements, roomDataProvider.filledBoxes);
   }
 
+//to fix non host device printing host device's symbol when tapped rapidly,
+//a debounce function added to limit the number of times the onTap function can be called in a certain time period
+  Function() debounce(Function() func, [int milliseconds = 250]) {
+    Timer? timer;
+    return () {
+      if (timer != null) {
+        timer?.cancel();
+      }
+      timer = Timer(Duration(milliseconds: milliseconds), func);
+    };
+  }
+
   void increaseRound(RoomDataProvider roomDataProvider) {
     print('round increased');
     _socketMethods.increaseCurrentRound(roomDataProvider.roomData['_id']);
@@ -372,8 +384,9 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                                             final displayValue =
                                                 roomData.displayElements[index];
                                             return GestureDetector(
-                                              onTap: () => tapped(
-                                                  index, roomDataProvider),
+                                              onTap: debounce(() {
+                                                tapped(index, roomDataProvider);
+                                              }, 65), //debounce added to fix the bug caused by rapid tapping
                                               child: Transform.translate(
                                                 offset: Offset(
                                                   0.0,
