@@ -1,6 +1,8 @@
 //importing modules
+
 const express = require("express");
 const http = require("http")
+require('dotenv').config(); 
 const mongoose = require("mongoose");
 
 const app = express();
@@ -13,7 +15,7 @@ var io = require("socket.io")(server);
 //middle ware 
 app.use(express.json());
 
-const DB = "mongodb+srv://MrFreez18:123456789Ab@cluster0.gng6vna.mongodb.net/?retryWrites=true&w=majority";
+const DB = process.env.MONGO_CONNECTION;
 
 io.on("connection", (socket) => {
     console.log("Conected socket!");
