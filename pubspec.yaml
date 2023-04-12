@@ -43,6 +43,7 @@ dependencies:
   lottie: ^1.1.0
   spring: ^2.0.2
   custom_timer: ^0.0.6
+  connectivity_plus: ^2.0.2
 
 
 dev_dependencies:

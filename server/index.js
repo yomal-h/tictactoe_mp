@@ -189,6 +189,34 @@ server.listen(port, '0.0.0.0', () => {
     console.log(`Server started and running on port ${port}`)
 });
 
+const keepAlive = () => {
+    console.log('Sending keep-alive request to server...');
+    const options = {
+        hostname: 'https://tictactoe-mp-backend.onrender.com',
+        port: 80,
+        path: '/',
+        method: 'GET'
+    };
+
+    const req = http.request(options, (res) => {
+        console.log(`statusCode: ${res.statusCode}`);
+        res.on('data', (d) => {
+            process.stdout.write(d);
+        });
+    });
+
+    req.on('error', (error) => {
+        console.error(error);
+    });
+
+    req.end();
+    
+};
+
+// call the function every 5 minutes
+setInterval(keepAlive, 13 * 60 * 1000);
+
+
 
    // socket.on("winner", async ({ winnerSocketId, roomId}) => {
     //     try {
