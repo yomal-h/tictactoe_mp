@@ -192,7 +192,7 @@ server.listen(port, '0.0.0.0', () => {
 const keepAlive = () => {
     console.log('Sending keep-alive request to server...');
     const options = {
-        hostname: 'https://tictactoe-mp-backend.onrender.com',
+        hostname: 'tictactoe-mp-backend.onrender.com',
         port: 80,
         path: '/',
         method: 'GET'
