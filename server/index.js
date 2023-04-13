@@ -2,6 +2,7 @@
 
 const express = require("express");
 const http = require("http")
+const https = require('https');
 require('dotenv').config(); 
 const mongoose = require("mongoose");
 
@@ -189,32 +190,47 @@ server.listen(port, '0.0.0.0', () => {
     console.log(`Server started and running on port ${port}`)
 });
 
-const keepAlive = () => {
-    console.log('Sending keep-alive request to server...');
-    const options = {
-        hostname: 'tictactoe-mp-backend.onrender.com',
-        port: 80,
-        path: '/',
-        method: 'GET'
-    };
 
-    const req = http.request(options, (res) => {
-        console.log(`statusCode: ${res.statusCode}`);
-        res.on('data', (d) => {
-            process.stdout.write(d);
-        });
-    });
 
-    req.on('error', (error) => {
-        console.error(error);
-    });
+const url = 'https://tictactoe-mp-backend.onrender.com'; // replace with your server's URL
+const interval = 1 * 60 * 1000; // 5 minutes in milliseconds
 
-    req.end();
+setInterval(() => {
+  const request = https.get(url, () => {
+    console.log(`Sent request to ${url}`);
+  });
+
+  request.on('error', (err) => {
+    console.error(`Error sending request to ${url}: ${err.message}`);
+  });
+}, interval);
+
+// const keepAlive = () => {
+//     console.log('Sending keep-alive request to server...');
+//     const options = {
+//         hostname: 'tictactoe-mp-backend.onrender.com',
+//         port: 80,
+//         path: '/',
+//         method: 'GET'
+//     };
+
+//     const req = http.request(options, (res) => {
+//         console.log(`statusCode: ${res.statusCode}`);
+//         res.on('data', (d) => {
+//             process.stdout.write(d);
+//         });
+//     });
+
+//     req.on('error', (error) => {
+//         console.error(error);
+//     });
+
+//     req.end();
     
-};
+// };
 
-// call the function every 5 minutes
-setInterval(keepAlive, 13 * 60 * 1000);
+// // call the function every 5 minutes
+// setInterval(keepAlive, 1 * 60 * 1000);
 
 
 
