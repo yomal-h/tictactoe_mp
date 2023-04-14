@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:tictactoe_mp/responsive/responsive.dart';
@@ -10,18 +11,82 @@ import 'package:tictactoe_mp/utils/colors.dart';
 import 'package:tictactoe_mp/widgets/custom_button.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-class MainMenuScreen extends StatelessWidget {
+class MainMenuScreen extends StatefulWidget {
   static String routeName = '/main_menu';
 
   const MainMenuScreen({Key? key}) : super(key: key);
 
-  void createRoom(BuildContext context) {
-    Navigator.pushNamed(context, CreateRoomScreen.routeName);
+  @override
+  State<MainMenuScreen> createState() => _MainMenuScreenState();
+}
+
+class _MainMenuScreenState extends State<MainMenuScreen> {
+  Future<bool> checkInternetConnection() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      return false;
+    } else {
+      try {
+        final response = await InternetAddress.lookup('google.com');
+        if (response.isNotEmpty && response[0].rawAddress.isNotEmpty) {
+          return true;
+        } else {
+          return false;
+        }
+      } on SocketException catch (_) {
+        return false;
+      }
+    }
   }
 
-  void joinRoom(BuildContext context) {
-    Navigator.pushNamed(context, JoinRoomScreen.routeName);
+  void createRoom(BuildContext context) async {
+    bool isConnected = await checkInternetConnection();
+    if (isConnected) {
+      Navigator.pushNamed(context, CreateRoomScreen.routeName);
+    } else {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text('No Internet Connection'),
+          content: Text('Please check your internet connection and try again.'),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
   }
+
+  void joinRoom(BuildContext context) async {
+    bool isConnected = await checkInternetConnection();
+    if (isConnected) {
+      Navigator.pushNamed(context, JoinRoomScreen.routeName);
+    } else {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text('No Internet Connection'),
+          content: Text('Please check your internet connection and try again.'),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+  // void createRoom(BuildContext context) {
+  //   Navigator.pushNamed(context, CreateRoomScreen.routeName);
+  // }
+
+  // void joinRoom(BuildContext context) {
+  //   Navigator.pushNamed(context, JoinRoomScreen.routeName);
+  // }
 
   @override
   Widget build(BuildContext context) {

@@ -193,7 +193,7 @@ server.listen(port, '0.0.0.0', () => {
 
 
 const url = 'https://tictactoe-mp-backend.onrender.com'; // replace with your server's URL
-const interval = 1 * 60 * 1000; // 5 minutes in milliseconds
+const interval = 12 * 60 * 1000; // 5 minutes in milliseconds
 
 setInterval(() => {
   const request = https.get(url, () => {

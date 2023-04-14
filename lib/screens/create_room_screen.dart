@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:tictactoe_mp/resources/socket_methods.dart';
 import 'package:tictactoe_mp/responsive/responsive.dart';
@@ -18,6 +20,8 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
   final SocketMethods _socketMethods = SocketMethods();
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
+  bool _isInternetAvailable = false;
+
   @override
   void initState() {
     super.initState();
@@ -29,6 +33,39 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
     _nameController.dispose();
     _navigatorKey.currentState?.dispose();
     super.dispose();
+  }
+
+  Future<void> checkInternetConnection() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          _isInternetAvailable = true;
+        });
+        _socketMethods.createRoomSuccessListener(context);
+      }
+    } on SocketException catch (_) {
+      setState(() {
+        _isInternetAvailable = false;
+      });
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('No Internet Connection'),
+          content: const Text(
+              'Please check your internet connection and try again.'),
+          actions: [
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override
