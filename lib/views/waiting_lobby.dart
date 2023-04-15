@@ -83,12 +83,15 @@ class _WaitingLobbyState extends State<WaitingLobby>
           const SizedBox(
             height: 25,
           ),
-          const Text(
-            'Please share this Game ID with the player you want to play',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: const Text(
+              'Please share this Game ID with the player you want to play',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+              ),
             ),
           ),
           const SizedBox(

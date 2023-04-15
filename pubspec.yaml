@@ -44,6 +44,8 @@ dependencies:
   spring: ^2.0.2
   custom_timer: ^0.0.6
   connectivity_plus: ^2.0.2
+  cool_alert: ^1.1.0
+  
 
 
 dev_dependencies:

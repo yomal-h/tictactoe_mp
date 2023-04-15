@@ -35,39 +35,6 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
     super.dispose();
   }
 
-  Future<void> checkInternetConnection() async {
-    try {
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        setState(() {
-          _isInternetAvailable = true;
-        });
-        _socketMethods.createRoomSuccessListener(context);
-      }
-    } on SocketException catch (_) {
-      setState(() {
-        _isInternetAvailable = false;
-      });
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('No Internet Connection'),
-          content: const Text(
-              'Please check your internet connection and try again.'),
-          actions: [
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;

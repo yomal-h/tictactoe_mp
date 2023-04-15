@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:tictactoe_mp/responsive/responsive.dart';
 import 'package:tictactoe_mp/screens/create_room_screen.dart';
@@ -44,18 +45,16 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
     if (isConnected) {
       Navigator.pushNamed(context, CreateRoomScreen.routeName);
     } else {
-      showDialog(
+      CoolAlert.show(
         context: context,
-        builder: (_) => AlertDialog(
-          title: Text('No Internet Connection'),
-          content: Text('Please check your internet connection and try again.'),
-          actions: [
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
-            ),
-          ],
-        ),
+        type: CoolAlertType.warning,
+        title: "No Internet Connection",
+        text: "Please check your internet connection and try again.",
+        confirmBtnText: "OK",
+        barrierDismissible: false,
+        confirmBtnColor: Colors.purpleAccent,
+        backgroundColor: Colors.purple,
+        onConfirmBtnTap: () => Navigator.pop(context),
       );
     }
   }
@@ -65,18 +64,16 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
     if (isConnected) {
       Navigator.pushNamed(context, JoinRoomScreen.routeName);
     } else {
-      showDialog(
+      CoolAlert.show(
         context: context,
-        builder: (_) => AlertDialog(
-          title: Text('No Internet Connection'),
-          content: Text('Please check your internet connection and try again.'),
-          actions: [
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
-            ),
-          ],
-        ),
+        type: CoolAlertType.warning,
+        title: "No Internet Connection",
+        text: "Please check your internet connection and try again.",
+        confirmBtnText: "OK",
+        barrierDismissible: false,
+        confirmBtnColor: Colors.purpleAccent,
+        backgroundColor: Colors.purple,
+        onConfirmBtnTap: () => Navigator.pop(context),
       );
     }
   }
