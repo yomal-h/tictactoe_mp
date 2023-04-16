@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:tictactoe_mp/resources/socket_methods.dart';
 import 'package:tictactoe_mp/responsive/responsive.dart';
@@ -19,12 +21,12 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
   final TextEditingController _nameController = TextEditingController();
   final SocketMethods _socketMethods = SocketMethods();
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-
-  bool _isInternetAvailable = false;
+  late bool _isConnected;
 
   @override
   void initState() {
     super.initState();
+    initConnectivity();
     _socketMethods.createRoomSuccessListener(context);
   }
 
@@ -33,6 +35,49 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
     _nameController.dispose();
     _navigatorKey.currentState?.dispose();
     super.dispose();
+  }
+
+  Future<void> initConnectivity() async {
+    final ConnectivityResult result = await Connectivity().checkConnectivity();
+    setState(() {
+      _isConnected = result != ConnectivityResult.none;
+    });
+  }
+
+  Future<bool> checkInternetConnection() async {
+    final ConnectivityResult result = await Connectivity().checkConnectivity();
+    if (result == ConnectivityResult.none) {
+      return false;
+    } else {
+      try {
+        final response = await InternetAddress.lookup('google.com');
+        if (response.isNotEmpty && response[0].rawAddress.isNotEmpty) {
+          return true;
+        } else {
+          return false;
+        }
+      } catch (e) {
+        return false;
+      }
+    }
+  }
+
+  // Future<bool> checkInternetConnection() async {
+  //   var connectivityResult = await (Connectivity().checkConnectivity());
+  //   return connectivityResult != ConnectivityResult.none;
+  // }
+
+  void showNoInternetConnectionAlert(BuildContext context) {
+    CoolAlert.show(
+      context: context,
+      type: CoolAlertType.warning,
+      title: "No Internet Connection",
+      text: "Please check your internet connection and try again.",
+      confirmBtnText: "OK",
+      barrierDismissible: false,
+      confirmBtnColor: Colors.purpleAccent,
+      backgroundColor: Colors.purple,
+    );
   }
 
   @override
@@ -69,10 +114,21 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                         ),
                         SizedBox(height: size.height * 0.03),
                         CustomButton(
-                            onTap: () => _socketMethods.createRoom(
-                                  _nameController.text,
-                                ),
-                            text: 'Host'),
+                          onTap: () async {
+                            if (!_isConnected) {
+                              showNoInternetConnectionAlert(context);
+                              return;
+                            }
+
+                            final isConnected = await checkInternetConnection();
+                            if (isConnected) {
+                              _socketMethods.createRoom(_nameController.text);
+                            } else {
+                              showNoInternetConnectionAlert(context);
+                            }
+                          },
+                          text: 'Host',
+                        ),
                       ],
                     ),
                   ),
