@@ -432,7 +432,7 @@ class __TicTacToeGameHardState extends State<TicTacToeGameHard>
                 padding: const EdgeInsets.only(left: 10),
                 child: IconButton(
                   icon: Icon(Icons.home),
-                  onPressed: _startNewGame,
+                  onPressed: _goToMainMenu,
                   splashRadius: 18,
                   iconSize: 28,
                   padding: const EdgeInsets.all(8.0),
@@ -912,6 +912,10 @@ class __TicTacToeGameHardState extends State<TicTacToeGameHard>
     });
   }
 
+  void _goToMainMenu() {
+    Navigator.pushNamed(context, '/main_menu_game_modes_screen');
+  }
+
   void _showWinner() {
     String winner = '';
     if (_playerScore > _computerScore) {
@@ -1055,7 +1059,7 @@ class __TicTacToeGameHardState extends State<TicTacToeGameHard>
                                 ),
                               ),
                               onPressed: () {
-                                _startNewGame();
+                                _goToMainMenu();
                                 Navigator.of(context).pop();
                               },
                             ),
@@ -1217,7 +1221,7 @@ class __TicTacToeGameHardState extends State<TicTacToeGameHard>
                         ),
                       ),
                       onPressed: () {
-                        _startNewGame();
+                        _goToMainMenu();
                         Navigator.of(context).pop();
                       },
                     ),

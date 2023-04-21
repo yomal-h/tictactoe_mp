@@ -4,6 +4,7 @@ import 'package:tictactoe_mp/provider/room_data_provider.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
+  static const routeName = '/settings';
 
   @override
   Widget build(BuildContext context) {

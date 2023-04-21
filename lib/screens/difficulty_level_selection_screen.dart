@@ -22,25 +22,25 @@ class DifficultyLevelSelectionScreen extends StatelessWidget {
             _buildButton(
               context,
               'Easy',
-              () => Navigator.pushNamed(context, '/single-player'),
+              () => Navigator.pushNamed(context, '/tictactoe_easy'),
             ),
             const SizedBox(height: 28),
             _buildButton(
               context,
               'Medium',
-              () => Navigator.pushNamed(context, '/multiplayer-offline'),
+              () => Navigator.pushNamed(context, '/tictactoe_medium'),
             ),
             const SizedBox(height: 28),
             _buildButton(
               context,
               'Hard',
-              () {},
+              () => Navigator.pushNamed(context, '/tictactoe_hard'),
             ),
             const SizedBox(height: 28),
             _buildButton(
               context,
               'Expert',
-              () {},
+              () => Navigator.pushNamed(context, '/tictactoe_expert'),
               true, // Make this button different
             ),
             const SizedBox(height: 30),

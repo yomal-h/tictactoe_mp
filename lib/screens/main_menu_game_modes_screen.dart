@@ -24,21 +24,23 @@ class MainMenuGameModesScreen extends StatelessWidget {
               context,
               'SinglePlayer',
               Icons.person,
-              () => Navigator.pushNamed(context, '/single-player'),
+              () => Navigator.pushNamed(
+                  context, '/difficulty_level_selection_screen'),
             ),
             const SizedBox(height: 26),
             _buildButton(
               context,
               'Multiplayer (Offline)',
               Icons.people,
-              () => Navigator.pushNamed(context, '/multiplayer-offline'),
+              () => Navigator.pushNamed(
+                  context, '/tictactoe_offline_multiplayer'),
             ),
             const SizedBox(height: 26),
             _buildButton(
               context,
               'Multiplayer (Online)',
               FontAwesome5.globe,
-              () {},
+              () => Navigator.pushNamed(context, '/main_menu'),
               true, // Make this button different
             ),
             const SizedBox(height: 30),
