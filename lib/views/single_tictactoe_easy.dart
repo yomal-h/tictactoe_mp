@@ -1019,8 +1019,8 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy>
                                 ),
                               ),
                               onPressed: () {
-                                _goToMainMenu();
                                 Navigator.of(context).pop();
+                                _goToMainMenu();
                               },
                             ),
                             SizedBox(width: 15),
@@ -1181,8 +1181,8 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy>
                         ),
                       ),
                       onPressed: () {
-                        _goToMainMenu();
                         Navigator.of(context).pop();
+                        _goToMainMenu();
                       },
                     ),
                     SizedBox(width: 15),

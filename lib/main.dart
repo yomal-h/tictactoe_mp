@@ -8,6 +8,7 @@ import 'package:tictactoe_mp/screens/game_screen.dart';
 import 'package:tictactoe_mp/screens/join_room_screen.dart';
 import 'package:tictactoe_mp/screens/main_menu_game_modes_screen.dart';
 import 'package:tictactoe_mp/screens/main_menu_screen.dart';
+import 'package:tictactoe_mp/screens/settings_screen.dart';
 import 'package:tictactoe_mp/utils/colors.dart';
 import 'package:tictactoe_mp/views/single_tictactoe_expert.dart';
 import 'package:tictactoe_mp/views/single_tictactoe_hard.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
           JoinRoomScreen.routeName: (context) => const JoinRoomScreen(),
           CreateRoomScreen.routeName: (context) => const CreateRoomScreen(),
           GameScreen.routeName: (context) => const GameScreen(),
+          SettingsScreen.routeName: (context) => const SettingsScreen(),
         },
         initialRoute: MainMenuGameModesScreen.routeName,
       ),

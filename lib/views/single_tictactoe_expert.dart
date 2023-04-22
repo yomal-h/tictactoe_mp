@@ -1000,8 +1000,8 @@ class __TicTacToeGameExpertState extends State<TicTacToeGameExpert>
                                 ),
                               ),
                               onPressed: () {
-                                _goToMainMenu();
                                 Navigator.of(context).pop();
+                                _goToMainMenu();
                               },
                             ),
                             SizedBox(width: 15),
@@ -1162,8 +1162,8 @@ class __TicTacToeGameExpertState extends State<TicTacToeGameExpert>
                         ),
                       ),
                       onPressed: () {
-                        _goToMainMenu();
                         Navigator.of(context).pop();
+                        _goToMainMenu();
                       },
                     ),
                     SizedBox(width: 15),
