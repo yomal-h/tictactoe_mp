@@ -24,23 +24,25 @@ class MainMenuGameModesScreen extends StatelessWidget {
               context,
               'SinglePlayer',
               Icons.person,
-              () => Navigator.pushNamed(
-                  context, '/difficulty_level_selection_screen'),
+              () => Navigator.pushNamedAndRemoveUntil(context,
+                  '/difficulty_level_selection_screen', (route) => false),
             ),
             const SizedBox(height: 26),
             _buildButton(
               context,
               'Multiplayer (Offline)',
               Icons.people,
-              () => Navigator.pushNamed(
-                  context, '/tictactoe_offline_multiplayer'),
+              () => Navigator.pushNamedAndRemoveUntil(
+                  context, '/tictactoe_offline_multiplayer', (route) => false),
             ),
             const SizedBox(height: 26),
             _buildButton(
               context,
               'Multiplayer (Online)',
               FontAwesome5.globe,
-              () => Navigator.pushNamed(context, '/main_menu'),
+              () => Navigator.pushNamedAndRemoveUntil(
+                  context, '/main_menu', (route) => false),
+
               true, // Make this button different
             ),
             const SizedBox(height: 30),
@@ -70,8 +72,8 @@ class MainMenuGameModesScreen extends StatelessWidget {
                         Icons.settings,
                         color: Colors.white,
                       ),
-                      onPressed: () =>
-                          Navigator.pushNamed(context, '/settings'),
+                      onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                          context, '/settings', (route) => false),
                     ),
                   ),
                 ),

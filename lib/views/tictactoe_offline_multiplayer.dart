@@ -82,6 +82,9 @@ class __TicTacToeGameOfflineMultiplayer
 
   @override
   void dispose() {
+    // _animationController.stop();
+    // _rotateController.stop();
+    // _controller.stop();
     _animationController.dispose();
     _rotateController.dispose();
     _controller.dispose();
@@ -253,8 +256,12 @@ class __TicTacToeGameOfflineMultiplayer
                                 if (_checkForWinner(_board, 'X')) {
                                   _playerScore++;
                                   Future.delayed(Duration(seconds: 3), () {
-                                    _controller.stop();
-                                    _rotateController.stop();
+                                    if (mounted) {
+                                      //method will only be executed if the widget is still mounted, preventing the
+                                      //AnimationController objects from being accessed after they've been disposed of.
+                                      _controller.stop();
+                                      _rotateController.stop();
+                                    }
                                   });
                                   _controller.repeat(reverse: true);
                                   _rotateController.repeat(reverse: true);
@@ -263,8 +270,12 @@ class __TicTacToeGameOfflineMultiplayer
                                 } else if (_checkForWinner(_board, 'O')) {
                                   _computerScore++;
                                   Future.delayed(Duration(seconds: 3), () {
-                                    _controller.stop();
-                                    _rotateController.stop();
+                                    if (mounted) {
+                                      //method will only be executed if the widget is still mounted, preventing the
+                                      //AnimationController objects from being accessed after they've been disposed of.
+                                      _controller.stop();
+                                      _rotateController.stop();
+                                    }
                                   });
                                   _controller.repeat(reverse: true);
                                   _rotateController.repeat(reverse: true);
@@ -769,7 +780,8 @@ class __TicTacToeGameOfflineMultiplayer
   }
 
   void _goToMainMenu() {
-    Navigator.pushNamed(context, '/main_menu_game_modes_screen');
+    Navigator.pushNamedAndRemoveUntil(
+        context, '/main_menu_game_modes_screen', (route) => false);
   }
 
   void _showWinner() {
@@ -1174,300 +1186,299 @@ class __TicTacToeGameOfflineMultiplayer
 //       },
 //     );
 
+//  Text(
+//                 'Game Over',
+//                 style: TextStyle(
+//                   fontSize: 40,
+//                   fontWeight: FontWeight.bold,
+//                   color: Colors.white,
+//                   shadows: [
+//                     BoxShadow(
+//                       color: Colors.pinkAccent.withOpacity(0.8),
+//                       blurRadius: 12,
+//                       offset: Offset(2, 2),
+//                     ),
+//                   ],
+//                 ),
+//               ),
 
-  //  Text(
-  //                 'Game Over',
-  //                 style: TextStyle(
-  //                   fontSize: 40,
-  //                   fontWeight: FontWeight.bold,
-  //                   color: Colors.white,
-  //                   shadows: [
-  //                     BoxShadow(
-  //                       color: Colors.pinkAccent.withOpacity(0.8),
-  //                       blurRadius: 12,
-  //                       offset: Offset(2, 2),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ),
+// showDialog(
+//   context: context,
+//   builder: (BuildContext context) {
+//     return Dialog(
+//       backgroundColor: Colors.black,
+//       shape: RoundedRectangleBorder(
+//         borderRadius: BorderRadius.circular(12),
+//       ),
+//       child: Container(
+//         padding: EdgeInsets.all(16),
+//         decoration: BoxDecoration(
+//           borderRadius: BorderRadius.circular(12),
+//           color: PrimaryColor,
+//           boxShadow: [
+//             BoxShadow(
+//               color: boardBorderColor.withOpacity(0.3),
+//               blurRadius: 12,
+//               offset: Offset(0, 0),
+//             ),
+//           ],
+//         ),
+//         child: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             Text(
+//               dialogTitle,
+//               style: TextStyle(
+//                 fontSize: 24,
+//                 fontWeight: FontWeight.bold,
+//                 color: Colors.white,
+//                 shadows: [
+//                   BoxShadow(
+//                     color: Colors.pinkAccent.withOpacity(0.8),
+//                     blurRadius: 12,
+//                     offset: Offset(2, 2),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             SizedBox(height: 16),
+//             AnimatedBuilder(
+//               animation: _animationController,
+//               builder: (context, child) {
+//                 Color shadowColor =
+//                     winner == 'Player 1' ? Colors.pink : Colors.green;
+//                 return Transform.scale(
+//                   scale: _animation.value,
+//                   child: winner == 'Tie'
+//                       ? SizedBox
+//                           .shrink() //text should be added after this otherwise it gives error
+//                       : Text(
+//                           '${winner == 'Player 1' ? 'X' : 'O'}',
+//                           style: TextStyle(
+//                             fontSize: 55,
+//                             fontWeight: FontWeight.bold,
+//                             color: Colors.white,
+//                             shadows: [
+//                               Shadow(blurRadius: 60, color: shadowColor)
+//                             ],
+//                           ),
+//                         ),
+//                 );
+//               },
+//             ),
+//             SizedBox(height: 8),
+//             Text(
+//               dialogContent,
+//               style: TextStyle(
+//                 fontSize: 18,
+//                 color: Colors.white,
+//               ),
+//             ),
+//             SizedBox(height: 16),
+//             ElevatedButton(
+//               child: Text(
+//                 'OK',
+//                 style: TextStyle(
+//                   fontSize: 18,
+//                   color: Colors.white,
+//                 ),
+//               ),
+//               style: ElevatedButton.styleFrom(
+//                 primary: Colors.purple, // background color
+//                 shape: RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.circular(
+//                       18.0), // rounded corner radius
+//                 ),
+//               ),
+//               onPressed: () {
+//                 _winningLine.clear();
+//                 Navigator.of(context).pop();
+//                 setState(() {
+//                   _board.fillRange(0, 9, '');
+//                   //_currentPlayer = 'X';
+//                   _round++;
+//                   _gameOver = false;
+//                   if (winner == 'Player 1') {
+//                     // _playerScore++;
+//                     _controller.stop();
+//                     _controller.reset();
+//                     _rotateController.stop();
+//                     _rotateController.reset();
+//                     _currentPlayer = 'O';
+//                   } else if (winner == 'Player 2') {
+//                     // _computerScore++;
+//                     _controller.stop();
+//                     _controller.reset();
+//                     _rotateController.stop();
+//                     _rotateController.reset();
+//                     _currentPlayer = 'X';
+//                   }
+//                 });
+//               },
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   },
+// );
 
-  // showDialog(
-      //   context: context,
-      //   builder: (BuildContext context) {
-      //     return Dialog(
-      //       backgroundColor: Colors.black,
-      //       shape: RoundedRectangleBorder(
-      //         borderRadius: BorderRadius.circular(12),
-      //       ),
-      //       child: Container(
-      //         padding: EdgeInsets.all(16),
-      //         decoration: BoxDecoration(
-      //           borderRadius: BorderRadius.circular(12),
-      //           color: PrimaryColor,
-      //           boxShadow: [
-      //             BoxShadow(
-      //               color: boardBorderColor.withOpacity(0.3),
-      //               blurRadius: 12,
-      //               offset: Offset(0, 0),
-      //             ),
-      //           ],
-      //         ),
-      //         child: Column(
-      //           mainAxisSize: MainAxisSize.min,
-      //           children: [
-      //             Text(
-      //               dialogTitle,
-      //               style: TextStyle(
-      //                 fontSize: 24,
-      //                 fontWeight: FontWeight.bold,
-      //                 color: Colors.white,
-      //                 shadows: [
-      //                   BoxShadow(
-      //                     color: Colors.pinkAccent.withOpacity(0.8),
-      //                     blurRadius: 12,
-      //                     offset: Offset(2, 2),
-      //                   ),
-      //                 ],
-      //               ),
-      //             ),
-      //             SizedBox(height: 16),
-      //             AnimatedBuilder(
-      //               animation: _animationController,
-      //               builder: (context, child) {
-      //                 Color shadowColor =
-      //                     winner == 'Player 1' ? Colors.pink : Colors.green;
-      //                 return Transform.scale(
-      //                   scale: _animation.value,
-      //                   child: winner == 'Tie'
-      //                       ? SizedBox
-      //                           .shrink() //text should be added after this otherwise it gives error
-      //                       : Text(
-      //                           '${winner == 'Player 1' ? 'X' : 'O'}',
-      //                           style: TextStyle(
-      //                             fontSize: 55,
-      //                             fontWeight: FontWeight.bold,
-      //                             color: Colors.white,
-      //                             shadows: [
-      //                               Shadow(blurRadius: 60, color: shadowColor)
-      //                             ],
-      //                           ),
-      //                         ),
-      //                 );
-      //               },
-      //             ),
-      //             SizedBox(height: 8),
-      //             Text(
-      //               dialogContent,
-      //               style: TextStyle(
-      //                 fontSize: 18,
-      //                 color: Colors.white,
-      //               ),
-      //             ),
-      //             SizedBox(height: 16),
-      //             ElevatedButton(
-      //               child: Text(
-      //                 'OK',
-      //                 style: TextStyle(
-      //                   fontSize: 18,
-      //                   color: Colors.white,
-      //                 ),
-      //               ),
-      //               style: ElevatedButton.styleFrom(
-      //                 primary: Colors.purple, // background color
-      //                 shape: RoundedRectangleBorder(
-      //                   borderRadius: BorderRadius.circular(
-      //                       18.0), // rounded corner radius
-      //                 ),
-      //               ),
-      //               onPressed: () {
-      //                 _winningLine.clear();
-      //                 Navigator.of(context).pop();
-      //                 setState(() {
-      //                   _board.fillRange(0, 9, '');
-      //                   //_currentPlayer = 'X';
-      //                   _round++;
-      //                   _gameOver = false;
-      //                   if (winner == 'Player 1') {
-      //                     // _playerScore++;
-      //                     _controller.stop();
-      //                     _controller.reset();
-      //                     _rotateController.stop();
-      //                     _rotateController.reset();
-      //                     _currentPlayer = 'O';
-      //                   } else if (winner == 'Player 2') {
-      //                     // _computerScore++;
-      //                     _controller.stop();
-      //                     _controller.reset();
-      //                     _rotateController.stop();
-      //                     _rotateController.reset();
-      //                     _currentPlayer = 'X';
-      //                   }
-      //                 });
-      //               },
-      //             ),
-      //           ],
-      //         ),
-      //       ),
-      //     );
-      //   },
-      // );
-
-    //   showDialog(
-    //   context: context,
-    //   builder: (BuildContext context) {
-    //     return Dialog(
-    //       backgroundColor: Colors.black,
-    //       shape: RoundedRectangleBorder(
-    //         borderRadius: BorderRadius.circular(12),
-    //       ),
-    //       child: Container(
-    //         padding: EdgeInsets.all(16),
-    //         decoration: BoxDecoration(
-    //           borderRadius: BorderRadius.circular(12),
-    //           color: PrimaryColor,
-    //           boxShadow: [
-    //             BoxShadow(
-    //               color: boardBorderColor.withOpacity(0.3),
-    //               blurRadius: 12,
-    //               offset: Offset(0, 0),
-    //             ),
-    //           ],
-    //         ),
-    //         child: Column(
-    //           mainAxisSize: MainAxisSize.min,
-    //           children: [
-    //             SizedBox(height: 10),
-    //             AnimatedTextKit(
-    //               animatedTexts: [
-    //                 WavyAnimatedText(
-    //                   'Game Over',
-    //                   textStyle: TextStyle(
-    //                     fontSize: 40.0,
-    //                     fontWeight: FontWeight.bold,
-    //                     color: Colors.white,
-    //                     shadows: [
-    //                       BoxShadow(
-    //                         color: Colors.pinkAccent.withOpacity(0.8),
-    //                         blurRadius: 12,
-    //                         offset: Offset(2, 2),
-    //                       ),
-    //                     ],
-    //                   ),
-    //                 ),
-    //               ],
-    //               isRepeatingAnimation: false,
-    //             ),
-    //             SizedBox(height: 20),
-    //             AnimatedBuilder(
-    //               animation: _animationController,
-    //               builder: (context, child) {
-    //                 Color shadowColor =
-    //                     winner == 'Player 1' ? Colors.pink : Colors.green;
-    //                 return Transform.scale(
-    //                   scale: _animation.value,
-    //                   child: winner == 'Nobody'
-    //                       ? SizedBox
-    //                           .shrink() //text should be added after this otherwise it gives error
-    //                       : Text(
-    //                           '${winner == 'Player 1' ? 'X' : 'O'}',
-    //                           style: TextStyle(
-    //                             fontSize: 65,
-    //                             fontWeight: FontWeight.bold,
-    //                             color: Colors.white,
-    //                             shadows: [
-    //                               Shadow(blurRadius: 60, color: shadowColor)
-    //                             ],
-    //                           ),
-    //                         ),
-    //                 );
-    //               },
-    //             ),
-    //             SizedBox(height: 8),
-    //             Text(
-    //               'The winner is',
-    //               style: TextStyle(
-    //                 fontSize: 20,
-    //                 color: Colors.white,
-    //               ),
-    //             ),
-    //             SizedBox(height: 8),
-    //             Container(
-    //               decoration: BoxDecoration(
-    //                 borderRadius: BorderRadius.circular(10),
-    //               ),
-    //               child: ShaderMask(
-    //                 shaderCallback: (bounds) {
-    //                   return LinearGradient(
-    //                     colors: [
-    //                       Colors.pinkAccent,
-    //                       Colors.blue,
-    //                       Colors.pinkAccent
-    //                     ],
-    //                     tileMode: TileMode.mirror,
-    //                     begin: Alignment.centerLeft,
-    //                     end: Alignment.centerRight,
-    //                   ).createShader(bounds);
-    //                 },
-    //                 child: Padding(
-    //                   padding: const EdgeInsets.all(8.0),
-    //                   child: Text(
-    //                     '$winner',
-    //                     style: TextStyle(
-    //                       fontSize: 24,
-    //                       fontWeight: FontWeight.bold,
-    //                       color: Colors.white,
-    //                     ),
-    //                   ),
-    //                 ),
-    //               ),
-    //             ),
-    //             SizedBox(height: 16),
-    //             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-    //               ElevatedButton(
-    //                 child: Text(
-    //                   'Main Menu',
-    //                   style: TextStyle(
-    //                     fontSize: 18,
-    //                     color: Colors.white,
-    //                   ),
-    //                 ),
-    //                 style: ElevatedButton.styleFrom(
-    //                   primary: Colors.purple, // background color
-    //                   shape: RoundedRectangleBorder(
-    //                     borderRadius: BorderRadius.circular(
-    //                         18.0), // rounded corner radius
-    //                   ),
-    //                 ),
-    //                 onPressed: () {
-    //                   _startNewGame();
-    //                   Navigator.of(context).pop();
-    //                 },
-    //               ),
-    //               SizedBox(width: 15),
-    //               ElevatedButton(
-    //                 child: Text(
-    //                   'New Game',
-    //                   style: TextStyle(
-    //                     fontSize: 18,
-    //                     color: Colors.white,
-    //                   ),
-    //                 ),
-    //                 style: ElevatedButton.styleFrom(
-    //                   primary: Colors.purple, // background color
-    //                   shape: RoundedRectangleBorder(
-    //                     borderRadius: BorderRadius.circular(
-    //                         18.0), // rounded corner radius
-    //                   ),
-    //                 ),
-    //                 onPressed: () {
-    //                   _startNewGame();
-    //                   Navigator.of(context).pop();
-    //                 },
-    //               ),
-    //             ]),
-    //           ],
-    //         ),
-    //       ),
-    //     );
-    //   },
-    // );
+//   showDialog(
+//   context: context,
+//   builder: (BuildContext context) {
+//     return Dialog(
+//       backgroundColor: Colors.black,
+//       shape: RoundedRectangleBorder(
+//         borderRadius: BorderRadius.circular(12),
+//       ),
+//       child: Container(
+//         padding: EdgeInsets.all(16),
+//         decoration: BoxDecoration(
+//           borderRadius: BorderRadius.circular(12),
+//           color: PrimaryColor,
+//           boxShadow: [
+//             BoxShadow(
+//               color: boardBorderColor.withOpacity(0.3),
+//               blurRadius: 12,
+//               offset: Offset(0, 0),
+//             ),
+//           ],
+//         ),
+//         child: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             SizedBox(height: 10),
+//             AnimatedTextKit(
+//               animatedTexts: [
+//                 WavyAnimatedText(
+//                   'Game Over',
+//                   textStyle: TextStyle(
+//                     fontSize: 40.0,
+//                     fontWeight: FontWeight.bold,
+//                     color: Colors.white,
+//                     shadows: [
+//                       BoxShadow(
+//                         color: Colors.pinkAccent.withOpacity(0.8),
+//                         blurRadius: 12,
+//                         offset: Offset(2, 2),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ],
+//               isRepeatingAnimation: false,
+//             ),
+//             SizedBox(height: 20),
+//             AnimatedBuilder(
+//               animation: _animationController,
+//               builder: (context, child) {
+//                 Color shadowColor =
+//                     winner == 'Player 1' ? Colors.pink : Colors.green;
+//                 return Transform.scale(
+//                   scale: _animation.value,
+//                   child: winner == 'Nobody'
+//                       ? SizedBox
+//                           .shrink() //text should be added after this otherwise it gives error
+//                       : Text(
+//                           '${winner == 'Player 1' ? 'X' : 'O'}',
+//                           style: TextStyle(
+//                             fontSize: 65,
+//                             fontWeight: FontWeight.bold,
+//                             color: Colors.white,
+//                             shadows: [
+//                               Shadow(blurRadius: 60, color: shadowColor)
+//                             ],
+//                           ),
+//                         ),
+//                 );
+//               },
+//             ),
+//             SizedBox(height: 8),
+//             Text(
+//               'The winner is',
+//               style: TextStyle(
+//                 fontSize: 20,
+//                 color: Colors.white,
+//               ),
+//             ),
+//             SizedBox(height: 8),
+//             Container(
+//               decoration: BoxDecoration(
+//                 borderRadius: BorderRadius.circular(10),
+//               ),
+//               child: ShaderMask(
+//                 shaderCallback: (bounds) {
+//                   return LinearGradient(
+//                     colors: [
+//                       Colors.pinkAccent,
+//                       Colors.blue,
+//                       Colors.pinkAccent
+//                     ],
+//                     tileMode: TileMode.mirror,
+//                     begin: Alignment.centerLeft,
+//                     end: Alignment.centerRight,
+//                   ).createShader(bounds);
+//                 },
+//                 child: Padding(
+//                   padding: const EdgeInsets.all(8.0),
+//                   child: Text(
+//                     '$winner',
+//                     style: TextStyle(
+//                       fontSize: 24,
+//                       fontWeight: FontWeight.bold,
+//                       color: Colors.white,
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//             ),
+//             SizedBox(height: 16),
+//             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+//               ElevatedButton(
+//                 child: Text(
+//                   'Main Menu',
+//                   style: TextStyle(
+//                     fontSize: 18,
+//                     color: Colors.white,
+//                   ),
+//                 ),
+//                 style: ElevatedButton.styleFrom(
+//                   primary: Colors.purple, // background color
+//                   shape: RoundedRectangleBorder(
+//                     borderRadius: BorderRadius.circular(
+//                         18.0), // rounded corner radius
+//                   ),
+//                 ),
+//                 onPressed: () {
+//                   _startNewGame();
+//                   Navigator.of(context).pop();
+//                 },
+//               ),
+//               SizedBox(width: 15),
+//               ElevatedButton(
+//                 child: Text(
+//                   'New Game',
+//                   style: TextStyle(
+//                     fontSize: 18,
+//                     color: Colors.white,
+//                   ),
+//                 ),
+//                 style: ElevatedButton.styleFrom(
+//                   primary: Colors.purple, // background color
+//                   shape: RoundedRectangleBorder(
+//                     borderRadius: BorderRadius.circular(
+//                         18.0), // rounded corner radius
+//                   ),
+//                 ),
+//                 onPressed: () {
+//                   _startNewGame();
+//                   Navigator.of(context).pop();
+//                 },
+//               ),
+//             ]),
+//           ],
+//         ),
+//       ),
+//     );
+//   },
+// );

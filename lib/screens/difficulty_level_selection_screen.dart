@@ -18,6 +18,21 @@ class DifficultyLevelSelectionScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 50),
+            Text(
+              'Select Difficulty',
+              style: TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                shadows: [
+                  Shadow(
+                    blurRadius: 10.0,
+                    color: Colors.blueAccent.withOpacity(0.9),
+                    offset: Offset(2, 2),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: 55),
             _buildButton(
               context,
