@@ -1,5 +1,6 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:tictactoe_mp/screens/main_menu_game_modes_screen.dart';
 import 'dart:io' show Platform;
 
 import 'package:tictactoe_mp/utils/colors.dart';
@@ -780,8 +781,35 @@ class __TicTacToeGameOfflineMultiplayer
   }
 
   void _goToMainMenu() {
-    Navigator.pushNamedAndRemoveUntil(
-        context, '/main_menu_game_modes_screen', (route) => false);
+    Navigator.pushAndRemoveUntil(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> secondaryAnimation) {
+          // Build the page you want to navigate to
+          return MainMenuGameModesScreen();
+        },
+        transitionDuration:
+            Duration(milliseconds: 300), // Set the duration of the animation
+        transitionsBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> secondaryAnimation, Widget child) {
+          // Define the animation for the transition
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(-1, 0),
+              end: Offset.zero,
+            ).animate(
+              CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeOut,
+              ),
+            ),
+            child: child,
+          );
+        },
+      ),
+      (route) => false,
+    );
   }
 
   void _showWinner() {
