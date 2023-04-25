@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:tictactoe_mp/responsive/responsive.dart';
 import 'package:tictactoe_mp/screens/create_room_screen.dart';
 import 'package:tictactoe_mp/screens/join_room_screen.dart';
+import 'package:tictactoe_mp/screens/main_menu_game_modes_screen.dart';
 import 'package:tictactoe_mp/utils/colors.dart';
 import 'package:tictactoe_mp/widgets/custom_button.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -93,26 +94,37 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
         onHorizontalDragUpdate: (_) {},
         child: Scaffold(
           backgroundColor: bgColor,
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 55),
-                _buildButton(
-                  context,
-                  'Host Match',
-                  () => createRoom(context),
-                ),
-                const SizedBox(height: 28),
-                _buildButton(
-                  context,
-                  'Join Match',
-                  () => joinRoom(context),
-                ),
-                const SizedBox(height: 30),
-              ],
+          body: Stack(children: [
+            Positioned(
+              top: 50,
+              left: 20,
+              child: IconButton(
+                icon: Icon(Icons.arrow_back),
+                color: Colors.white,
+                onPressed: () => _goToMainMenu(),
+              ),
             ),
-          ),
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 55),
+                  _buildButton(
+                    context,
+                    'Host Match',
+                    () => createRoom(context),
+                  ),
+                  const SizedBox(height: 28),
+                  _buildButton(
+                    context,
+                    'Join Match',
+                    () => joinRoom(context),
+                  ),
+                  const SizedBox(height: 30),
+                ],
+              ),
+            ),
+          ]),
         ),
       ),
     );
@@ -179,6 +191,38 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void _goToMainMenu() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> secondaryAnimation) {
+          // Build the page you want to navigate to
+          return MainMenuGameModesScreen();
+        },
+        transitionDuration:
+            Duration(milliseconds: 250), // Set the duration of the animation
+        transitionsBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> secondaryAnimation, Widget child) {
+          // Define the animation for the transition
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(-1, 0),
+              end: Offset.zero,
+            ).animate(
+              CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeOut,
+              ),
+            ),
+            child: child,
+          );
+        },
+      ),
+      (route) => false,
     );
   }
 }

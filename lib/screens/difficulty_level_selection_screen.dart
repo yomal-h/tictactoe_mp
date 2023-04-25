@@ -1,76 +1,86 @@
 import 'package:flutter/material.dart';
 import 'package:fluttericon/entypo_icons.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
+import 'package:tictactoe_mp/screens/main_menu_game_modes_screen.dart';
 
 import 'package:tictactoe_mp/utils/colors.dart';
 import 'package:tictactoe_mp/widgets/custom_flickering_menu_text.dart';
 
-class DifficultyLevelSelectionScreen extends StatelessWidget {
+class DifficultyLevelSelectionScreen extends StatefulWidget {
   static const routeName = '/difficulty_level_selection_screen';
   const DifficultyLevelSelectionScreen({Key? key}) : super(key: key);
 
   @override
+  State<DifficultyLevelSelectionScreen> createState() =>
+      _DifficultyLevelSelectionScreenState();
+}
+
+class _DifficultyLevelSelectionScreenState
+    extends State<DifficultyLevelSelectionScreen> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgColor,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/main_menu_game_modes_screen', (route) => false);
-          },
+      body: Stack(children: [
+        Positioned(
+          top: 50,
+          left: 20,
+          child: IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: Colors.white,
+            onPressed: () => _goToMainMenu(),
+          ),
         ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 50),
-            Text(
-              'Select Difficulty',
-              style: TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                shadows: [
-                  Shadow(
-                    blurRadius: 10.0,
-                    color: Colors.blueAccent.withOpacity(0.9),
-                    offset: Offset(2, 2),
-                  ),
-                ],
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 50),
+              Text(
+                'Select Difficulty',
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  shadows: [
+                    Shadow(
+                      blurRadius: 10.0,
+                      color: Colors.blueAccent.withOpacity(0.9),
+                      offset: Offset(2, 2),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 55),
-            _buildButton(
-              context,
-              'Easy',
-              () => Navigator.pushNamed(context, '/tictactoe_easy'),
-            ),
-            const SizedBox(height: 28),
-            _buildButton(
-              context,
-              'Medium',
-              () => Navigator.pushNamed(context, '/tictactoe_medium'),
-            ),
-            const SizedBox(height: 28),
-            _buildButton(
-              context,
-              'Hard',
-              () => Navigator.pushNamed(context, '/tictactoe_hard'),
-            ),
-            const SizedBox(height: 28),
-            _buildButton(
-              context,
-              'Expert',
-              () => Navigator.pushNamed(context, '/tictactoe_expert'),
-              true, // Make this button different
-            ),
-            const SizedBox(height: 30),
-          ],
+              const SizedBox(height: 55),
+              _buildButton(
+                context,
+                'Easy',
+                () => Navigator.pushNamed(context, '/tictactoe_easy'),
+              ),
+              const SizedBox(height: 28),
+              _buildButton(
+                context,
+                'Medium',
+                () => Navigator.pushNamed(context, '/tictactoe_medium'),
+              ),
+              const SizedBox(height: 28),
+              _buildButton(
+                context,
+                'Hard',
+                () => Navigator.pushNamed(context, '/tictactoe_hard'),
+              ),
+              const SizedBox(height: 28),
+              _buildButton(
+                context,
+                'Expert',
+                () => Navigator.pushNamed(context, '/tictactoe_expert'),
+                true, // Make this button different
+              ),
+              const SizedBox(height: 30),
+            ],
+          ),
         ),
-      ),
+      ]),
     );
   }
 
@@ -135,6 +145,38 @@ class DifficultyLevelSelectionScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _goToMainMenu() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> secondaryAnimation) {
+          // Build the page you want to navigate to
+          return MainMenuGameModesScreen();
+        },
+        transitionDuration:
+            Duration(milliseconds: 250), // Set the duration of the animation
+        transitionsBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> secondaryAnimation, Widget child) {
+          // Define the animation for the transition
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(-1, 0),
+              end: Offset.zero,
+            ).animate(
+              CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeOut,
+              ),
+            ),
+            child: child,
+          );
+        },
+      ),
+      (route) => false,
     );
   }
 }
