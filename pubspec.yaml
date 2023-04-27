@@ -75,6 +75,7 @@ flutter:
   assets:
     - assets/lottie/waiting.json
     - assets/lottie/waiting1.json
+    - assets/music/blade.mp3
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -124,7 +124,7 @@ class RoomDataProvider extends ChangeNotifier {
   }
 
   void playAudio() async {
-    int result = await audioPlayer.play('path/to/audio/file.mp3');
+    int result = await audioPlayer.play('assets/music/blade.mp3');
     if (result == 1) {
       _isPlaying = true;
       notifyListeners();
