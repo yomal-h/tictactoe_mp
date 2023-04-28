@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_final_fields, unused_field
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tictactoe_mp/models/player.dart';
 import 'package:tictactoe_mp/resources/socket_client.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class RoomDataProvider extends ChangeNotifier {
   Map<String, dynamic> _roomData = {};
@@ -31,6 +33,9 @@ class RoomDataProvider extends ChangeNotifier {
   bool _isPlaying = false;
 
   bool get isPlaying => _isPlaying;
+
+  late final AudioPlayer _audioPlayer;
+  late final SharedPreferences _prefs;
 
   // Returns the indices of the boxes that form the winning line based on the current displayElements.
   List<int> getWinningLine() {
@@ -123,9 +128,11 @@ class RoomDataProvider extends ChangeNotifier {
     print("Set filledboxes to ZERO");
   }
 
-  void playAudio() async {
-    int result = await audioPlayer.play('assets/music/blade.mp3');
+  Future<void> playMusic() async {
+    final bytes = await rootBundle.load('assets/blade.mp3');
+    final result = await audioPlayer.playBytes(bytes.buffer.asUint8List());
     if (result == 1) {
+      // success
       _isPlaying = true;
       notifyListeners();
     }
@@ -140,6 +147,6 @@ class RoomDataProvider extends ChangeNotifier {
   }
 
   void toggleAudio() {
-    _isPlaying ? stopAudio() : playAudio();
+    _isPlaying ? stopAudio() : playMusic();
   }
 }

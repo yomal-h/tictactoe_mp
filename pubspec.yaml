@@ -46,6 +46,7 @@ dependencies:
   connectivity_plus: ^2.0.2
   cool_alert: ^1.1.0
   audioplayers: ^0.20.0
+  shared_preferences: ^2.0.6
   
 
 
@@ -75,7 +76,7 @@ flutter:
   assets:
     - assets/lottie/waiting.json
     - assets/lottie/waiting1.json
-    - assets/music/blade.mp3
+    - assets/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
