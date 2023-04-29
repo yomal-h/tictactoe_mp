@@ -49,35 +49,35 @@ class MainMenuGameModesScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.blue,
-                          Colors.purple,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      border: Border.all(
-                        width: 2,
-                        color: Colors.purple.withOpacity(0.5),
-                      ),
-                      color: Colors.white.withOpacity(0.2),
-                    ),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.settings,
-                        color: Colors.white,
-                      ),
-                      onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                          context, '/settings', (route) => false),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 16),
+                // Center(
+                //   child: Container(
+                //     decoration: BoxDecoration(
+                //       borderRadius: BorderRadius.circular(20),
+                //       gradient: LinearGradient(
+                //         colors: [
+                //           Colors.blue,
+                //           Colors.purple,
+                //         ],
+                //         begin: Alignment.topLeft,
+                //         end: Alignment.bottomRight,
+                //       ),
+                //       border: Border.all(
+                //         width: 2,
+                //         color: Colors.purple.withOpacity(0.5),
+                //       ),
+                //       color: Colors.white.withOpacity(0.2),
+                //     ),
+                //     child: IconButton(
+                //       icon: Icon(
+                //         Icons.settings,
+                //         color: Colors.white,
+                //       ),
+                //       onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                //           context, '/settings', (route) => false),
+                //     ),
+                //   ),
+                // ),
+                // SizedBox(width: 16),
                 Center(
                   child: Container(
                     decoration: BoxDecoration(

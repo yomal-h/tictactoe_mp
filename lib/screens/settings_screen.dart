@@ -17,16 +17,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late SharedPreferences _prefs;
   bool _isPlaying = true;
 
+  late RoomDataProvider _roomProvider;
+
   @override
   void initState() {
     super.initState();
+    _roomProvider = RoomDataProvider();
     _loadSettings();
   }
 
   Future<void> _loadSettings() async {
     _prefs = await SharedPreferences.getInstance();
     setState(() {
-      _isPlaying = _prefs.getBool('isPlaying') ?? true;
+      _roomProvider = Provider.of<RoomDataProvider>(context, listen: false);
+      _roomProvider.isPlaying = _prefs.getBool('isPlaying') ?? true;
     });
   }
 
@@ -47,18 +51,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Center(
             child: SwitchListTile(
               title: Text('Background Music'),
-              value: _isPlaying,
+              value: _roomProvider.isPlaying,
               onChanged: (value) {
                 setState(() {
-                  _isPlaying = value;
+                  _roomProvider.isPlaying = value;
                 });
                 _prefs.setBool('isPlaying', value);
-                final model =
-                    Provider.of<RoomDataProvider>(context, listen: false);
                 if (value) {
-                  model.playMusic();
+                  // _roomProvider.playMusic();
                 } else {
-                  model.stopAudio();
+                  //_roomProvider.stopAudio();
                 }
               },
             ),

@@ -39,33 +39,33 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addObserver(this);
+    //WidgetsBinding.instance?.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
+    //WidgetsBinding.instance?.removeObserver(this);
     super.dispose();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   super.didChangeAppLifecycleState(state);
 
-    if (state == AppLifecycleState.resumed) {
-      roomProvider.playMusic();
-      // App is resumed from the background
-    } else if (state == AppLifecycleState.inactive) {
-      roomProvider.stopAudio();
-      // App is no longer the active app
-    } else if (state == AppLifecycleState.paused) {
-      roomProvider.stopAudio();
-      // App is in the background
-    } else if (state == AppLifecycleState.detached) {
-      roomProvider.stopAudio();
-      // App state is detached from the host
-    }
-  }
+  //   if (state == AppLifecycleState.resumed) {
+  //     roomProvider.playMusic();
+  //     // App is resumed from the background
+  //   } else if (state == AppLifecycleState.inactive) {
+  //     roomProvider.stopAudio();
+  //     // App is no longer the active app
+  //   } else if (state == AppLifecycleState.paused) {
+  //     roomProvider.stopAudio();
+  //     // App is in the background
+  //   } else if (state == AppLifecycleState.detached) {
+  //     roomProvider.stopAudio();
+  //     // App state is detached from the host
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

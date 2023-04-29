@@ -30,7 +30,7 @@ class RoomDataProvider extends ChangeNotifier {
   int get currentRound => _currentRound;
 
   AudioPlayer audioPlayer = AudioPlayer();
-  bool _isPlaying = false;
+  bool _isPlaying = true;
 
   bool get isPlaying => _isPlaying;
 
@@ -128,25 +128,30 @@ class RoomDataProvider extends ChangeNotifier {
     print("Set filledboxes to ZERO");
   }
 
-  Future<void> playMusic() async {
-    final bytes = await rootBundle.load('assets/blade.mp3');
-    final result = await audioPlayer.playBytes(bytes.buffer.asUint8List());
-    if (result == 1) {
-      // success
-      _isPlaying = true;
-      notifyListeners();
-    }
+  set isPlaying(bool value) {
+    _isPlaying = value;
+    notifyListeners();
   }
 
-  void stopAudio() async {
-    int result = await audioPlayer.stop();
-    if (result == 1) {
-      _isPlaying = false;
-      notifyListeners();
-    }
-  }
+  // Future<void> playMusic() async {
+  //   final bytes = await rootBundle.load('assets/blade.mp3');
+  //   final result = await audioPlayer.playBytes(bytes.buffer.asUint8List());
+  //   if (result == 1) {
+  //     // success
+  //     _isPlaying = true;
+  //     notifyListeners();
+  //   }
+  // }
 
-  void toggleAudio() {
-    _isPlaying ? stopAudio() : playMusic();
-  }
+  // void stopAudio() async {
+  //   int result = await audioPlayer.stop();
+  //   if (result == 1) {
+  //     _isPlaying = false;
+  //     notifyListeners();
+  //   }
+  // }
+
+  // void toggleAudio() {
+  //   _isPlaying ? stopAudio() : playMusic();
+  // }
 }
