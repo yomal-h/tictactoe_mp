@@ -73,7 +73,7 @@ class MainMenuGameModesScreen extends StatelessWidget {
                 //         color: Colors.white,
                 //       ),
                 //       onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                //           context, '/settings', (route) => false),
+                //           context, '/settings2', (route) => false),
                 //     ),
                 //   ),
                 // ),
@@ -101,8 +101,8 @@ class MainMenuGameModesScreen extends StatelessWidget {
                         Entypo.info_circled,
                         color: Colors.white,
                       ),
-                      onPressed: () =>
-                          Navigator.pushNamed(context, '/settings'),
+                      onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                          context, '/info', (route) => false),
                     ),
                   ),
                 ),

@@ -22,7 +22,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
-    _roomProvider = RoomDataProvider();
+    // _roomProvider = RoomDataProvider();
     _loadSettings();
   }
 

@@ -195,7 +195,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   }
 
   void _goToMainMenu() {
-    Navigator.pushAndRemoveUntil(
+    Navigator.push(
       context,
       PageRouteBuilder(
         pageBuilder: (BuildContext context, Animation<double> animation,
@@ -222,7 +222,6 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
           );
         },
       ),
-      (route) => false,
     );
   }
 }

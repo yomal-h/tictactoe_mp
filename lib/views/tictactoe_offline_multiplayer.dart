@@ -489,6 +489,8 @@ class __TicTacToeGameOfflineMultiplayer
   }
 
   void _startNewRound() {
+    bool _buttonTapped =
+        false; // Add this boolean variable to keep track of whether the button has been tapped
     String winner = _checkForWinner(_board, 'X')
         ? 'Player 1'
         : _checkForWinner(_board, 'O')
@@ -601,37 +603,38 @@ class __TicTacToeGameOfflineMultiplayer
                               ),
                             ),
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.purple, // background color
+                              primary: Colors.purple,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    18.0), // rounded corner radius
+                                borderRadius: BorderRadius.circular(18.0),
                               ),
                             ),
-                            onPressed: () {
-                              _winningLine.clear();
-                              Navigator.of(context).pop();
-                              setState(() {
-                                _board.fillRange(0, 9, '');
-                                //_currentPlayer = 'X';
-                                _round++;
-                                _gameOver = false;
-                                if (winner == 'Player 1') {
-                                  // _playerScore++;
-                                  _controller.stop();
-                                  _controller.reset();
-                                  _rotateController.stop();
-                                  _rotateController.reset();
-                                  _currentPlayer = 'O';
-                                } else if (winner == 'Player 2') {
-                                  // _computerScore++;
-                                  _controller.stop();
-                                  _controller.reset();
-                                  _rotateController.stop();
-                                  _rotateController.reset();
-                                  _currentPlayer = 'X';
-                                }
-                              });
-                            },
+                            onPressed: _buttonTapped
+                                ? null
+                                : () {
+                                    // Add a condition to disable the button if it has already been tapped
+                                    _buttonTapped =
+                                        true; // Set the boolean variable to true to prevent the button from being tapped again
+                                    _winningLine.clear();
+                                    Navigator.of(context).pop();
+                                    setState(() {
+                                      _board.fillRange(0, 9, '');
+                                      _round++;
+                                      _gameOver = false;
+                                      if (winner == 'Player 1') {
+                                        _controller.stop();
+                                        _controller.reset();
+                                        _rotateController.stop();
+                                        _rotateController.reset();
+                                        _currentPlayer = 'O';
+                                      } else if (winner == 'Player 2') {
+                                        _controller.stop();
+                                        _controller.reset();
+                                        _rotateController.stop();
+                                        _rotateController.reset();
+                                        _currentPlayer = 'X';
+                                      }
+                                    });
+                                  },
                           ),
                         ],
                       ),
@@ -722,37 +725,38 @@ class __TicTacToeGameOfflineMultiplayer
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.purple, // background color
+                        primary: Colors.purple,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              18.0), // rounded corner radius
+                          borderRadius: BorderRadius.circular(18.0),
                         ),
                       ),
-                      onPressed: () {
-                        _winningLine.clear();
-                        Navigator.of(context).pop();
-                        setState(() {
-                          _board.fillRange(0, 9, '');
-                          //_currentPlayer = 'X';
-                          _round++;
-                          _gameOver = false;
-                          if (winner == 'Player 1') {
-                            // _playerScore++;
-                            _controller.stop();
-                            _controller.reset();
-                            _rotateController.stop();
-                            _rotateController.reset();
-                            _currentPlayer = 'O';
-                          } else if (winner == 'Player 2') {
-                            // _computerScore++;
-                            _controller.stop();
-                            _controller.reset();
-                            _rotateController.stop();
-                            _rotateController.reset();
-                            _currentPlayer = 'X';
-                          }
-                        });
-                      },
+                      onPressed: _buttonTapped
+                          ? null
+                          : () {
+                              // Add a condition to disable the button if it has already been tapped
+                              _buttonTapped =
+                                  true; // Set the boolean variable to true to prevent the button from being tapped again
+                              _winningLine.clear();
+                              Navigator.of(context).pop();
+                              setState(() {
+                                _board.fillRange(0, 9, '');
+                                _round++;
+                                _gameOver = false;
+                                if (winner == 'Player 1') {
+                                  _controller.stop();
+                                  _controller.reset();
+                                  _rotateController.stop();
+                                  _rotateController.reset();
+                                  _currentPlayer = 'O';
+                                } else if (winner == 'Player 2') {
+                                  _controller.stop();
+                                  _controller.reset();
+                                  _rotateController.stop();
+                                  _rotateController.reset();
+                                  _currentPlayer = 'X';
+                                }
+                              });
+                            },
                     ),
                   ],
                 ),

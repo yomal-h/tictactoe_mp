@@ -55,25 +55,30 @@ class _DifficultyLevelSelectionScreenState
               _buildButton(
                 context,
                 'Easy',
-                () => Navigator.pushNamed(context, '/tictactoe_easy'),
+                () => Navigator.pushNamedAndRemoveUntil(
+                    context, '/tictactoe_easy', (route) => false),
               ),
               const SizedBox(height: 28),
               _buildButton(
                 context,
                 'Medium',
-                () => Navigator.pushNamed(context, '/tictactoe_medium'),
+                () => Navigator.pushNamedAndRemoveUntil(
+                    context, '/tictactoe_medium', (route) => false),
               ),
               const SizedBox(height: 28),
               _buildButton(
                 context,
                 'Hard',
-                () => Navigator.pushNamed(context, '/tictactoe_hard'),
+                () => Navigator.pushNamedAndRemoveUntil(
+                    context, '/tictactoe_hard', (route) => false),
               ),
               const SizedBox(height: 28),
               _buildButton(
                 context,
                 'Expert',
-                () => Navigator.pushNamed(context, '/tictactoe_expert'),
+                () => Navigator.pushNamedAndRemoveUntil(
+                    context, '/tictactoe_expert', (route) => false),
+
                 true, // Make this button different
               ),
               const SizedBox(height: 30),

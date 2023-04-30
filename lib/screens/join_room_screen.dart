@@ -168,7 +168,7 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
   }
 
   void _goToMainMenu() {
-    Navigator.pushAndRemoveUntil(
+    Navigator.push(
       context,
       PageRouteBuilder(
         pageBuilder: (BuildContext context, Animation<double> animation,
@@ -195,7 +195,6 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
           );
         },
       ),
-      (route) => false,
     );
   }
 }

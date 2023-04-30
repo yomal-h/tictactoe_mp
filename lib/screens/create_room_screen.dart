@@ -162,7 +162,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
   }
 
   void _goToMainMenu() {
-    Navigator.pushAndRemoveUntil(
+    Navigator.push(
       context,
       PageRouteBuilder(
         pageBuilder: (BuildContext context, Animation<double> animation,
@@ -189,7 +189,6 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
           );
         },
       ),
-      (route) => false,
     );
   }
 }

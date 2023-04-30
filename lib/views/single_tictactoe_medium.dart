@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:tictactoe_mp/screens/main_menu_game_modes_screen.dart';
 import 'dart:io' show Platform;
 
 import 'package:tictactoe_mp/utils/colors.dart';
@@ -614,6 +615,8 @@ class __TicTacToeGameMediumState extends State<TicTacToeGameMedium>
   //indicating that there is no winning line to highlight
 
   void _startNewRound() {
+    bool _buttonTapped =
+        false; // Add this boolean variable to keep track of whether the button has been tapped
     String winner = _checkForWinner(_board, 'X')
         ? 'Player'
         : _checkForWinner(_board, 'O')
@@ -726,45 +729,38 @@ class __TicTacToeGameMediumState extends State<TicTacToeGameMedium>
                               ),
                             ),
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.purple, // background color
+                              primary: Colors.purple,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    18.0), // rounded corner radius
+                                borderRadius: BorderRadius.circular(18.0),
                               ),
                             ),
-                            onPressed: () {
-                              _winningLine.clear();
-                              Navigator.of(context).pop();
-                              setState(() {
-                                _board.fillRange(0, 9, '');
-                                //_currentPlayer = 'X';
-                                _round++;
-                                _gameOver = false;
-                                if (winner == 'Player') {
-                                  // _playerScore++;
-                                  _controller.stop();
-                                  _controller.reset();
-                                  _rotateController.stop();
-                                  _rotateController.reset();
-                                  _currentPlayer = 'O';
-                                  _isComputerThinking =
-                                      true; //to disable player then add computer's move code
-                                  Future.delayed(Duration(seconds: 1), () {
+                            onPressed: _buttonTapped
+                                ? null
+                                : () {
+                                    // Add a condition to disable the button if it has already been tapped
+                                    _buttonTapped =
+                                        true; // Set the boolean variable to true to prevent the button from being tapped again
+                                    _winningLine.clear();
+                                    Navigator.of(context).pop();
                                     setState(() {
-                                      _makeComputerMove();
-                                      _isComputerThinking = false;
+                                      _board.fillRange(0, 9, '');
+                                      _round++;
+                                      _gameOver = false;
+                                      if (winner == 'Player') {
+                                        _controller.stop();
+                                        _controller.reset();
+                                        _rotateController.stop();
+                                        _rotateController.reset();
+                                        _currentPlayer = 'O';
+                                      } else if (winner == 'Computer') {
+                                        _controller.stop();
+                                        _controller.reset();
+                                        _rotateController.stop();
+                                        _rotateController.reset();
+                                        _currentPlayer = 'X';
+                                      }
                                     });
-                                  });
-                                } else if (winner == 'Computer') {
-                                  // _computerScore++;
-                                  _controller.stop();
-                                  _controller.reset();
-                                  _rotateController.stop();
-                                  _rotateController.reset();
-                                  _currentPlayer = 'X';
-                                }
-                              });
-                            },
+                                  },
                           ),
                         ],
                       ),
@@ -855,37 +851,38 @@ class __TicTacToeGameMediumState extends State<TicTacToeGameMedium>
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.purple, // background color
+                        primary: Colors.purple,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              18.0), // rounded corner radius
+                          borderRadius: BorderRadius.circular(18.0),
                         ),
                       ),
-                      onPressed: () {
-                        _winningLine.clear();
-                        Navigator.of(context).pop();
-                        setState(() {
-                          _board.fillRange(0, 9, '');
-                          //_currentPlayer = 'X';
-                          _round++;
-                          _gameOver = false;
-                          if (winner == 'Player') {
-                            // _playerScore++;
-                            _controller.stop();
-                            _controller.reset();
-                            _rotateController.stop();
-                            _rotateController.reset();
-                            _currentPlayer = 'O';
-                          } else if (winner == 'Computer') {
-                            // _computerScore++;
-                            _controller.stop();
-                            _controller.reset();
-                            _rotateController.stop();
-                            _rotateController.reset();
-                            _currentPlayer = 'X';
-                          }
-                        });
-                      },
+                      onPressed: _buttonTapped
+                          ? null
+                          : () {
+                              // Add a condition to disable the button if it has already been tapped
+                              _buttonTapped =
+                                  true; // Set the boolean variable to true to prevent the button from being tapped again
+                              _winningLine.clear();
+                              Navigator.of(context).pop();
+                              setState(() {
+                                _board.fillRange(0, 9, '');
+                                _round++;
+                                _gameOver = false;
+                                if (winner == 'Player') {
+                                  _controller.stop();
+                                  _controller.reset();
+                                  _rotateController.stop();
+                                  _rotateController.reset();
+                                  _currentPlayer = 'O';
+                                } else if (winner == 'Computer') {
+                                  _controller.stop();
+                                  _controller.reset();
+                                  _rotateController.stop();
+                                  _rotateController.reset();
+                                  _currentPlayer = 'X';
+                                }
+                              });
+                            },
                     ),
                   ],
                 ),
@@ -910,7 +907,35 @@ class __TicTacToeGameMediumState extends State<TicTacToeGameMedium>
   }
 
   void _goToMainMenu() {
-    Navigator.pushNamed(context, '/main_menu_game_modes_screen');
+    Navigator.pushAndRemoveUntil(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> secondaryAnimation) {
+          // Build the page you want to navigate to
+          return MainMenuGameModesScreen();
+        },
+        transitionDuration:
+            Duration(milliseconds: 300), // Set the duration of the animation
+        transitionsBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> secondaryAnimation, Widget child) {
+          // Define the animation for the transition
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(-1, 0),
+              end: Offset.zero,
+            ).animate(
+              CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeOut,
+              ),
+            ),
+            child: child,
+          );
+        },
+      ),
+      (route) => false,
+    );
   }
 
   void _showWinner() {

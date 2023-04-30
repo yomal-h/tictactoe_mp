@@ -5,9 +5,11 @@ import 'package:tictactoe_mp/resources/socket_methods.dart';
 import 'package:tictactoe_mp/screens/create_room_screen.dart';
 import 'package:tictactoe_mp/screens/difficulty_level_selection_screen.dart';
 import 'package:tictactoe_mp/screens/game_screen.dart';
+import 'package:tictactoe_mp/screens/info_screen.dart';
 import 'package:tictactoe_mp/screens/join_room_screen.dart';
 import 'package:tictactoe_mp/screens/main_menu_game_modes_screen.dart';
 import 'package:tictactoe_mp/screens/main_menu_screen.dart';
+
 import 'package:tictactoe_mp/screens/settings_screen.dart';
 import 'package:tictactoe_mp/utils/colors.dart';
 import 'package:tictactoe_mp/views/single_tictactoe_expert.dart';
@@ -102,6 +104,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           CreateRoomScreen.routeName: (context) => const CreateRoomScreen(),
           GameScreen.routeName: (context) => const GameScreen(),
           SettingsScreen.routeName: (context) => const SettingsScreen(),
+          InfoScreen.routeName: (context) => const InfoScreen(),
         },
         initialRoute: MainMenuGameModesScreen.routeName,
       ),
