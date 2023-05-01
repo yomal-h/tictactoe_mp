@@ -817,6 +817,8 @@ class __TicTacToeGameOfflineMultiplayer
   }
 
   void _showWinner() {
+    bool _newGameButtonTapped =
+        false; // Add this boolean variable to keep track of whether the new game button has been tapped
     String winner = '';
     if (_playerScore > _computerScore) {
       winner = 'Player 1';
@@ -981,10 +983,14 @@ class __TicTacToeGameOfflineMultiplayer
                                       18.0), // rounded corner radius
                                 ),
                               ),
-                              onPressed: () {
-                                _startNewGame();
-                                Navigator.of(context).pop();
-                              },
+                              onPressed: _newGameButtonTapped
+                                  ? null
+                                  : () {
+                                      _newGameButtonTapped =
+                                          true; // Set the boolean variable to true to prevent the button from being tapped again
+                                      _startNewGame();
+                                      Navigator.of(context).pop();
+                                    },
                             ),
                           ]),
                     ],
@@ -1144,10 +1150,13 @@ class __TicTacToeGameOfflineMultiplayer
                               18.0), // rounded corner radius
                         ),
                       ),
-                      onPressed: () {
-                        _startNewGame();
-                        Navigator.of(context).pop();
-                      },
+                      onPressed: _newGameButtonTapped
+                          ? null
+                          : () {
+                              _newGameButtonTapped = true;
+                              _startNewGame();
+                              Navigator.of(context).pop();
+                            },
                     ),
                   ]),
                 ],

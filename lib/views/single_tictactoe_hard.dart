@@ -257,8 +257,12 @@ class __TicTacToeGameHardState extends State<TicTacToeGameHard>
                                   _playerScore++;
 
                                   Future.delayed(Duration(seconds: 3), () {
-                                    _controller.stop();
-                                    _rotateController.stop();
+                                    if (mounted) {
+                                      //method will only be executed if the widget is still mounted, preventing the
+                                      //AnimationController objects from being accessed after they've been disposed of.
+                                      _controller.stop();
+                                      _rotateController.stop();
+                                    }
                                   });
                                   _controller.repeat(reverse: true);
                                   _rotateController.repeat(reverse: true);
@@ -268,8 +272,12 @@ class __TicTacToeGameHardState extends State<TicTacToeGameHard>
                                   _computerScore++;
 
                                   Future.delayed(Duration(seconds: 3), () {
-                                    _controller.stop();
-                                    _rotateController.stop();
+                                    if (mounted) {
+                                      //method will only be executed if the widget is still mounted, preventing the
+                                      //AnimationController objects from being accessed after they've been disposed of.
+                                      _controller.stop();
+                                      _rotateController.stop();
+                                    }
                                   });
                                   _controller.repeat(reverse: true);
                                   _rotateController.repeat(reverse: true);
@@ -290,8 +298,12 @@ class __TicTacToeGameHardState extends State<TicTacToeGameHard>
                                       if (_checkForWinner(_board, 'O')) {
                                         Future.delayed(Duration(seconds: 3),
                                             () {
-                                          _controller.stop();
-                                          _rotateController.stop();
+                                          if (mounted) {
+                                            //method will only be executed if the widget is still mounted, preventing the
+                                            //AnimationController objects from being accessed after they've been disposed of.
+                                            _controller.stop();
+                                            _rotateController.stop();
+                                          }
                                         });
                                         _controller.repeat(reverse: true);
                                         _rotateController.repeat(reverse: true);
@@ -755,6 +767,15 @@ class __TicTacToeGameHardState extends State<TicTacToeGameHard>
                                         _rotateController.stop();
                                         _rotateController.reset();
                                         _currentPlayer = 'O';
+                                        _isComputerThinking =
+                                            true; //to disable player then add computer's move code
+                                        Future.delayed(Duration(seconds: 1),
+                                            () {
+                                          setState(() {
+                                            _makeComputerMove();
+                                            _isComputerThinking = false;
+                                          });
+                                        });
                                       } else if (winner == 'Computer') {
                                         _controller.stop();
                                         _controller.reset();
@@ -877,6 +898,14 @@ class __TicTacToeGameHardState extends State<TicTacToeGameHard>
                                   _rotateController.stop();
                                   _rotateController.reset();
                                   _currentPlayer = 'O';
+                                  _isComputerThinking =
+                                      true; //to disable player then add computer's move code
+                                  Future.delayed(Duration(seconds: 1), () {
+                                    setState(() {
+                                      _makeComputerMove();
+                                      _isComputerThinking = false;
+                                    });
+                                  });
                                 } else if (winner == 'Computer') {
                                   _controller.stop();
                                   _controller.reset();
@@ -906,6 +935,10 @@ class __TicTacToeGameHardState extends State<TicTacToeGameHard>
       _gameOver = false;
       _currentPlayer = 'X';
       _winningLine.clear();
+      _controller.stop();
+      _controller.reset();
+      _rotateController.stop();
+      _rotateController.reset();
     });
   }
 
@@ -942,6 +975,8 @@ class __TicTacToeGameHardState extends State<TicTacToeGameHard>
   }
 
   void _showWinner() {
+    bool _newGameButtonTapped =
+        false; // Add this boolean variable to keep track of whether the new game button has been tapped
     String winner = '';
     if (_playerScore > _computerScore) {
       winner = 'Player';
@@ -1104,10 +1139,14 @@ class __TicTacToeGameHardState extends State<TicTacToeGameHard>
                                       18.0), // rounded corner radius
                                 ),
                               ),
-                              onPressed: () {
-                                _startNewGame();
-                                Navigator.of(context).pop();
-                              },
+                              onPressed: _newGameButtonTapped
+                                  ? null
+                                  : () {
+                                      // Add a condition to disable the button if it has already been tapped
+                                      _newGameButtonTapped = true;
+                                      _startNewGame();
+                                      Navigator.of(context).pop();
+                                    },
                             ),
                           ]),
                     ],
@@ -1266,10 +1305,14 @@ class __TicTacToeGameHardState extends State<TicTacToeGameHard>
                               18.0), // rounded corner radius
                         ),
                       ),
-                      onPressed: () {
-                        _startNewGame();
-                        Navigator.of(context).pop();
-                      },
+                      onPressed: _newGameButtonTapped
+                          ? null
+                          : () {
+                              // Add a condition to disable the button if it has already been tapped
+                              _newGameButtonTapped = true;
+                              _startNewGame();
+                              Navigator.of(context).pop();
+                            },
                     ),
                   ]),
                 ],
