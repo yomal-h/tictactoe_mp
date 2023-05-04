@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "204448318337",
+    "project_id": "tic-tac-toe-xperience",
+    "storage_bucket": "tic-tac-toe-xperience.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:204448318337:android:eb2af6519b5d6538681e80",
+        "android_client_info": {
+          "package_name": "com.freez.tictactoe_mp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "204448318337-sbn5l4vbrmmh44lb78ap5ptk7vn8itq8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5L5iq89Wropf8jkEfOX1sSsdiEYgjDDs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "204448318337-sbn5l4vbrmmh44lb78ap5ptk7vn8itq8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "204448318337-j6pucpvhv8u2cve4p8r75kvfujcub04h.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.freez.tictactoeMp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
