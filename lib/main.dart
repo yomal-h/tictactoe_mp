@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe_mp/provider/room_data_provider.dart';
@@ -11,6 +13,7 @@ import 'package:tictactoe_mp/screens/main_menu_game_modes_screen.dart';
 import 'package:tictactoe_mp/screens/main_menu_screen.dart';
 
 import 'package:tictactoe_mp/screens/settings_screen.dart';
+import 'package:tictactoe_mp/utils/ad_manager.dart';
 import 'package:tictactoe_mp/utils/colors.dart';
 import 'package:tictactoe_mp/views/single_tictactoe_expert.dart';
 import 'package:tictactoe_mp/views/single_tictactoe_hard.dart';
@@ -18,8 +21,16 @@ import 'package:tictactoe_mp/views/single_tictactoe_medium.dart';
 import 'package:tictactoe_mp/views/single_tictactoe_easy.dart';
 import 'package:tictactoe_mp/views/tictactoe_board.dart';
 import 'package:tictactoe_mp/views/tictactoe_offline_multiplayer.dart';
+import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp();
+
+  // Pass all uncaught "fatal" errors from the framework to Crashlytics
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+
   runApp(const MyApp());
 }
 
@@ -41,6 +52,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+
     //WidgetsBinding.instance?.addObserver(this);
   }
 

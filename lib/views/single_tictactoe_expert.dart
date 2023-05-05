@@ -1046,27 +1046,6 @@ class __TicTacToeGameExpertState extends State<TicTacToeGameExpert>
                           children: [
                             ElevatedButton(
                               child: Text(
-                                'Main Menu',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.purple, // background color
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      18.0), // rounded corner radius
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                _goToMainMenu();
-                              },
-                            ),
-                            SizedBox(width: 15),
-                            ElevatedButton(
-                              child: Text(
                                 'New Game',
                                 style: TextStyle(
                                   fontSize: 18,
@@ -1088,6 +1067,27 @@ class __TicTacToeGameExpertState extends State<TicTacToeGameExpert>
                                       _startNewGame();
                                       Navigator.of(context).pop();
                                     },
+                            ),
+                            SizedBox(width: 15),
+                            ElevatedButton(
+                              child: Text(
+                                'Main Menu',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.purple, // background color
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      18.0), // rounded corner radius
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                _goToMainMenu();
+                              },
                             ),
                           ]),
                     ],
@@ -1212,27 +1212,6 @@ class __TicTacToeGameExpertState extends State<TicTacToeGameExpert>
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     ElevatedButton(
                       child: Text(
-                        'Main Menu',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.purple, // background color
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              18.0), // rounded corner radius
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        _goToMainMenu();
-                      },
-                    ),
-                    SizedBox(width: 15),
-                    ElevatedButton(
-                      child: Text(
                         'New Game',
                         style: TextStyle(
                           fontSize: 18,
@@ -1254,6 +1233,27 @@ class __TicTacToeGameExpertState extends State<TicTacToeGameExpert>
                               _startNewGame();
                               Navigator.of(context).pop();
                             },
+                    ),
+                    SizedBox(width: 15),
+                    ElevatedButton(
+                      child: Text(
+                        'Main Menu',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.purple, // background color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              18.0), // rounded corner radius
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        _goToMainMenu();
+                      },
                     ),
                   ]),
                 ],

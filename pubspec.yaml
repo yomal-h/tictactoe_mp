@@ -47,8 +47,11 @@ dependencies:
   cool_alert: ^1.1.0
   audioplayers: ^0.20.1
   shared_preferences: ^2.0.6
-  firebase_core: ^1.10.6
-  firebase_crashlytics: ^2.5.2
+  firebase_core: ^1.0.3 
+  firebase_crashlytics: ^2.0.0
+  unity_ads_plugin: ^0.3.8
+ 
+  
     
 
 

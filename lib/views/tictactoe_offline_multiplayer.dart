@@ -1,9 +1,11 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:tictactoe_mp/screens/main_menu_game_modes_screen.dart';
+import 'package:tictactoe_mp/utils/ad_manager.dart';
 import 'dart:io' show Platform;
 
 import 'package:tictactoe_mp/utils/colors.dart';
+import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
 class TicTacToeGameOfflineMultiplayer extends StatefulWidget {
   static String routeName = '/tictactoe_offline_multiplayer';
@@ -78,6 +80,17 @@ class __TicTacToeGameOfflineMultiplayer
         parent: _animationController,
         curve: Curves.easeInOut,
       ),
+    );
+
+    UnityAds.init(
+      gameId: AdManager.gameId,
+      testMode: true,
+      onComplete: () {
+        print('Initialization Complete');
+        _loadAd(AdManager.interstitialVideoAdPlacementId);
+      },
+      onFailed: (error, message) =>
+          print('Initialization Failed: $error $message'),
     );
   }
 
@@ -785,6 +798,7 @@ class __TicTacToeGameOfflineMultiplayer
   }
 
   void _goToMainMenu() {
+    _showAd(AdManager.interstitialVideoAdPlacementId);
     Navigator.pushAndRemoveUntil(
       context,
       PageRouteBuilder(
@@ -948,28 +962,6 @@ class __TicTacToeGameOfflineMultiplayer
                           children: [
                             ElevatedButton(
                               child: Text(
-                                'Main Menu',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.purple, // background color
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      18.0), // rounded corner radius
-                                ),
-                              ),
-                              onPressed: () {
-                                // Close the dialog and navigate to the main menu
-                                Navigator.pop(context);
-                                _goToMainMenu();
-                              },
-                            ),
-                            SizedBox(width: 15),
-                            ElevatedButton(
-                              child: Text(
                                 'New Game',
                                 style: TextStyle(
                                   fontSize: 18,
@@ -991,6 +983,28 @@ class __TicTacToeGameOfflineMultiplayer
                                       _startNewGame();
                                       Navigator.of(context).pop();
                                     },
+                            ),
+                            SizedBox(width: 15),
+                            ElevatedButton(
+                              child: Text(
+                                'Main Menu',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.purple, // background color
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      18.0), // rounded corner radius
+                                ),
+                              ),
+                              onPressed: () {
+                                // Close the dialog and navigate to the main menu
+                                Navigator.pop(context);
+                                _goToMainMenu();
+                              },
                             ),
                           ]),
                     ],
@@ -1115,28 +1129,6 @@ class __TicTacToeGameOfflineMultiplayer
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     ElevatedButton(
                       child: Text(
-                        'Main Menu',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.purple, // background color
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              18.0), // rounded corner radius
-                        ),
-                      ),
-                      onPressed: () {
-                        // Close the dialog and navigate to the main menu
-                        Navigator.pop(context);
-                        _goToMainMenu();
-                      },
-                    ),
-                    SizedBox(width: 15),
-                    ElevatedButton(
-                      child: Text(
                         'New Game',
                         style: TextStyle(
                           fontSize: 18,
@@ -1158,6 +1150,28 @@ class __TicTacToeGameOfflineMultiplayer
                               Navigator.of(context).pop();
                             },
                     ),
+                    SizedBox(width: 15),
+                    ElevatedButton(
+                      child: Text(
+                        'Main Menu',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.purple, // background color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              18.0), // rounded corner radius
+                        ),
+                      ),
+                      onPressed: () {
+                        // Close the dialog and navigate to the main menu
+                        Navigator.pop(context);
+                        _goToMainMenu();
+                      },
+                    ),
                   ]),
                 ],
               ),
@@ -1166,6 +1180,32 @@ class __TicTacToeGameOfflineMultiplayer
         });
 
     _gameOver = true;
+  }
+
+  void _loadAd(String placementId) async {
+    await UnityAds.load(
+      placementId: AdManager.interstitialVideoAdPlacementId,
+    );
+  }
+
+  void _showAd(String placementId) {
+    UnityAds.showVideoAd(
+      placementId: placementId,
+      onComplete: (placementId) {
+        print('Video Ad $placementId completed');
+        _loadAd(placementId);
+      },
+      onFailed: (placementId, error, message) {
+        print('Video Ad $placementId failed: $error $message');
+        _loadAd(placementId);
+      },
+      onStart: (placementId) => print('Video Ad $placementId started'),
+      onClick: (placementId) => print('Video Ad $placementId click'),
+      onSkipped: (placementId) {
+        print('Video Ad $placementId skipped');
+        _loadAd(placementId);
+      },
+    );
   }
 }
 
