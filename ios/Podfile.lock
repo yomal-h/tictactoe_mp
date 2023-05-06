@@ -66,6 +66,10 @@ PODS:
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - unity_ads_plugin (0.0.1):
+    - Flutter
+    - UnityAds (= 4.6.1)
+  - UnityAds (4.6.1)
 
 DEPENDENCIES:
   - audioplayers (from `.symlinks/plugins/audioplayers/ios`)
@@ -76,6 +80,7 @@ DEPENDENCIES:
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
   - share_extend (from `.symlinks/plugins/share_extend/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
+  - unity_ads_plugin (from `.symlinks/plugins/unity_ads_plugin/ios`)
 
 SPEC REPOS:
   trunk:
@@ -90,6 +95,7 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - ReachabilitySwift
+    - UnityAds
 
 EXTERNAL SOURCES:
   audioplayers:
@@ -108,6 +114,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/share_extend/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/ios"
+  unity_ads_plugin:
+    :path: ".symlinks/plugins/unity_ads_plugin/ios"
 
 SPEC CHECKSUMS:
   audioplayers: 455322b54050b30ea4b1af7cd9e9d105f74efa8c
@@ -129,6 +137,8 @@ SPEC CHECKSUMS:
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   share_extend: b6748dc53695587891126a89533b862b92548c7b
   shared_preferences_foundation: 297b3ebca31b34ec92be11acd7fb0ba932c822ca
+  unity_ads_plugin: a7c3b00019fc4687a7f92dd448f77dd43bae73c5
+  UnityAds: 824808c73af90fe4302ee0594381c8d515e5ce97
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 

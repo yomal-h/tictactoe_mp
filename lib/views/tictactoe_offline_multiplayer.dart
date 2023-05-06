@@ -782,6 +782,7 @@ class __TicTacToeGameOfflineMultiplayer
   }
 
   void _startNewGame() {
+    _showAd(AdManager.interstitialVideoAdPlacementId);
     setState(() {
       _board.fillRange(0, 9, '');
       _playerScore = 0;
@@ -981,6 +982,7 @@ class __TicTacToeGameOfflineMultiplayer
                                       _newGameButtonTapped =
                                           true; // Set the boolean variable to true to prevent the button from being tapped again
                                       _startNewGame();
+
                                       Navigator.of(context).pop();
                                     },
                             ),

@@ -12,7 +12,7 @@ class AdManager {
   }
 
   static String get bannerAdPlacementId {
-    return 'your_banner_ad_placement_id';
+    return 'Banner_Android';
   }
 
   static String get interstitialVideoAdPlacementId {

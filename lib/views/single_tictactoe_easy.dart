@@ -3,9 +3,11 @@ import 'dart:math';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:tictactoe_mp/screens/main_menu_game_modes_screen.dart';
+import 'package:tictactoe_mp/utils/ad_manager.dart';
 import 'dart:io' show Platform;
 
 import 'package:tictactoe_mp/utils/colors.dart';
+import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
 class TicTacToeGameEasy extends StatefulWidget {
   static String routeName = '/tictactoe_easy';
@@ -78,6 +80,17 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy>
         parent: _animationController,
         curve: Curves.easeInOut,
       ),
+    );
+
+    UnityAds.init(
+      gameId: AdManager.gameId,
+      testMode: true,
+      onComplete: () {
+        print('Initialization Complete');
+        _loadAd(AdManager.interstitialVideoAdPlacementId);
+      },
+      onFailed: (error, message) =>
+          print('Initialization Failed: $error $message'),
     );
   }
 
@@ -887,6 +900,7 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy>
   }
 
   void _startNewGame() {
+    _showAd(AdManager.interstitialVideoAdPlacementId);
     setState(() {
       _board.fillRange(0, 9, '');
       _playerScore = 0;
@@ -903,6 +917,7 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy>
   }
 
   void _goToMainMenu() {
+    _showAd(AdManager.interstitialVideoAdPlacementId);
     Navigator.pushAndRemoveUntil(
       context,
       PageRouteBuilder(
@@ -1287,6 +1302,32 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy>
           );
         });
     _gameOver = true;
+  }
+
+  void _loadAd(String placementId) async {
+    await UnityAds.load(
+      placementId: AdManager.interstitialVideoAdPlacementId,
+    );
+  }
+
+  void _showAd(String placementId) {
+    UnityAds.showVideoAd(
+      placementId: placementId,
+      onComplete: (placementId) {
+        print('Video Ad $placementId completed');
+        _loadAd(placementId);
+      },
+      onFailed: (placementId, error, message) {
+        print('Video Ad $placementId failed: $error $message');
+        _loadAd(placementId);
+      },
+      onStart: (placementId) => print('Video Ad $placementId started'),
+      onClick: (placementId) => print('Video Ad $placementId click'),
+      onSkipped: (placementId) {
+        print('Video Ad $placementId skipped');
+        _loadAd(placementId);
+      },
+    );
   }
 }
 
