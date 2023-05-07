@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tictactoe_mp/provider/room_data_provider.dart';
 import 'package:tictactoe_mp/screens/main_menu_game_modes_screen.dart';
+import 'package:tictactoe_mp/utils/ad_manager.dart';
+import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
 class InfoScreen extends StatefulWidget {
   const InfoScreen({Key? key}) : super(key: key);
@@ -16,6 +18,16 @@ class _InfoScreenState extends State<InfoScreen> {
   @override
   void initState() {
     super.initState();
+    UnityAds.init(
+      gameId: AdManager.gameId,
+      testMode: true,
+      onComplete: () {
+        print('Initialization Complete');
+        _loadAd(AdManager.bannerAdPlacementId);
+      },
+      onFailed: (error, message) =>
+          print('Initialization Failed: $error $message'),
+    );
     // _roomProvider = RoomDataProvider();
   }
 
@@ -140,6 +152,19 @@ class _InfoScreenState extends State<InfoScreen> {
               ),
             ),
           ),
+          Positioned.fill(
+            bottom: 0, // Position the container at the bottom of the screen
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: 50, // Set the desired height of the banner ad
+                child: UnityBannerAd(
+                  placementId: AdManager.bannerAdPlacementId,
+                  size: BannerSize.standard, // Choose the size of the banner ad
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -174,6 +199,12 @@ class _InfoScreenState extends State<InfoScreen> {
         },
       ),
       (route) => false,
+    );
+  }
+
+  void _loadAd(String placementId) async {
+    await UnityAds.load(
+      placementId: AdManager.bannerAdPlacementId,
     );
   }
 }
