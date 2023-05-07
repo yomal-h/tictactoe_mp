@@ -53,7 +53,7 @@ class _DifficultyLevelSelectionScreenState
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 50),
+              const SizedBox(height: 20),
               Text(
                 'Select Difficulty',
                 style: TextStyle(
@@ -99,21 +99,20 @@ class _DifficultyLevelSelectionScreenState
 
                 true, // Make this button different
               ),
-              const SizedBox(height: 30),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height: 50, // Set the desired height of the banner ad
-                    child: UnityBannerAd(
-                      placementId: AdManager.bannerAdPlacementId,
-                      size: BannerSize
-                          .standard, // Choose the size of the banner ad
-                    ),
-                  ),
-                ),
-              ),
             ],
+          ),
+        ),
+        Positioned.fill(
+          bottom: 0, // Position the container at the bottom of the screen
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: 50, // Set the desired height of the banner ad
+              child: UnityBannerAd(
+                placementId: AdManager.bannerAdPlacementId,
+                size: BannerSize.standard, // Choose the size of the banner ad
+              ),
+            ),
           ),
         ),
       ]),
