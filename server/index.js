@@ -117,8 +117,8 @@ io.on("connection", (socket) => {
             player.points += 1;
             room.currentRound += 1;
             room = await room.save();
-
-            if (player.points >= room.maxRounds) {
+//player.points >= room.maxRounds
+            if (room.currentRound === room.maxRounds) {
                 
                 io.to(roomId).emit("endGame", player);
                 await Room.deleteOne({ id: roomId }, function(err) {

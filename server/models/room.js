@@ -22,7 +22,7 @@ const roomSchema = new mongoose.Schema({
   },
   maxRounds: {
     type: Number,
-    default: 5,//default 6
+    default: 6,//default 6
   },
   currentRound: {
     required: true,

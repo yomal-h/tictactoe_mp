@@ -6,8 +6,7 @@ class SocketClient {
   static SocketClient? _instance;
 
   SocketClient._internal() {
-    socket =
-        IO.io('https://tictactoe-mp-backend.onrender.com', <String, dynamic>{
+    socket = IO.io('http://192.168.1.13:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
     });

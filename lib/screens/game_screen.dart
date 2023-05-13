@@ -1036,7 +1036,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                         ),
                         SizedBox(height: 16),
                         Text(
-                          'The next round starting in...',
+                          '${text == "Draw" ? "The round will restart in..." : "The next round starting in..."}',
                           style: TextStyle(fontSize: 15.0, color: Colors.white),
                         ),
                         SizedBox(height: 5),
