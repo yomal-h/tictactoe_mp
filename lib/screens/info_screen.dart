@@ -141,7 +141,7 @@ class _InfoScreenState extends State<InfoScreen> {
                     ),
                     SizedBox(height: 5.0),
                     Text(
-                      '1. X always goes first.\n2. Players take turns placing their symbols on the grid.\n3. The game is over when one player gets three of their symbols in a row or there are no more empty cells on the grid.\n4. If all cells are filled and there is no winner, the game ends in a tie.',
+                      '1. X always goes first.\n2. Players take turns placing their symbols on the grid. \n3. Each game mode consists of 5 rounds. \n4. The round is over when one player gets three of their symbols in a row or there are no more empty cells on the grid.\n5. If all cells are filled and there is no winner, the round ends in a tie.',
                       style: TextStyle(
                         fontSize: 16.0,
                         color: Colors.white,

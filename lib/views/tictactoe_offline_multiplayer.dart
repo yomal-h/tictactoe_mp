@@ -1,4 +1,5 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tictactoe_mp/screens/main_menu_game_modes_screen.dart';
 import 'package:tictactoe_mp/utils/ad_manager.dart';
@@ -112,8 +113,11 @@ class __TicTacToeGameOfflineMultiplayer
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-              height:
-                  Platform.isIOS ? 90 : 70), //55 for android and //90 for ios
+              height: kIsWeb
+                  ? 90
+                  : (Platform.isIOS
+                      ? 90
+                      : 70)), //55 for android and //90 for ios
           Center(
             child: Container(
               decoration: BoxDecoration(
@@ -246,7 +250,9 @@ class __TicTacToeGameOfflineMultiplayer
               aspectRatio: 1,
               child: Padding(
                 padding: EdgeInsets.all(
-                    Platform.isIOS ? 5 : 10), //10 for android and 5 for ios
+                    kIsWeb || defaultTargetPlatform == TargetPlatform.iOS
+                        ? 5
+                        : 10), //10 for android and 5 for ios
                 child: LayoutBuilder(builder:
                     (BuildContext context, BoxConstraints constraints) {
                   double fontSize1 = constraints.maxWidth / 4.5;
@@ -459,7 +465,11 @@ class __TicTacToeGameOfflineMultiplayer
             ],
           ),
           SizedBox(
-            height: Platform.isIOS ? 40 : 2, //2 for android
+            height: kIsWeb
+                ? 40
+                : Platform.isIOS
+                    ? 40
+                    : 2, //2 for android
           ),
         ],
       ),
@@ -510,7 +520,7 @@ class __TicTacToeGameOfflineMultiplayer
             ? 'Player 2'
             : 'Tie';
 
-    if (_round > 2) {
+    if (_round > 4) {
       // Game is over
 
       _showWinner();

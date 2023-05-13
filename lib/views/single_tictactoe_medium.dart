@@ -647,7 +647,7 @@ class __TicTacToeGameMediumState extends State<TicTacToeGameMedium>
             ? 'Computer'
             : 'Tie';
 
-    if (_round > 2) {
+    if (_round > 4) {
       // Game is over
 
       _showWinner();
