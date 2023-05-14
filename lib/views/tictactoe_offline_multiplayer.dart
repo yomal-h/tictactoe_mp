@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tictactoe_mp/screens/main_menu_game_modes_screen.dart';
 import 'package:tictactoe_mp/utils/ad_manager.dart';
-import 'dart:io' show Platform;
 
 import 'package:tictactoe_mp/utils/colors.dart';
 
@@ -100,12 +99,7 @@ class __TicTacToeGameOfflineMultiplayer
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
-              height: kIsWeb
-                  ? 90
-                  : (Platform.isIOS
-                      ? 90
-                      : 70)), //55 for android and //90 for ios
+          SizedBox(height: 90), //55 for android and //90 for ios
           Center(
             child: Container(
               decoration: BoxDecoration(
@@ -453,11 +447,7 @@ class __TicTacToeGameOfflineMultiplayer
             ],
           ),
           SizedBox(
-            height: kIsWeb
-                ? 40
-                : Platform.isIOS
-                    ? 40
-                    : 2, //2 for android
+            height: 2, //2 for android
           ),
         ],
       ),

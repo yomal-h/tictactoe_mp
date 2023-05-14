@@ -14,7 +14,6 @@ import 'package:tictactoe_mp/utils/colors.dart';
 import 'package:tictactoe_mp/views/scoreboard.dart';
 import 'package:tictactoe_mp/views/tictactoe_board.dart';
 import 'package:tictactoe_mp/views/waiting_lobby.dart';
-import 'dart:io' show Platform;
 
 class GameScreen extends StatefulWidget {
   static String routeName = '/game';
@@ -207,9 +206,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                         // ignore: prefer_const_literals_to_create_immutables
                         children: [
                           SizedBox(
-                              height: Platform.isIOS
-                                  ? 90
-                                  : 70), //55 for android and //90 for ios
+                              height: 90), //55 for android and //90 for ios
                           Center(
                             child: Container(
                               decoration: BoxDecoration(
@@ -362,8 +359,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                             child: AspectRatio(
                               aspectRatio: 1,
                               child: Padding(
-                                padding:
-                                    EdgeInsets.all(Platform.isIOS ? 5 : 10),
+                                padding: EdgeInsets.all(5),
                                 child: LayoutBuilder(builder:
                                     (BuildContext context,
                                         BoxConstraints constraints) {
@@ -567,7 +563,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                             ),
                           ),
                           SizedBox(
-                            height: Platform.isIOS ? 40 : 2, //2 for android
+                            height: 2, //2 for android
                           ),
                           // Text(
                           //     '${roomDataProvider.roomData['turn']['nickname']}\'s turn'),

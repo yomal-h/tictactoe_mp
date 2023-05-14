@@ -4,7 +4,6 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:tictactoe_mp/screens/main_menu_game_modes_screen.dart';
 import 'package:tictactoe_mp/utils/ad_manager.dart';
-import 'dart:io' show Platform;
 
 import 'package:tictactoe_mp/utils/colors.dart';
 
@@ -96,9 +95,7 @@ class __TicTacToeGameHardState extends State<TicTacToeGameHard>
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
-              height:
-                  Platform.isIOS ? 90 : 70), //55 for android and //90 for ios
+          SizedBox(height: 90), //55 for android and //90 for ios
           Center(
             child: Container(
               decoration: BoxDecoration(
@@ -230,8 +227,7 @@ class __TicTacToeGameHardState extends State<TicTacToeGameHard>
             child: AspectRatio(
               aspectRatio: 1,
               child: Padding(
-                padding: EdgeInsets.all(
-                    Platform.isIOS ? 5 : 10), //10 for android and 5 for ios
+                padding: EdgeInsets.all(5), //10 for android and 5 for ios
                 child: LayoutBuilder(builder:
                     (BuildContext context, BoxConstraints constraints) {
                   double fontSize1 = constraints.maxWidth / 4.5;
@@ -471,7 +467,7 @@ class __TicTacToeGameHardState extends State<TicTacToeGameHard>
             ],
           ),
           SizedBox(
-            height: Platform.isIOS ? 40 : 2, //2 for android
+            height: 2, //2 for android
           ),
         ],
       ),
