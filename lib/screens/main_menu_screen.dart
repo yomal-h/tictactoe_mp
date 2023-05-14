@@ -9,7 +9,6 @@ import 'package:tictactoe_mp/responsive/responsive.dart';
 import 'package:tictactoe_mp/screens/create_room_screen.dart';
 import 'package:tictactoe_mp/screens/join_room_screen.dart';
 import 'package:tictactoe_mp/screens/main_menu_game_modes_screen.dart';
-import 'package:tictactoe_mp/utils/ad_manager.dart';
 import 'package:tictactoe_mp/utils/colors.dart';
 import 'package:tictactoe_mp/widgets/custom_button.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -24,66 +23,18 @@ class MainMenuScreen extends StatefulWidget {
 }
 
 class _MainMenuScreenState extends State<MainMenuScreen> {
-  Future<bool> checkInternetConnection() async {
-    final connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
-      return false;
-    } else {
-      try {
-        final response = await InternetAddress.lookup('google.com');
-        if (response.isNotEmpty && response[0].rawAddress.isNotEmpty) {
-          return true;
-        } else {
-          return false;
-        }
-      } on SocketException catch (_) {
-        return false;
-      }
-    }
-  }
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
   }
 
-  void createRoom(BuildContext context) async {
-    bool isConnected = await checkInternetConnection();
-    if (isConnected) {
-      Navigator.pushNamed(context, CreateRoomScreen.routeName);
-    } else {
-      CoolAlert.show(
-        context: context,
-        type: CoolAlertType.warning,
-        title: "No Internet Connection",
-        text: "Please check your internet connection and try again.",
-        confirmBtnText: "OK",
-        barrierDismissible: false,
-        confirmBtnColor: Colors.purpleAccent,
-        backgroundColor: Colors.purple,
-        onConfirmBtnTap: () => Navigator.pop(context),
-      );
-    }
+  void createRoom(BuildContext context) {
+    Navigator.pushNamed(context, CreateRoomScreen.routeName);
   }
 
-  void joinRoom(BuildContext context) async {
-    bool isConnected = await checkInternetConnection();
-    if (isConnected) {
-      Navigator.pushNamed(context, JoinRoomScreen.routeName);
-    } else {
-      CoolAlert.show(
-        context: context,
-        type: CoolAlertType.warning,
-        title: "No Internet Connection",
-        text: "Please check your internet connection and try again.",
-        confirmBtnText: "OK",
-        barrierDismissible: false,
-        confirmBtnColor: Colors.purpleAccent,
-        backgroundColor: Colors.purple,
-        onConfirmBtnTap: () => Navigator.pop(context),
-      );
-    }
+  void joinRoom(BuildContext context) {
+    Navigator.pushNamed(context, JoinRoomScreen.routeName);
   }
   // void createRoom(BuildContext context) {
   //   Navigator.pushNamed(context, CreateRoomScreen.routeName);
