@@ -13,7 +13,6 @@ import 'package:tictactoe_mp/utils/ad_manager.dart';
 import 'package:tictactoe_mp/utils/colors.dart';
 import 'package:tictactoe_mp/widgets/custom_button.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
 class MainMenuScreen extends StatefulWidget {
   static String routeName = '/main_menu';
@@ -47,16 +46,6 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    UnityAds.init(
-      gameId: AdManager.gameId,
-      testMode: true,
-      onComplete: () {
-        print('Initialization Complete');
-        _loadAd(AdManager.bannerAdPlacementId);
-      },
-      onFailed: (error, message) =>
-          print('Initialization Failed: $error $message'),
-    );
   }
 
   void createRoom(BuildContext context) async {
@@ -140,20 +129,6 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                   ),
                   const SizedBox(height: 30),
                 ],
-              ),
-            ),
-            Positioned.fill(
-              bottom: 0, // Position the container at the bottom of the screen
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: 50, // Set the desired height of the banner ad
-                  child: UnityBannerAd(
-                    placementId: AdManager.bannerAdPlacementId,
-                    size:
-                        BannerSize.standard, // Choose the size of the banner ad
-                  ),
-                ),
               ),
             ),
           ]),
@@ -254,12 +229,6 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
           );
         },
       ),
-    );
-  }
-
-  void _loadAd(String placementId) async {
-    await UnityAds.load(
-      placementId: AdManager.bannerAdPlacementId,
     );
   }
 }

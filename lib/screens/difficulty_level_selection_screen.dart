@@ -6,7 +6,6 @@ import 'package:tictactoe_mp/utils/ad_manager.dart';
 
 import 'package:tictactoe_mp/utils/colors.dart';
 import 'package:tictactoe_mp/widgets/custom_flickering_menu_text.dart';
-import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
 class DifficultyLevelSelectionScreen extends StatefulWidget {
   static const routeName = '/difficulty_level_selection_screen';
@@ -23,16 +22,6 @@ class _DifficultyLevelSelectionScreenState
   void initState() {
     // TODO: implement initState
     super.initState();
-    UnityAds.init(
-      gameId: AdManager.gameId,
-      testMode: true,
-      onComplete: () {
-        print('Initialization Complete');
-        _loadAd(AdManager.bannerAdPlacementId);
-      },
-      onFailed: (error, message) =>
-          print('Initialization Failed: $error $message'),
-    );
   }
 
   @override
@@ -100,19 +89,6 @@ class _DifficultyLevelSelectionScreenState
                 true, // Make this button different
               ),
             ],
-          ),
-        ),
-        Positioned.fill(
-          bottom: 0, // Position the container at the bottom of the screen
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: 50, // Set the desired height of the banner ad
-              child: UnityBannerAd(
-                placementId: AdManager.bannerAdPlacementId,
-                size: BannerSize.standard, // Choose the size of the banner ad
-              ),
-            ),
           ),
         ),
       ]),
@@ -212,22 +188,6 @@ class _DifficultyLevelSelectionScreenState
         },
       ),
       (route) => false,
-    );
-  }
-
-  void _loadAd(String placementId) async {
-    await UnityAds.load(
-      placementId: AdManager.bannerAdPlacementId,
-    );
-  }
-
-  _showAd(String placementId) {
-    UnityBannerAd(
-      placementId: placementId,
-      onLoad: (placementId) => print('Banner loaded: $placementId'),
-      onClick: (placementId) => print('Banner clicked: $placementId'),
-      onFailed: (placementId, error, message) =>
-          print('Banner Ad $placementId failed: $error $message'),
     );
   }
 }

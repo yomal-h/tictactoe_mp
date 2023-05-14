@@ -16,8 +16,6 @@ import 'package:tictactoe_mp/views/tictactoe_board.dart';
 import 'package:tictactoe_mp/views/waiting_lobby.dart';
 import 'dart:io' show Platform;
 
-import 'package:unity_ads_plugin/unity_ads_plugin.dart';
-
 class GameScreen extends StatefulWidget {
   static String routeName = '/game';
 
@@ -143,17 +141,6 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     //_socketMethods.tappedListener(context);
     endGameListener(context);
     tappedListener(context);
-
-    UnityAds.init(
-      gameId: AdManager.gameId,
-      testMode: true,
-      onComplete: () {
-        print('Initialization Complete');
-        _loadAd(AdManager.interstitialVideoAdPlacementId);
-      },
-      onFailed: (error, message) =>
-          print('Initialization Failed: $error $message'),
-    );
   }
 
   @override
@@ -190,7 +177,6 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   }
 
   void _goToMainMenu() {
-    _showAd(AdManager.interstitialVideoAdPlacementId);
     final gameState = Provider.of<RoomDataProvider>(context, listen: false);
     clearBoard(context);
 
@@ -739,7 +725,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                         ),
                         onPressed: () {
                           clearBoard(context);
-                          _showAd(AdManager.interstitialVideoAdPlacementId);
+
                           Navigator.pop(context);
 //                 //navigateToMainMenu(context);
                           Navigator.pushNamed(
@@ -887,7 +873,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                     ),
                     onPressed: () {
                       clearBoard(context);
-                      _showAd(AdManager.interstitialVideoAdPlacementId);
+
                       Navigator.pop(context);
 //                 //navigateToMainMenu(context);
                       Navigator.pushNamed(context, MainMenuScreen.routeName);
@@ -1346,32 +1332,6 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
       roomDataProvider.updateDisplayElements(i, '');
     }
     roomDataProvider.setFilledBoxesTo0();
-  }
-
-  void _loadAd(String placementId) async {
-    await UnityAds.load(
-      placementId: AdManager.interstitialVideoAdPlacementId,
-    );
-  }
-
-  void _showAd(String placementId) {
-    UnityAds.showVideoAd(
-      placementId: placementId,
-      onComplete: (placementId) {
-        print('Video Ad $placementId completed');
-        _loadAd(placementId);
-      },
-      onFailed: (placementId, error, message) {
-        print('Video Ad $placementId failed: $error $message');
-        _loadAd(placementId);
-      },
-      onStart: (placementId) => print('Video Ad $placementId started'),
-      onClick: (placementId) => print('Video Ad $placementId click'),
-      onSkipped: (placementId) {
-        print('Video Ad $placementId skipped');
-        _loadAd(placementId);
-      },
-    );
   }
 }
 

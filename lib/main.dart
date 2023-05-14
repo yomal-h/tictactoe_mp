@@ -24,13 +24,6 @@ import 'package:tictactoe_mp/views/tictactoe_offline_multiplayer.dart';
 import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  await Firebase.initializeApp();
-
-  // Pass all uncaught "fatal" errors from the framework to Crashlytics
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-
   runApp(const MyApp());
 }
 

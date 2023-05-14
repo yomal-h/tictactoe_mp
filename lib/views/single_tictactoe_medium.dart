@@ -7,7 +7,6 @@ import 'package:tictactoe_mp/utils/ad_manager.dart';
 import 'dart:io' show Platform;
 
 import 'package:tictactoe_mp/utils/colors.dart';
-import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
 class TicTacToeGameMedium extends StatefulWidget {
   static String routeName = '/tictactoe_medium';
@@ -80,16 +79,6 @@ class __TicTacToeGameMediumState extends State<TicTacToeGameMedium>
         parent: _animationController,
         curve: Curves.easeInOut,
       ),
-    );
-    UnityAds.init(
-      gameId: AdManager.gameId,
-      testMode: true,
-      onComplete: () {
-        print('Initialization Complete');
-        _loadAd(AdManager.interstitialVideoAdPlacementId);
-      },
-      onFailed: (error, message) =>
-          print('Initialization Failed: $error $message'),
     );
   }
 
@@ -936,7 +925,6 @@ class __TicTacToeGameMediumState extends State<TicTacToeGameMedium>
   }
 
   void _startNewGame() {
-    _showAd(AdManager.interstitialVideoAdPlacementId);
     setState(() {
       _board.fillRange(0, 9, '');
       _playerScore = 0;
@@ -953,7 +941,6 @@ class __TicTacToeGameMediumState extends State<TicTacToeGameMedium>
   }
 
   void _goToMainMenu() {
-    _showAd(AdManager.interstitialVideoAdPlacementId);
     Navigator.pushAndRemoveUntil(
       context,
       PageRouteBuilder(
@@ -1332,31 +1319,5 @@ class __TicTacToeGameMediumState extends State<TicTacToeGameMedium>
           );
         });
     _gameOver = true;
-  }
-
-  void _loadAd(String placementId) async {
-    await UnityAds.load(
-      placementId: AdManager.interstitialVideoAdPlacementId,
-    );
-  }
-
-  void _showAd(String placementId) {
-    UnityAds.showVideoAd(
-      placementId: placementId,
-      onComplete: (placementId) {
-        print('Video Ad $placementId completed');
-        _loadAd(placementId);
-      },
-      onFailed: (placementId, error, message) {
-        print('Video Ad $placementId failed: $error $message');
-        _loadAd(placementId);
-      },
-      onStart: (placementId) => print('Video Ad $placementId started'),
-      onClick: (placementId) => print('Video Ad $placementId click'),
-      onSkipped: (placementId) {
-        print('Video Ad $placementId skipped');
-        _loadAd(placementId);
-      },
-    );
   }
 }

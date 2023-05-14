@@ -10,7 +10,6 @@ import 'package:tictactoe_mp/utils/ad_manager.dart';
 import 'package:tictactoe_mp/widgets/custom_button.dart';
 import 'package:tictactoe_mp/widgets/custom_text.dart';
 import 'package:tictactoe_mp/widgets/custom_textfield.dart';
-import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
 class JoinRoomScreen extends StatefulWidget {
   static String routeName = '/join-room';
@@ -34,16 +33,6 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
     _socketMethods.joinRoomSuccessListener(context);
     _socketMethods.errorOccuredListener(context);
     _socketMethods.updatePlayersStateListener(context);
-    UnityAds.init(
-      gameId: AdManager.gameId,
-      testMode: true,
-      onComplete: () {
-        print('Initialization Complete');
-        _loadAd(AdManager.bannerAdPlacementId);
-      },
-      onFailed: (error, message) =>
-          print('Initialization Failed: $error $message'),
-    );
   }
 
   @override
@@ -173,20 +162,6 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
                 ),
               ),
             ),
-            Positioned.fill(
-              bottom: 0, // Position the container at the bottom of the screen
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: 50, // Set the desired height of the banner ad
-                  child: UnityBannerAd(
-                    placementId: AdManager.bannerAdPlacementId,
-                    size:
-                        BannerSize.standard, // Choose the size of the banner ad
-                  ),
-                ),
-              ),
-            ),
           ],
         )),
       ),
@@ -221,12 +196,6 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
           );
         },
       ),
-    );
-  }
-
-  void _loadAd(String placementId) async {
-    await UnityAds.load(
-      placementId: AdManager.bannerAdPlacementId,
     );
   }
 }
