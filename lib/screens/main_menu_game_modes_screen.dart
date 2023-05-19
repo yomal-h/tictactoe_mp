@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttericon/entypo_icons.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
+import 'package:tictactoe_mp/screens/main_menu_screen.dart';
 
 import 'package:tictactoe_mp/utils/colors.dart';
 import 'package:tictactoe_mp/widgets/custom_flickering_menu_text.dart';
@@ -40,8 +41,10 @@ class MainMenuGameModesScreen extends StatelessWidget {
               context,
               'Multiplayer (Online)',
               FontAwesome5.globe,
-              () => Navigator.pushNamedAndRemoveUntil(
-                  context, '/main_menu', (route) => false),
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MainMenuScreen()),
+              ),
 
               true, // Make this button different
             ),
