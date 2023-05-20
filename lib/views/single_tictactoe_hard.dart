@@ -958,7 +958,7 @@ class __TicTacToeGameHardState extends State<TicTacToeGameHard>
 
   void _goToMainMenu() {
     _showAd(AdManager.interstitialVideoAdPlacementId);
-    Navigator.pushAndRemoveUntil(
+    Navigator.pushReplacement(
       context,
       PageRouteBuilder(
         pageBuilder: (BuildContext context, Animation<double> animation,
@@ -985,7 +985,6 @@ class __TicTacToeGameHardState extends State<TicTacToeGameHard>
           );
         },
       ),
-      (route) => false,
     );
   }
 

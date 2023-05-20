@@ -33,145 +33,151 @@ class _InfoScreenState extends State<InfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Positioned(
-            top: 50,
-            left: 20,
-            child: IconButton(
-              icon: Icon(Icons.arrow_back),
-              color: Colors.white,
-              onPressed: () => _goToMainMenu(),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 100),
-            child: Container(
-              child: Padding(
-                padding: EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      'Help',
-                      style: TextStyle(
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 25.0),
-                    Text(
-                      'Objective:',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 5.0),
-                    Text(
-                      'Get three of your symbols (X or O) in a row on a 3x3 grid.',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 16.0),
-                    Text(
-                      'Singleplayer Mode:',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 5.0),
-                    Text(
-                      'Play against the computer. You are X and the computer is O.',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 16.0),
-                    Text(
-                      'Multiplayer Mode (Offline):',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 5.0),
-                    Text(
-                      'Play against a friend on the same device. One player is X and the other is O.',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 16.0),
-                    Text(
-                      'Multiplayer Mode (Online):',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 5.0),
-                    Text(
-                      'Play against other people online. Share the game ID with your opponent and take turns placing Xs and Os.',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 16.0),
-                    Text(
-                      'Rules:',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 5.0),
-                    Text(
-                      '1. X always goes first.\n2. Players take turns placing their symbols on the grid. \n3. Each game mode consists of 5 rounds. \n4. The round is over when one player gets three of their symbols in a row or there are no more empty cells on the grid.\n5. If all cells are filled and there is no winner, the round ends in a tie.',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: GestureDetector(
+        child: Scaffold(
+          body: Stack(
+            children: [
+              Positioned(
+                top: 50,
+                left: 20,
+                child: IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  color: Colors.white,
+                  onPressed: () => _goToMainMenu(),
                 ),
               ),
-            ),
-          ),
-          Positioned.fill(
-            bottom: 0, // Position the container at the bottom of the screen
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                height: 50, // Set the desired height of the banner ad
-                child: UnityBannerAd(
-                  placementId: AdManager.bannerAdPlacementId,
-                  size: BannerSize.standard, // Choose the size of the banner ad
+              Padding(
+                padding: const EdgeInsets.only(top: 100),
+                child: Container(
+                  child: Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'Help',
+                          style: TextStyle(
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 25.0),
+                        Text(
+                          'Objective:',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 5.0),
+                        Text(
+                          'Get three of your symbols (X or O) in a row on a 3x3 grid.',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 16.0),
+                        Text(
+                          'Singleplayer Mode:',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 5.0),
+                        Text(
+                          'Play against the computer. You are X and the computer is O.',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 16.0),
+                        Text(
+                          'Multiplayer Mode (Offline):',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 5.0),
+                        Text(
+                          'Play against a friend on the same device. One player is X and the other is O.',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 16.0),
+                        Text(
+                          'Multiplayer Mode (Online):',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 5.0),
+                        Text(
+                          'Play against other people online. Share the game ID with your opponent and take turns placing Xs and Os.',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 16.0),
+                        Text(
+                          'Rules:',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 5.0),
+                        Text(
+                          '1. X always goes first.\n2. Players take turns placing their symbols on the grid. \n3. Each game mode consists of 5 rounds. \n4. The round is over when one player gets three of their symbols in a row or there are no more empty cells on the grid.\n5. If all cells are filled and there is no winner, the round ends in a tie.',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
+              Positioned.fill(
+                bottom: 0, // Position the container at the bottom of the screen
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    height: 50, // Set the desired height of the banner ad
+                    child: UnityBannerAd(
+                      placementId: AdManager.bannerAdPlacementId,
+                      size: BannerSize
+                          .standard, // Choose the size of the banner ad
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 
   void _goToMainMenu() {
-    Navigator.pushAndRemoveUntil(
+    Navigator.pushReplacement(
       context,
       PageRouteBuilder(
         pageBuilder: (BuildContext context, Animation<double> animation,
@@ -198,7 +204,6 @@ class _InfoScreenState extends State<InfoScreen> {
           );
         },
       ),
-      (route) => false,
     );
   }
 

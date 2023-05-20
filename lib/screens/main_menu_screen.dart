@@ -227,7 +227,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   }
 
   void _goToMainMenu() {
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       PageRouteBuilder(
         pageBuilder: (BuildContext context, Animation<double> animation,

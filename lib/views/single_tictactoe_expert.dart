@@ -899,7 +899,7 @@ class __TicTacToeGameExpertState extends State<TicTacToeGameExpert>
 
   void _goToMainMenu() {
     _showAd(AdManager.interstitialVideoAdPlacementId);
-    Navigator.pushAndRemoveUntil(
+    Navigator.pushReplacement(
       context,
       PageRouteBuilder(
         pageBuilder: (BuildContext context, Animation<double> animation,
@@ -926,7 +926,6 @@ class __TicTacToeGameExpertState extends State<TicTacToeGameExpert>
           );
         },
       ),
-      (route) => false,
     );
   }
 

@@ -37,85 +37,97 @@ class _DifficultyLevelSelectionScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: bgColor,
-      body: Stack(children: [
-        Positioned(
-          top: 50,
-          left: 20,
-          child: IconButton(
-            icon: Icon(Icons.arrow_back),
-            color: Colors.white,
-            onPressed: () => _goToMainMenu(),
-          ),
-        ),
-        Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 20),
-              Text(
-                'Select Difficulty',
-                style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  shadows: [
-                    Shadow(
-                      blurRadius: 10.0,
-                      color: Colors.blueAccent.withOpacity(0.9),
-                      offset: Offset(2, 2),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 55),
-              _buildButton(
-                context,
-                'Easy',
-                () => Navigator.pushNamedAndRemoveUntil(
-                    context, '/tictactoe_easy', (route) => false),
-              ),
-              const SizedBox(height: 28),
-              _buildButton(
-                context,
-                'Medium',
-                () => Navigator.pushNamedAndRemoveUntil(
-                    context, '/tictactoe_medium', (route) => false),
-              ),
-              const SizedBox(height: 28),
-              _buildButton(
-                context,
-                'Hard',
-                () => Navigator.pushNamedAndRemoveUntil(
-                    context, '/tictactoe_hard', (route) => false),
-              ),
-              const SizedBox(height: 28),
-              _buildButton(
-                context,
-                'Expert',
-                () => Navigator.pushNamedAndRemoveUntil(
-                    context, '/tictactoe_expert', (route) => false),
-
-                true, // Make this button different
-              ),
-            ],
-          ),
-        ),
-        Positioned.fill(
-          bottom: 0, // Position the container at the bottom of the screen
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: 50, // Set the desired height of the banner ad
-              child: UnityBannerAd(
-                placementId: AdManager.bannerAdPlacementId,
-                size: BannerSize.standard, // Choose the size of the banner ad
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: GestureDetector(
+        child: Scaffold(
+          backgroundColor: bgColor,
+          body: Stack(children: [
+            Positioned(
+              top: 50,
+              left: 20,
+              child: IconButton(
+                icon: Icon(Icons.arrow_back),
+                color: Colors.white,
+                onPressed: () => _goToMainMenu(),
               ),
             ),
-          ),
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 20),
+                  Text(
+                    'Select Difficulty',
+                    style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 10.0,
+                          color: Colors.blueAccent.withOpacity(0.9),
+                          offset: Offset(2, 2),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 55),
+                  _buildButton(
+                    context,
+                    'Easy',
+                    () => Navigator.pushReplacementNamed(
+                        context, '/tictactoe_easy'),
+                  ),
+                  const SizedBox(height: 28),
+                  _buildButton(
+                    context,
+                    'Medium',
+                    () => Navigator.pushReplacementNamed(
+                      context,
+                      '/tictactoe_medium',
+                    ),
+                  ),
+                  const SizedBox(height: 28),
+                  _buildButton(
+                    context,
+                    'Hard',
+                    () => Navigator.pushReplacementNamed(
+                      context,
+                      '/tictactoe_hard',
+                    ),
+                  ),
+                  const SizedBox(height: 28),
+                  _buildButton(
+                    context,
+                    'Expert',
+                    () => Navigator.pushReplacementNamed(
+                      context,
+                      '/tictactoe_expert',
+                    ),
+
+                    true, // Make this button different
+                  ),
+                ],
+              ),
+            ),
+            Positioned.fill(
+              bottom: 0, // Position the container at the bottom of the screen
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: 50, // Set the desired height of the banner ad
+                  child: UnityBannerAd(
+                    placementId: AdManager.bannerAdPlacementId,
+                    size:
+                        BannerSize.standard, // Choose the size of the banner ad
+                  ),
+                ),
+              ),
+            ),
+          ]),
         ),
-      ]),
+      ),
     );
   }
 

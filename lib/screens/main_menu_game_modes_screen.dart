@@ -12,106 +12,115 @@ class MainMenuGameModesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: bgColor,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 50),
-            FlickeringText(),
-            const SizedBox(height: 55),
-            _buildButton(
-              context,
-              'SinglePlayer',
-              Icons.person,
-              () => Navigator.pushNamedAndRemoveUntil(context,
-                  '/difficulty_level_selection_screen', (route) => false),
-            ),
-            const SizedBox(height: 26),
-            _buildButton(
-              context,
-              'Multiplayer (Offline)',
-              Icons.people,
-              () => Navigator.pushNamedAndRemoveUntil(
-                  context, '/tictactoe_offline_multiplayer', (route) => false),
-            ),
-            const SizedBox(height: 26),
-            _buildButton(
-              context,
-              'Multiplayer (Online)',
-              FontAwesome5.globe,
-              () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MainMenuScreen()),
-              ),
-
-              true, // Make this button different
-            ),
-            const SizedBox(height: 30),
-            Row(
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: GestureDetector(
+        child: Scaffold(
+          backgroundColor: bgColor,
+          body: Center(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Center(
-                //   child: Container(
-                //     decoration: BoxDecoration(
-                //       borderRadius: BorderRadius.circular(20),
-                //       gradient: LinearGradient(
-                //         colors: [
-                //           Colors.blue,
-                //           Colors.purple,
-                //         ],
-                //         begin: Alignment.topLeft,
-                //         end: Alignment.bottomRight,
-                //       ),
-                //       border: Border.all(
-                //         width: 2,
-                //         color: Colors.purple.withOpacity(0.5),
-                //       ),
-                //       color: Colors.white.withOpacity(0.2),
-                //     ),
-                //     child: IconButton(
-                //       icon: Icon(
-                //         Icons.settings,
-                //         color: Colors.white,
-                //       ),
-                //       onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                //           context, '/settings2', (route) => false),
-                //     ),
-                //   ),
-                // ),
-                // SizedBox(width: 16),
-                Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.blue,
-                          Colors.purple,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      border: Border.all(
-                        width: 2,
-                        color: Colors.purple.withOpacity(0.5),
-                      ),
-                      color: Colors.white.withOpacity(0.2),
-                    ),
-                    child: IconButton(
-                      icon: Icon(
-                        Entypo.info_circled,
-                        color: Colors.white,
-                      ),
-                      onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                          context, '/info', (route) => false),
-                    ),
-                  ),
+                const SizedBox(height: 50),
+                FlickeringText(),
+                const SizedBox(height: 55),
+                _buildButton(
+                  context,
+                  'SinglePlayer',
+                  Icons.person,
+                  () => Navigator.pushReplacementNamed(
+                      context, '/difficulty_level_selection_screen'),
                 ),
+                const SizedBox(height: 26),
+                _buildButton(
+                  context,
+                  'Multiplayer (Offline)',
+                  Icons.people,
+                  () => Navigator.pushReplacementNamed(
+                      context, '/tictactoe_offline_multiplayer'),
+                  // Navigator.pushNamedAndRemoveUntil(
+                  // context, '/tictactoe_offline_multiplayer', (route) => false),
+                ),
+                const SizedBox(height: 26),
+                _buildButton(
+                  context,
+                  'Multiplayer (Online)',
+                  FontAwesome5.globe,
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainMenuScreen()),
+                  ),
+
+                  true, // Make this button different
+                ),
+                const SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Center(
+                    //   child: Container(
+                    //     decoration: BoxDecoration(
+                    //       borderRadius: BorderRadius.circular(20),
+                    //       gradient: LinearGradient(
+                    //         colors: [
+                    //           Colors.blue,
+                    //           Colors.purple,
+                    //         ],
+                    //         begin: Alignment.topLeft,
+                    //         end: Alignment.bottomRight,
+                    //       ),
+                    //       border: Border.all(
+                    //         width: 2,
+                    //         color: Colors.purple.withOpacity(0.5),
+                    //       ),
+                    //       color: Colors.white.withOpacity(0.2),
+                    //     ),
+                    //     child: IconButton(
+                    //       icon: Icon(
+                    //         Icons.settings,
+                    //         color: Colors.white,
+                    //       ),
+                    //       onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                    //           context, '/settings2', (route) => false),
+                    //     ),
+                    //   ),
+                    // ),
+                    // SizedBox(width: 16),
+                    Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.blue,
+                              Colors.purple,
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          border: Border.all(
+                            width: 2,
+                            color: Colors.purple.withOpacity(0.5),
+                          ),
+                          color: Colors.white.withOpacity(0.2),
+                        ),
+                        child: IconButton(
+                          icon: Icon(
+                            Entypo.info_circled,
+                            color: Colors.white,
+                          ),
+                          onPressed: () => Navigator.pushReplacementNamed(
+                            context,
+                            '/info',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
               ],
-            )
-          ],
+            ),
+          ),
         ),
       ),
     );
