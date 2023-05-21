@@ -26,7 +26,7 @@ class _FlickeringTextState extends State<FlickeringText>
     );
     _opacityAnimation =
         Tween<double>(begin: 0.2, end: 1.0).animate(_controller);
-    _colorAnimation = ColorTween(begin: Colors.purple, end: boardBorderColor)
+    _colorAnimation = ColorTween(begin: Color(0xFF9C27B0), end: boardBorderColor)
         .animate(_controller);
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
