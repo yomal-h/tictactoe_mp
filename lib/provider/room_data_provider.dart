@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tictactoe_mp/models/player.dart';
 import 'package:tictactoe_mp/resources/socket_client.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -28,14 +27,6 @@ class RoomDataProvider extends ChangeNotifier {
   Player get player1 => _player1;
   Player get player2 => _player2;
   int get currentRound => _currentRound;
-
-  AudioPlayer audioPlayer = AudioPlayer();
-  bool _isPlaying = true;
-
-  bool get isPlaying => _isPlaying;
-
-  late final AudioPlayer _audioPlayer;
-  late final SharedPreferences _prefs;
 
   // Returns the indices of the boxes that form the winning line based on the current displayElements.
   List<int> getWinningLine() {
@@ -126,11 +117,6 @@ class RoomDataProvider extends ChangeNotifier {
   void setFilledBoxesTo0() {
     _filledBoxes = 0;
     print("Set filledboxes to ZERO");
-  }
-
-  set isPlaying(bool value) {
-    _isPlaying = value;
-    notifyListeners();
   }
 
   // Future<void> playMusic() async {

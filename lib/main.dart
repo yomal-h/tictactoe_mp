@@ -115,7 +115,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           JoinRoomScreen.routeName: (context) => const JoinRoomScreen(),
           CreateRoomScreen.routeName: (context) => const CreateRoomScreen(),
           GameScreen.routeName: (context) => const GameScreen(),
-          SettingsScreen.routeName: (context) => const SettingsScreen(),
+          //SettingsScreen.routeName: (context) => const SettingsScreen(),
           InfoScreen.routeName: (context) => const InfoScreen(),
         },
         initialRoute: MainMenuGameModesScreen.routeName,

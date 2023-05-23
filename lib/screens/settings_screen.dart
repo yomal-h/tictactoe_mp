@@ -5,100 +5,100 @@ import 'package:tictactoe_mp/provider/room_data_provider.dart';
 import 'package:tictactoe_mp/screens/main_menu_game_modes_screen.dart';
 import 'package:tictactoe_mp/screens/main_menu_screen.dart';
 
-class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
-  static const routeName = '/settings';
+// class SettingsScreen extends StatefulWidget {
+//   const SettingsScreen({Key? key}) : super(key: key);
+//   static const routeName = '/settings';
 
-  @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
-}
+//   @override
+//   State<SettingsScreen> createState() => _SettingsScreenState();
+// }
 
-class _SettingsScreenState extends State<SettingsScreen> {
-  late SharedPreferences _prefs;
-  bool _isPlaying = true;
+// // class _SettingsScreenState extends State<SettingsScreen> {
+// //   late SharedPreferences _prefs;
+// //   bool _isPlaying = true;
 
-  late RoomDataProvider _roomProvider;
+// //   late RoomDataProvider _roomProvider;
 
-  @override
-  void initState() {
-    super.initState();
-    // _roomProvider = RoomDataProvider();
-    _loadSettings();
-  }
+// //   @override
+// //   void initState() {
+// //     super.initState();
+// //     // _roomProvider = RoomDataProvider();
+// //     _loadSettings();
+// //   }
 
-  Future<void> _loadSettings() async {
-    _prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _roomProvider = Provider.of<RoomDataProvider>(context, listen: false);
-      _roomProvider.isPlaying = _prefs.getBool('isPlaying') ?? true;
-    });
-  }
+//   // Future<void> _loadSettings() async {
+//   //   _prefs = await SharedPreferences.getInstance();
+//   //   setState(() {
+//   //     _roomProvider = Provider.of<RoomDataProvider>(context, listen: false);
+//   //     _roomProvider.isPlaying = _prefs.getBool('isPlaying') ?? true;
+//   //   });
+//   // }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Positioned(
-            top: 50,
-            left: 20,
-            child: IconButton(
-              icon: Icon(Icons.arrow_back),
-              color: Colors.white,
-              onPressed: () => _goToMainMenu(),
-            ),
-          ),
-          Center(
-            child: SwitchListTile(
-              title: Text('Background Music'),
-              value: _roomProvider.isPlaying,
-              onChanged: (value) {
-                setState(() {
-                  _roomProvider.isPlaying = value;
-                });
-                _prefs.setBool('isPlaying', value);
-                if (value) {
-                  // _roomProvider.playMusic();
-                } else {
-                  //_roomProvider.stopAudio();
-                }
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+//   // @override
+//   // Widget build(BuildContext context) {
+//   //   return Scaffold(
+//   //     body: Stack(
+//   //       children: [
+//   //         Positioned(
+//   //           top: 50,
+//   //           left: 20,
+//   //           child: IconButton(
+//   //             icon: Icon(Icons.arrow_back),
+//   //             color: Colors.white,
+//   //             onPressed: () => _goToMainMenu(),
+//   //           ),
+//   //         ),
+//   //         Center(
+//   //           child: SwitchListTile(
+//   //             title: Text('Background Music'),
+//   //             value: _roomProvider.isPlaying,
+//   //             onChanged: (value) {
+//   //               setState(() {
+//   //                 _roomProvider.isPlaying = value;
+//   //               });
+//   //               _prefs.setBool('isPlaying', value);
+//   //               if (value) {
+//   //                 // _roomProvider.playMusic();
+//   //               } else {
+//   //                 //_roomProvider.stopAudio();
+//   //               }
+//   //             },
+//   //           ),
+//   //         ),
+//   //       ],
+//   //     ),
+//   //   );
+//   // }
 
-  void _goToMainMenu() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (BuildContext context, Animation<double> animation,
-            Animation<double> secondaryAnimation) {
-          // Build the page you want to navigate to
-          return MainMenuGameModesScreen();
-        },
-        transitionDuration:
-            Duration(milliseconds: 250), // Set the duration of the animation
-        transitionsBuilder: (BuildContext context, Animation<double> animation,
-            Animation<double> secondaryAnimation, Widget child) {
-          // Define the animation for the transition
-          return SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(-1, 0),
-              end: Offset.zero,
-            ).animate(
-              CurvedAnimation(
-                parent: animation,
-                curve: Curves.easeOut,
-              ),
-            ),
-            child: child,
-          );
-        },
-      ),
-      (route) => false,
-    );
-  }
-}
+//   void _goToMainMenu() {
+//     Navigator.pushAndRemoveUntil(
+//       context,
+//       PageRouteBuilder(
+//         pageBuilder: (BuildContext context, Animation<double> animation,
+//             Animation<double> secondaryAnimation) {
+//           // Build the page you want to navigate to
+//           return MainMenuGameModesScreen();
+//         },
+//         transitionDuration:
+//             Duration(milliseconds: 250), // Set the duration of the animation
+//         transitionsBuilder: (BuildContext context, Animation<double> animation,
+//             Animation<double> secondaryAnimation, Widget child) {
+//           // Define the animation for the transition
+//           return SlideTransition(
+//             position: Tween<Offset>(
+//               begin: const Offset(-1, 0),
+//               end: Offset.zero,
+//             ).animate(
+//               CurvedAnimation(
+//                 parent: animation,
+//                 curve: Curves.easeOut,
+//               ),
+//             ),
+//             child: child,
+//           );
+//         },
+//       ),
+//       (route) => false,
+//     );
+//   }
+// }
