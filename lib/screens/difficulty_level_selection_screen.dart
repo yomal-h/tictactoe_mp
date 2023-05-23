@@ -25,7 +25,7 @@ class _DifficultyLevelSelectionScreenState
     super.initState();
     UnityAds.init(
       gameId: AdManager.gameId,
-      testMode: true,
+      testMode: false,
       onComplete: () {
         print('Initialization Complete');
         _loadAd(AdManager.bannerAdPlacementId);

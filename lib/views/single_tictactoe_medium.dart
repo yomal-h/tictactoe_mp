@@ -83,7 +83,7 @@ class __TicTacToeGameMediumState extends State<TicTacToeGameMedium>
     );
     UnityAds.init(
       gameId: AdManager.gameId,
-      testMode: true,
+      testMode: false,
       onComplete: () {
         print('Initialization Complete');
         _loadAd(AdManager.interstitialVideoAdPlacementId);

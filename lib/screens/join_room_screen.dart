@@ -36,7 +36,7 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
     _socketMethods.updatePlayersStateListener(context);
     UnityAds.init(
       gameId: AdManager.gameId,
-      testMode: true,
+      testMode: false,
       onComplete: () {
         print('Initialization Complete');
         _loadAd(AdManager.bannerAdPlacementId);

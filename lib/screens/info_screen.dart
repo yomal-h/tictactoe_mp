@@ -20,7 +20,7 @@ class _InfoScreenState extends State<InfoScreen> {
     super.initState();
     UnityAds.init(
       gameId: AdManager.gameId,
-      testMode: true,
+      testMode: false,
       onComplete: () {
         print('Initialization Complete');
         _loadAd(AdManager.bannerAdPlacementId);

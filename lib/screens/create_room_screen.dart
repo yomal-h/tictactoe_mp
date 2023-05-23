@@ -33,7 +33,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
     _socketMethods.createRoomSuccessListener(context);
     UnityAds.init(
       gameId: AdManager.gameId,
-      testMode: true,
+      testMode: false,
       onComplete: () {
         print('Initialization Complete');
         _loadAd(AdManager.bannerAdPlacementId);

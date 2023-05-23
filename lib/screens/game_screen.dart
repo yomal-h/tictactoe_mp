@@ -146,7 +146,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
 
     UnityAds.init(
       gameId: AdManager.gameId,
-      testMode: true,
+      testMode: false,
       onComplete: () {
         print('Initialization Complete');
         _loadAd(AdManager.interstitialVideoAdPlacementId);
