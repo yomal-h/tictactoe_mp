@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tictactoe_mp/resources/socket_methods.dart';
 import 'package:tictactoe_mp/responsive/responsive.dart';
 import 'package:tictactoe_mp/screens/main_menu_screen.dart';
+import 'package:tictactoe_mp/utils/ad_helper.dart';
 import 'package:tictactoe_mp/utils/ad_manager.dart';
 import 'package:tictactoe_mp/widgets/custom_button.dart';
 import 'package:tictactoe_mp/widgets/custom_text.dart';
@@ -26,6 +28,9 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
   final SocketMethods _socketMethods = SocketMethods();
   late bool _isConnected = true;
 
+  //admob
+  BannerAd? _bannerAd;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -34,16 +39,17 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
     _socketMethods.joinRoomSuccessListener(context);
     _socketMethods.errorOccuredListener(context);
     _socketMethods.updatePlayersStateListener(context);
-    UnityAds.init(
-      gameId: AdManager.gameId,
-      testMode: false,
-      onComplete: () {
-        print('Initialization Complete');
-        _loadAd(AdManager.bannerAdPlacementId);
-      },
-      onFailed: (error, message) =>
-          print('Initialization Failed: $error $message'),
-    );
+    // UnityAds.init(
+    //   gameId: AdManager.gameId,
+    //   testMode: false,
+    //   onComplete: () {
+    //     print('Initialization Complete');
+    //     _loadAd(AdManager.bannerAdPlacementId);
+    //   },
+    //   onFailed: (error, message) =>
+    //       print('Initialization Failed: $error $message'),
+    // );
+    _loadBannerAd();
   }
 
   @override
@@ -52,6 +58,7 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
     super.dispose();
     _nameController.dispose();
     _gameIdController.dispose();
+    _bannerAd?.dispose();
   }
 
   Future<void> initConnectivity() async {
@@ -179,11 +186,7 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   height: 50, // Set the desired height of the banner ad
-                  child: UnityBannerAd(
-                    placementId: AdManager.bannerAdPlacementId,
-                    size:
-                        BannerSize.standard, // Choose the size of the banner ad
-                  ),
+                  child: AdWidget(ad: _bannerAd!),
                 ),
               ),
             ),
@@ -224,9 +227,30 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
     );
   }
 
-  void _loadAd(String placementId) async {
-    await UnityAds.load(
-      placementId: AdManager.bannerAdPlacementId,
+  // void _loadAd(String placementId) async {
+  //   await UnityAds.load(
+  //     placementId: AdManager.bannerAdPlacementId,
+  //   );
+  // }
+
+  void _loadBannerAd() async {
+    final adUnitId = AdHelper.bannerAdUnitId;
+
+    _bannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: adUnitId,
+      listener: BannerAdListener(
+        onAdLoaded: (Ad ad) {
+          print('Banner Ad loaded.');
+          setState(() {});
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('Banner Ad failed to load: $error');
+        },
+      ),
+      request: AdRequest(),
     );
+
+    _bannerAd?.load();
   }
 }

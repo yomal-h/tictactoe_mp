@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tictactoe_mp/resources/socket_methods.dart';
 import 'package:tictactoe_mp/responsive/responsive.dart';
 import 'package:tictactoe_mp/screens/main_menu_screen.dart';
+import 'package:tictactoe_mp/utils/ad_helper.dart';
 import 'package:tictactoe_mp/utils/ad_manager.dart';
 import 'package:tictactoe_mp/widgets/custom_button.dart';
 import 'package:tictactoe_mp/widgets/custom_text.dart';
@@ -26,27 +28,33 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
   late bool _isConnected;
 
+  //admob
+  BannerAd? _bannerAd;
+
   @override
   void initState() {
     super.initState();
     initConnectivity();
     _socketMethods.createRoomSuccessListener(context);
-    UnityAds.init(
-      gameId: AdManager.gameId,
-      testMode: false,
-      onComplete: () {
-        print('Initialization Complete');
-        _loadAd(AdManager.bannerAdPlacementId);
-      },
-      onFailed: (error, message) =>
-          print('Initialization Failed: $error $message'),
-    );
+    // UnityAds.init(
+    //   gameId: AdManager.gameId,
+    //   testMode: false,
+    //   onComplete: () {
+    //     print('Initialization Complete');
+    //     _loadAd(AdManager.bannerAdPlacementId);
+    //   },
+    //   onFailed: (error, message) =>
+    //       print('Initialization Failed: $error $message'),
+    // );
+
+    _loadBannerAd();
   }
 
   @override
   void dispose() {
     _nameController.dispose();
     _navigatorKey.currentState?.dispose();
+    _bannerAd?.dispose();
     super.dispose();
   }
 
@@ -170,11 +178,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                           child: Container(
                             height:
                                 50, // Set the desired height of the banner ad
-                            child: UnityBannerAd(
-                              placementId: AdManager.bannerAdPlacementId,
-                              size: BannerSize
-                                  .standard, // Choose the size of the banner ad
-                            ),
+                            child: AdWidget(ad: _bannerAd!),
                           ),
                         ),
                       ),
@@ -220,11 +224,32 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
     );
   }
 
-  void _loadAd(String placementId) async {
-    await UnityAds.load(
-      placementId: AdManager.bannerAdPlacementId,
+  void _loadBannerAd() async {
+    final adUnitId = AdHelper.bannerAdUnitId;
+
+    _bannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: adUnitId,
+      listener: BannerAdListener(
+        onAdLoaded: (Ad ad) {
+          print('Banner Ad loaded.');
+          setState(() {});
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('Banner Ad failed to load: $error');
+        },
+      ),
+      request: AdRequest(),
     );
+
+    _bannerAd?.load();
   }
+
+  // void _loadAd(String placementId) async {
+  //   await UnityAds.load(
+  //     placementId: AdManager.bannerAdPlacementId,
+  //   );
+  // }
 }
 
 

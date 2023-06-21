@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttericon/entypo_icons.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tictactoe_mp/screens/main_menu_game_modes_screen.dart';
+import 'package:tictactoe_mp/utils/ad_helper.dart';
 import 'package:tictactoe_mp/utils/ad_manager.dart';
 
 import 'package:tictactoe_mp/utils/colors.dart';
@@ -19,20 +21,31 @@ class DifficultyLevelSelectionScreen extends StatefulWidget {
 
 class _DifficultyLevelSelectionScreenState
     extends State<DifficultyLevelSelectionScreen> {
+//admob
+  BannerAd? _bannerAd;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    UnityAds.init(
-      gameId: AdManager.gameId,
-      testMode: false,
-      onComplete: () {
-        print('Initialization Complete');
-        _loadAd(AdManager.bannerAdPlacementId);
-      },
-      onFailed: (error, message) =>
-          print('Initialization Failed: $error $message'),
-    );
+    // UnityAds.init(
+    //   gameId: AdManager.gameId,
+    //   testMode: false,
+    //   onComplete: () {
+    //     print('Initialization Complete');
+    //     _loadAd(AdManager.bannerAdPlacementId);
+    //   },
+    //   onFailed: (error, message) =>
+    //       print('Initialization Failed: $error $message'),
+    // );
+    _loadBannerAd();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _bannerAd?.dispose();
+    super.dispose();
   }
 
   @override
@@ -117,11 +130,7 @@ class _DifficultyLevelSelectionScreenState
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   height: 50, // Set the desired height of the banner ad
-                  child: UnityBannerAd(
-                    placementId: AdManager.bannerAdPlacementId,
-                    size:
-                        BannerSize.standard, // Choose the size of the banner ad
-                  ),
+                  child: AdWidget(ad: _bannerAd!),
                 ),
               ),
             ),
@@ -227,19 +236,40 @@ class _DifficultyLevelSelectionScreenState
     );
   }
 
-  void _loadAd(String placementId) async {
-    await UnityAds.load(
-      placementId: AdManager.bannerAdPlacementId,
+  void _loadBannerAd() async {
+    final adUnitId = AdHelper.bannerAdUnitId;
+
+    _bannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: adUnitId,
+      listener: BannerAdListener(
+        onAdLoaded: (Ad ad) {
+          print('Banner Ad loaded.');
+          setState(() {});
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('Banner Ad failed to load: $error');
+        },
+      ),
+      request: AdRequest(),
     );
+
+    _bannerAd?.load();
   }
 
-  _showAd(String placementId) {
-    UnityBannerAd(
-      placementId: placementId,
-      onLoad: (placementId) => print('Banner loaded: $placementId'),
-      onClick: (placementId) => print('Banner clicked: $placementId'),
-      onFailed: (placementId, error, message) =>
-          print('Banner Ad $placementId failed: $error $message'),
-    );
-  }
+  // void _loadAd(String placementId) async {
+  //   await UnityAds.load(
+  //     placementId: AdManager.bannerAdPlacementId,
+  //   );
+  // }
+
+  // _showAd(String placementId) {
+  //   UnityBannerAd(
+  //     placementId: placementId,
+  //     onLoad: (placementId) => print('Banner loaded: $placementId'),
+  //     onClick: (placementId) => print('Banner clicked: $placementId'),
+  //     onFailed: (placementId, error, message) =>
+  //         print('Banner Ad $placementId failed: $error $message'),
+  //   );
+  // }
 }

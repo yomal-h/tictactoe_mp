@@ -5,10 +5,12 @@ import 'dart:io';
 
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tictactoe_mp/responsive/responsive.dart';
 import 'package:tictactoe_mp/screens/create_room_screen.dart';
 import 'package:tictactoe_mp/screens/join_room_screen.dart';
 import 'package:tictactoe_mp/screens/main_menu_game_modes_screen.dart';
+import 'package:tictactoe_mp/utils/ad_helper.dart';
 import 'package:tictactoe_mp/utils/ad_manager.dart';
 import 'package:tictactoe_mp/utils/colors.dart';
 import 'package:tictactoe_mp/widgets/custom_button.dart';
@@ -25,6 +27,9 @@ class MainMenuScreen extends StatefulWidget {
 }
 
 class _MainMenuScreenState extends State<MainMenuScreen> {
+//admob
+  BannerAd? _bannerAd;
+
   Future<bool> checkInternetConnection() async {
     final connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
@@ -47,16 +52,24 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    UnityAds.init(
-      gameId: AdManager.gameId,
-      testMode: false,
-      onComplete: () {
-        print('Initialization Complete');
-        _loadAd(AdManager.bannerAdPlacementId);
-      },
-      onFailed: (error, message) =>
-          print('Initialization Failed: $error $message'),
-    );
+    // UnityAds.init(
+    //   gameId: AdManager.gameId,
+    //   testMode: false,
+    //   onComplete: () {
+    //     print('Initialization Complete');
+    //     _loadAd(AdManager.bannerAdPlacementId);
+    //   },
+    //   onFailed: (error, message) =>
+    //       print('Initialization Failed: $error $message'),
+    // );
+    _loadBannerAd();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _bannerAd?.dispose();
+    super.dispose();
   }
 
   void createRoom(BuildContext context) async {
@@ -148,11 +161,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   height: 50, // Set the desired height of the banner ad
-                  child: UnityBannerAd(
-                    placementId: AdManager.bannerAdPlacementId,
-                    size:
-                        BannerSize.standard, // Choose the size of the banner ad
-                  ),
+                  child: AdWidget(ad: _bannerAd!),
                 ),
               ),
             ),
@@ -257,11 +266,32 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
     );
   }
 
-  void _loadAd(String placementId) async {
-    await UnityAds.load(
-      placementId: AdManager.bannerAdPlacementId,
+  void _loadBannerAd() async {
+    final adUnitId = AdHelper.bannerAdUnitId;
+
+    _bannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: adUnitId,
+      listener: BannerAdListener(
+        onAdLoaded: (Ad ad) {
+          print('Banner Ad loaded.');
+          setState(() {});
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('Banner Ad failed to load: $error');
+        },
+      ),
+      request: AdRequest(),
     );
+
+    _bannerAd?.load();
   }
+
+  // void _loadAd(String placementId) async {
+  //   await UnityAds.load(
+  //     placementId: AdManager.bannerAdPlacementId,
+  //   );
+  // }
 }
 
 

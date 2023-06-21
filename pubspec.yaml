@@ -50,6 +50,7 @@ dependencies:
   firebase_core: ^1.0.3 
   firebase_crashlytics: ^2.0.0
   unity_ads_plugin: ^0.3.8
+  google_mobile_ads: ^2.0.0
   
  
   

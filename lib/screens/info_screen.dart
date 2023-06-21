@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tictactoe_mp/provider/room_data_provider.dart';
 import 'package:tictactoe_mp/screens/main_menu_game_modes_screen.dart';
+import 'package:tictactoe_mp/utils/ad_helper.dart';
 import 'package:tictactoe_mp/utils/ad_manager.dart';
 import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
@@ -15,20 +17,31 @@ class InfoScreen extends StatefulWidget {
 }
 
 class _InfoScreenState extends State<InfoScreen> {
+//admob
+  BannerAd? _bannerAd;
+
   @override
   void initState() {
     super.initState();
-    UnityAds.init(
-      gameId: AdManager.gameId,
-      testMode: false,
-      onComplete: () {
-        print('Initialization Complete');
-        _loadAd(AdManager.bannerAdPlacementId);
-      },
-      onFailed: (error, message) =>
-          print('Initialization Failed: $error $message'),
-    );
+    // UnityAds.init(
+    //   gameId: AdManager.gameId,
+    //   testMode: false,
+    //   onComplete: () {
+    //     print('Initialization Complete');
+    //     _loadAd(AdManager.bannerAdPlacementId);
+    //   },
+    //   onFailed: (error, message) =>
+    //       print('Initialization Failed: $error $message'),
+    // );
     // _roomProvider = RoomDataProvider();
+    _loadBannerAd();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _bannerAd?.dispose();
+    super.dispose();
   }
 
   @override
@@ -161,11 +174,7 @@ class _InfoScreenState extends State<InfoScreen> {
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     height: 50, // Set the desired height of the banner ad
-                    child: UnityBannerAd(
-                      placementId: AdManager.bannerAdPlacementId,
-                      size: BannerSize
-                          .standard, // Choose the size of the banner ad
-                    ),
+                    child: AdWidget(ad: _bannerAd!),
                   ),
                 ),
               ),
@@ -207,9 +216,30 @@ class _InfoScreenState extends State<InfoScreen> {
     );
   }
 
-  void _loadAd(String placementId) async {
-    await UnityAds.load(
-      placementId: AdManager.bannerAdPlacementId,
+  void _loadBannerAd() async {
+    final adUnitId = AdHelper.bannerAdUnitId;
+
+    _bannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: adUnitId,
+      listener: BannerAdListener(
+        onAdLoaded: (Ad ad) {
+          print('Banner Ad loaded.');
+          setState(() {});
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('Banner Ad failed to load: $error');
+        },
+      ),
+      request: AdRequest(),
     );
+
+    _bannerAd?.load();
   }
+
+  // void _loadAd(String placementId) async {
+  //   await UnityAds.load(
+  //     placementId: AdManager.bannerAdPlacementId,
+  //   );
+  // }
 }
