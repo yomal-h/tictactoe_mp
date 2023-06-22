@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:tictactoe_mp/provider/room_data_provider.dart';
 import 'package:tictactoe_mp/resources/socket_client.dart';
 import 'package:tictactoe_mp/resources/socket_methods.dart';
 import 'package:tictactoe_mp/screens/main_menu_screen.dart';
+import 'package:tictactoe_mp/utils/ad_helper.dart';
 import 'package:tictactoe_mp/utils/ad_manager.dart';
 import 'package:tictactoe_mp/utils/colors.dart';
 import 'package:tictactoe_mp/views/scoreboard.dart';
@@ -44,6 +46,10 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   late AnimationController _rotateController;
   late Animation<double> _rotateAnimation;
   late Animation<double> _scaleAnimation;
+
+  InterstitialAd? _interstitialAd;
+  int _numInterstitialLoadAttempts = 0;
+  int maxFailedLoadAttempts = 3;
 
   void tappedListener(BuildContext context) {
     _socketClient.off('tapped'); //double tap in new game error fixed
@@ -144,16 +150,17 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     endGameListener(context);
     tappedListener(context);
 
-    UnityAds.init(
-      gameId: AdManager.gameId,
-      testMode: false,
-      onComplete: () {
-        print('Initialization Complete');
-        _loadAd(AdManager.interstitialVideoAdPlacementId);
-      },
-      onFailed: (error, message) =>
-          print('Initialization Failed: $error $message'),
-    );
+    // UnityAds.init(
+    //   gameId: AdManager.gameId,
+    //   testMode: false,
+    //   onComplete: () {
+    //     print('Initialization Complete');
+    //     _loadAd(AdManager.interstitialVideoAdPlacementId);
+    //   },
+    //   onFailed: (error, message) =>
+    //       print('Initialization Failed: $error $message'),
+    // );
+    _loadInterstitialAd();
   }
 
   @override
@@ -163,6 +170,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     _animationController1.dispose();
     _rotateController.dispose();
     _controller.dispose();
+    _interstitialAd?.dispose();
     super.dispose();
     // TODO: implement dispose
   }
@@ -190,7 +198,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   }
 
   void _goToMainMenu() {
-    _showAd(AdManager.interstitialVideoAdPlacementId);
+    //_showAd(AdManager.interstitialVideoAdPlacementId);
+    _showInterstitialAd();
     final gameState = Provider.of<RoomDataProvider>(context, listen: false);
     clearBoard(context);
 
@@ -739,7 +748,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                         ),
                         onPressed: () {
                           clearBoard(context);
-                          _showAd(AdManager.interstitialVideoAdPlacementId);
+                          // _showAd(AdManager.interstitialVideoAdPlacementId);
+                          _showInterstitialAd();
                           Navigator.pop(context);
 //                 //navigateToMainMenu(context);
                           Navigator.pushNamed(
@@ -887,7 +897,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                     ),
                     onPressed: () {
                       clearBoard(context);
-                      _showAd(AdManager.interstitialVideoAdPlacementId);
+                      //_showAd(AdManager.interstitialVideoAdPlacementId);
+                      _showInterstitialAd();
                       Navigator.pop(context);
 //                 //navigateToMainMenu(context);
                       Navigator.pushNamed(context, MainMenuScreen.routeName);
@@ -1348,31 +1359,78 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     roomDataProvider.setFilledBoxesTo0();
   }
 
-  void _loadAd(String placementId) async {
-    await UnityAds.load(
-      placementId: AdManager.interstitialVideoAdPlacementId,
-    );
+  void _loadInterstitialAd() async {
+    final adUnitId = AdHelper.interstitialAdUnitId;
+    final adRequest = AdRequest();
+    InterstitialAd.load(
+        adUnitId: adUnitId,
+        request: adRequest,
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (InterstitialAd ad) {
+            print('$ad admob loaded');
+            _interstitialAd = ad;
+            _numInterstitialLoadAttempts = 0;
+            _interstitialAd!.setImmersiveMode(true);
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            print('InterstitialAd admob failed to load: $error.');
+            _numInterstitialLoadAttempts += 1;
+            _interstitialAd = null;
+            if (_numInterstitialLoadAttempts < maxFailedLoadAttempts) {
+              _loadInterstitialAd();
+            }
+          },
+        ));
   }
 
-  void _showAd(String placementId) {
-    UnityAds.showVideoAd(
-      placementId: placementId,
-      onComplete: (placementId) {
-        print('Video Ad $placementId completed');
-        _loadAd(placementId);
+  void _showInterstitialAd() {
+    if (_interstitialAd == null) {
+      print('Warning: attempt to show interstitial before loaded.');
+      return;
+    }
+    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (InterstitialAd ad) =>
+          print('ad onAdShowedFullScreenContent.'),
+      onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        print('$ad onAdDismissedFullScreenContent.');
+        ad.dispose();
+        _loadInterstitialAd();
       },
-      onFailed: (placementId, error, message) {
-        print('Video Ad $placementId failed: $error $message');
-        _loadAd(placementId);
-      },
-      onStart: (placementId) => print('Video Ad $placementId started'),
-      onClick: (placementId) => print('Video Ad $placementId click'),
-      onSkipped: (placementId) {
-        print('Video Ad $placementId skipped');
-        _loadAd(placementId);
+      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+        print('$ad onAdFailedToShowFullScreenContent: $error');
+        ad.dispose();
+        _loadInterstitialAd();
       },
     );
+    _interstitialAd!.show();
+    _interstitialAd = null;
   }
+
+  // void _loadAd(String placementId) async {
+  //   await UnityAds.load(
+  //     placementId: AdManager.interstitialVideoAdPlacementId,
+  //   );
+  // }
+
+  // void _showAd(String placementId) {
+  //   UnityAds.showVideoAd(
+  //     placementId: placementId,
+  //     onComplete: (placementId) {
+  //       print('Video Ad $placementId completed');
+  //       _loadAd(placementId);
+  //     },
+  //     onFailed: (placementId, error, message) {
+  //       print('Video Ad $placementId failed: $error $message');
+  //       _loadAd(placementId);
+  //     },
+  //     onStart: (placementId) => print('Video Ad $placementId started'),
+  //     onClick: (placementId) => print('Video Ad $placementId click'),
+  //     onSkipped: (placementId) {
+  //       print('Video Ad $placementId skipped');
+  //       _loadAd(placementId);
+  //     },
+  //   );
+  // }
 }
 
 class LinePainter extends CustomPainter {

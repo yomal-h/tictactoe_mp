@@ -2,7 +2,9 @@ import 'dart:math';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tictactoe_mp/screens/main_menu_game_modes_screen.dart';
+import 'package:tictactoe_mp/utils/ad_helper.dart';
 import 'package:tictactoe_mp/utils/ad_manager.dart';
 import 'dart:io' show Platform;
 
@@ -36,6 +38,11 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy>
 
   late AnimationController _animationController;
   late Animation<double> _animation;
+
+  //admob
+  InterstitialAd? _interstitialAd;
+  int _numInterstitialLoadAttempts = 0;
+  int maxFailedLoadAttempts = 3;
 
   @override
   void initState() {
@@ -82,16 +89,17 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy>
       ),
     );
 
-    UnityAds.init(
-      gameId: AdManager.gameId,
-      testMode: false,
-      onComplete: () {
-        print('Initialization Complete');
-        _loadAd(AdManager.interstitialVideoAdPlacementId);
-      },
-      onFailed: (error, message) =>
-          print('Initialization Failed: $error $message'),
-    );
+    // UnityAds.init(
+    //   gameId: AdManager.gameId,
+    //   testMode: false,
+    //   onComplete: () {
+    //     print('Initialization Complete');
+    //     _loadAd(AdManager.interstitialVideoAdPlacementId);
+    //   },
+    //   onFailed: (error, message) =>
+    //       print('Initialization Failed: $error $message'),
+    // );
+    _loadInterstitialAd();
   }
 
   @override
@@ -99,6 +107,7 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy>
     _animationController.dispose();
     _rotateController.dispose();
     _controller.dispose();
+    _interstitialAd?.dispose();
     super.dispose();
   }
 
@@ -900,7 +909,8 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy>
   }
 
   void _startNewGame() {
-    _showAd(AdManager.interstitialVideoAdPlacementId);
+    _showInterstitialAd();
+    //_showAd(AdManager.interstitialVideoAdPlacementId);
     setState(() {
       _board.fillRange(0, 9, '');
       _playerScore = 0;
@@ -917,7 +927,8 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy>
   }
 
   void _goToMainMenu() {
-    _showAd(AdManager.interstitialVideoAdPlacementId);
+    _showInterstitialAd();
+    //_showAd(AdManager.interstitialVideoAdPlacementId);
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
@@ -1303,30 +1314,77 @@ class __TicTacToeGameEasyState extends State<TicTacToeGameEasy>
     _gameOver = true;
   }
 
-  void _loadAd(String placementId) async {
-    await UnityAds.load(
-      placementId: AdManager.interstitialVideoAdPlacementId,
-    );
+  // void _loadAd(String placementId) async {
+  //   await UnityAds.load(
+  //     placementId: AdManager.interstitialVideoAdPlacementId,
+  //   );
+  // }
+
+  // void _showAd(String placementId) {
+  //   UnityAds.showVideoAd(
+  //     placementId: placementId,
+  //     onComplete: (placementId) {
+  //       print('Video Ad $placementId completed');
+  //       _loadAd(placementId);
+  //     },
+  //     onFailed: (placementId, error, message) {
+  //       print('Video Ad $placementId failed: $error $message');
+  //       _loadAd(placementId);
+  //     },
+  //     onStart: (placementId) => print('Video Ad $placementId started'),
+  //     onClick: (placementId) => print('Video Ad $placementId click'),
+  //     onSkipped: (placementId) {
+  //       print('Video Ad $placementId skipped');
+  //       _loadAd(placementId);
+  //     },
+  //   );
+  // }
+
+  void _loadInterstitialAd() async {
+    final adUnitId = AdHelper.interstitialAdUnitId;
+    final adRequest = AdRequest();
+    InterstitialAd.load(
+        adUnitId: adUnitId,
+        request: adRequest,
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (InterstitialAd ad) {
+            print('$ad admob loaded');
+            _interstitialAd = ad;
+            _numInterstitialLoadAttempts = 0;
+            _interstitialAd!.setImmersiveMode(true);
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            print('InterstitialAd admob failed to load: $error.');
+            _numInterstitialLoadAttempts += 1;
+            _interstitialAd = null;
+            if (_numInterstitialLoadAttempts < maxFailedLoadAttempts) {
+              _loadInterstitialAd();
+            }
+          },
+        ));
   }
 
-  void _showAd(String placementId) {
-    UnityAds.showVideoAd(
-      placementId: placementId,
-      onComplete: (placementId) {
-        print('Video Ad $placementId completed');
-        _loadAd(placementId);
+  void _showInterstitialAd() {
+    if (_interstitialAd == null) {
+      print('Warning: attempt to show interstitial before loaded.');
+      return;
+    }
+    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (InterstitialAd ad) =>
+          print('ad onAdShowedFullScreenContent.'),
+      onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        print('$ad onAdDismissedFullScreenContent.');
+        ad.dispose();
+        _loadInterstitialAd();
       },
-      onFailed: (placementId, error, message) {
-        print('Video Ad $placementId failed: $error $message');
-        _loadAd(placementId);
-      },
-      onStart: (placementId) => print('Video Ad $placementId started'),
-      onClick: (placementId) => print('Video Ad $placementId click'),
-      onSkipped: (placementId) {
-        print('Video Ad $placementId skipped');
-        _loadAd(placementId);
+      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+        print('$ad onAdFailedToShowFullScreenContent: $error');
+        ad.dispose();
+        _loadInterstitialAd();
       },
     );
+    _interstitialAd!.show();
+    _interstitialAd = null;
   }
 }
 
